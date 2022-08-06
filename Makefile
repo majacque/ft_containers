@@ -19,6 +19,7 @@ NAME				= container.out
 #######################################
 OBJ_DIR				= objs/
 INC_DIR				= include/
+PRV_DIR				= private/
 SRC_DIR				= $(shell find src -type d)
 
 vpath %.cpp $(foreach dir, $(SRC_DIR), $(dir):)
@@ -27,6 +28,7 @@ vpath %.cpp $(foreach dir, $(SRC_DIR), $(dir):)
 ######################################
 SRC				=	\
 					main.cpp	\
+					test_iterator_traits.cpp	\
 
 ######################################
 #            OBJECT FILES            #
@@ -39,7 +41,8 @@ DEP				= ${OBJ:.o=.d}
 #######################################
 #                FLAGS                #
 #######################################
-CXXFLAGS			= -Wall -Wextra -Werror -Wno-unused -I$(INC_DIR)
+CXXFLAGS			= -Wall -Wextra -Werror -Wno-unused
+CXXFLAGS			+= -I${INC_DIR} -I${PRV_DIR}
 CXXFLAGS			+= -std=c++98
 CXXFLAGS			+= -MMD -MP
 # CXXFLAGS			+= -Weffc++ -pedantic
