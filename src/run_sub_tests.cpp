@@ -30,13 +30,13 @@ void	run_sub_tests( t_sub_test const arr[] )
 			if (arr[i].f() == true)
 			{
 				std::cerr << GREEN;
-				std::cout << " [OK] ";
+				std::cout << " [OK]";
 				std::cerr << RESET;
 			}
 			else
 			{
 				std::cerr << RED;
-				std::cout << " [KO] ";
+				std::cout << " [KO]";
 				std::cerr << RESET;
 			}
 		}
