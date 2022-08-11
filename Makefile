@@ -30,6 +30,7 @@ SRC				=	\
 					main.cpp	\
 					run_sub_tests.cpp	\
 					test_iterator_traits.cpp	\
+					test_reverse_iterator.cpp	\
 
 ######################################
 #            OBJECT FILES            #
@@ -50,11 +51,11 @@ CXXFLAGS			+= -MMD -MP
 
 LDFLAGS			=
 
-ifeq (${LEAK}, 1)
+ifeq (${DEBUG}, 1)
 	CXXFLAGS	+= -g3
 endif
 
-ifeq (${LEAK}, 2)
+ifeq (${DEBUG}, 2)
 	CXXFLAGS	+= -fsanitize=address -g3
 	LDFLAGS		+= -fsanitize=address
 endif

@@ -25,6 +25,7 @@ int	main(int argc, char **argv) {
 
 	t_test	arr[] = {
 		{test_iterator_traits, "iterator traits"},
+		{test_reverse_iterator, "reverse iterator"},
 		{NULL, ""}
 	};
 
@@ -42,7 +43,6 @@ int	main(int argc, char **argv) {
 			{
 				std::cerr << RED "Error: " RESET << e.what() << '\n';
 			}
-			
 		}
 	}
 	else
