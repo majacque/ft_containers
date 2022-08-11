@@ -7,6 +7,6 @@
 # define NB_TEST 1
 #endif
 
-bool	test_iterator_traits( void );
+void	test_iterator_traits( void );
 
 #endif

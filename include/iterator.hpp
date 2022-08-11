@@ -3,7 +3,6 @@
 
 #include <iterator>
 
-// TODO iterator_traits
 namespace ft
 {
 

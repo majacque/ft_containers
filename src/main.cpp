@@ -23,8 +23,8 @@ int	main(int argc, char **argv) {
 		g_verbose = true;
 	}
 
-	t_fn_test	arr[] = {
-		{test_iterator_traits, "iterator traits:"},
+	t_test	arr[] = {
+		{test_iterator_traits, "iterator traits"},
 		{NULL, ""}
 	};
 
@@ -32,13 +32,25 @@ int	main(int argc, char **argv) {
 	{
 		for (size_t i = 0; arr[i].f; i++)
 		{
-			std::cout << i + 1 << " - " << arr[i].str;
-			arr[i].f();
-			std::cout << "\n";
+			try
+			{
+				std::cout << i + 1 << " - " << arr[i].str << ":";
+				arr[i].f();
+				std::cout << "\n";
+			}
+			catch(const std::exception& e)
+			{
+				std::cerr << RED "Error: " RESET << e.what() << '\n';
+			}
+			
 		}
 	}
 	else
+	{
+		std::cout << arr[test_to_launch].str << ":\n";
 		arr[test_to_launch].f();
+	}
 
 	return 0;
 }
+// TODO implement multiple verbose tests

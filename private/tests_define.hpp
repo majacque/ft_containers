@@ -13,12 +13,22 @@
 # define RESET "\033[0m"
 #endif
 
-typedef struct s_fn_test	t_fn_test;
+typedef struct s_sub_test	t_sub_test;
 
-struct s_fn_test
+struct s_sub_test
 {
-	bool		(*f)(void);
+	bool		( *f )( void );
 	std::string	str;
 };
+
+typedef struct s_test	t_test;
+
+struct s_test
+{
+	void		( *f )( void );
+	std::string	str;
+};
+
+void	run_sub_tests( t_sub_test const arr[] );
 
 #endif

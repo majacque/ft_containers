@@ -28,6 +28,7 @@ vpath %.cpp $(foreach dir, $(SRC_DIR), $(dir):)
 ######################################
 SRC				=	\
 					main.cpp	\
+					run_sub_tests.cpp	\
 					test_iterator_traits.cpp	\
 
 ######################################

@@ -4,8 +4,6 @@
 #include "iterator.hpp"
 #include "tests_define.hpp"
 
-extern bool	g_verbose;
-
 bool	__iterator( void )
 {
 	char	c = 0;
@@ -59,51 +57,14 @@ bool	__pointer_const_value( void )
 	return true;
 }
 
-bool	test_iterator_traits( void )
+void	test_iterator_traits( void )
 {
-	t_fn_test	arr[] = {
+	t_sub_test	arr[] = {
 		{__iterator, "template iterator"},
 		{__pointer, "template pointer"},
 		{__pointer_const_value, "template pointer on constant value"},
 		{NULL, ""}
 	};
 
-	if (g_verbose == true)
-	{
-		for (size_t i = 0; arr[i].f; i++)
-		{
-			if (arr[i].f() == true)
-			{
-				std::cerr << GREEN;
-				std::cout << "[OK] - " << arr[i].str << "\n";
-				std::cerr << RESET;
-			}
-			else
-			{
-				std::cerr << RED;
-				std::cout << "[KO] - " << arr[i].str << "\n";
-				std::cerr << RESET;
-			}
-		}
-	}
-	else
-	{
-		for (size_t i = 0; arr[i].f; i++)
-		{
-			if (arr[i].f() == true)
-			{
-				std::cerr << GREEN;
-				std::cout << " [OK] ";
-				std::cerr << RESET;
-			}
-			else
-			{
-				std::cerr << RED;
-				std::cout << " [KO] ";
-				std::cerr << RESET;
-			}
-		}
-	}
-	
-	return true;
+	run_sub_tests(arr);
 }
