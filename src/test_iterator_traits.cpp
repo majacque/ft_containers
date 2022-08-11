@@ -4,7 +4,7 @@
 #include "iterator.hpp"
 #include "tests_define.hpp"
 
-bool	__iterator( void )
+inline static bool	__iterator( void )
 {
 	char	c = 0;
 	ft::iterator_traits<std::string::iterator>::difference_type		str_d;
@@ -21,7 +21,7 @@ bool	__iterator( void )
 	return true;
 }
 
-bool	__pointer( void )
+inline static bool	__pointer( void )
 {
 	char	c = 0;
 	ft::iterator_traits<char *>::difference_type	c_d;
@@ -39,7 +39,7 @@ bool	__pointer( void )
 	return true;
 }
 
-bool	__pointer_const_value( void )
+inline static bool	__pointer_const_value( void )
 {
 	char const	c = 0;
 	ft::iterator_traits<char const *>::difference_type		c_d;
