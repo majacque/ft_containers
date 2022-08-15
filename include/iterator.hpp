@@ -55,9 +55,12 @@ public:
 	typedef typename iterator_traits<Iterator>::reference			reference;
 	typedef typename iterator_traits<Iterator>::iterator_category	iterator_category;
 
+	/**************************************************************************/
+	/*                               CONSTRUCTOR                              */
+	/**************************************************************************/
+
 	/**
 	 * @brief Construct a new reverse iterator that points to no object
-	 * 
 	 */
 	reverse_iterator( void ): _current()
 	{
@@ -84,6 +87,33 @@ public:
 		return;
 	}
 
+	/**************************************************************************/
+	/*                               DESTRUCTOR                               */
+	/**************************************************************************/
+
+	/**
+	 * @brief Destroy the reverse iterator
+	 */
+	~reverse_iterator( void )
+	{
+		return;
+	}
+
+	/**************************************************************************/
+	/*                            MEMBER FUNCTIONS                            */
+	/**************************************************************************/
+
+	/**
+	 * @brief Returns a copy of the base iterator
+	 */
+	iterator_type	base( void )
+	{
+		return _current;
+	}
+
+	/**************************************************************************/
+	/*                            MEMBER OPERATORS                            */
+	/**************************************************************************/
 };
 
 }

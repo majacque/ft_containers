@@ -23,7 +23,7 @@ inline static bool	__initialization_constructor( void )
 	typedef std::string::iterator	it_type;
 
 	std::string	str("abcdef");
-	it_type	it = str.begin();
+	it_type	it = str.end();
 
 	std::reverse_iterator<it_type>	std_rit(it);
 	ft::reverse_iterator<it_type>	ft_rit(it);
@@ -41,7 +41,7 @@ inline static bool	__copy_constructor( void )
 	typedef std::string::iterator	it_type;
 
 	std::string	str("abcdef");
-	it_type	it = str.begin();
+	it_type	it = str.end();
 	ft::reverse_iterator<it_type>	ft_rit0(it);
 
 	ft::reverse_iterator<it_type>	ft_rit1(ft_rit0);
@@ -53,12 +53,31 @@ inline static bool	__copy_constructor( void )
 	return true;
 }
 
+inline static bool	__base( void )
+{
+	typedef std::string::iterator	it_type;
+
+	std::string	str("abcdef");
+	it_type	it = str.end();
+
+	ft::reverse_iterator<it_type>	ft_rit(it);
+
+	it_type	base = ft_rit.base();
+	if (sizeof(it) != sizeof(base)
+		|| memcmp(&it, &base, sizeof(it)))
+		return false;
+
+	// REMIND compare with operator != or ==
+	return true;
+}
+
 void	test_reverse_iterator( void )
 {
 	t_sub_test	arr[] = {
 		{__default_constructor, "default constructor"},
 		{__initialization_constructor, "init constructor"},
 		{__copy_constructor, "copy constructor"},
+		{__base, "base"},
 		{NULL, ""}
 	};
 
