@@ -35,8 +35,9 @@ inline static bool	__initialization_constructor( void )
 		return false;
 	else if (std_rit.base() != ft_rit.base())
 		return false;
+	else if (*std_rit != *ft_rit)
+		return false;
 
-	// REMIND compare with operator*
 	return true;
 }
 
@@ -52,8 +53,9 @@ inline static bool	__copy_constructor( void )
 	if (sizeof(ft_rit0) != sizeof(ft_rit1)
 		|| memcmp(&ft_rit0, &ft_rit1, sizeof(ft_rit0)))
 		return false;
+	else if (*ft_rit0 != *ft_rit1)
+		return false;
 
-	// REMIND compare with operator*
 	return true;
 }
 
