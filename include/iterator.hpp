@@ -145,6 +145,29 @@ public:
 		return reverse_iterator(_current + n);
 	}
 
+	/**
+	 * @brief Advances the reverse_iterator by one position (pre-increment)
+	 * 
+	 * @return *this
+	 */
+	reverse_iterator& operator++()
+	{
+		--_current;
+		return *this;
+	}
+
+	/**
+	 * @brief Advances the reverse_iterator by one position (post-increment)
+	 * 
+	 * @return the value *this had before the call
+	 */
+	reverse_iterator operator++(int) // post-increment
+	{
+		reverse_iterator	tmp(_current);
+		--_current;
+		return tmp;
+	}
+
 };
 
 }

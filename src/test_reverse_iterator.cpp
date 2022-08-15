@@ -193,6 +193,78 @@ inline static bool	__substraction_operator( void )
 	return true;
 }
 
+inline static bool	__pre_incrementation_operator( void )
+{
+	typedef std::string::iterator	it_string_type;
+
+	std::string	str("abcdef");
+	it_string_type	it_string = str.end();
+
+	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
+	ft::reverse_iterator<it_string_type>	ft_string_rit(it_string);
+
+	for (int i = 1; i <= 6; i++)
+	{
+		if (*++std_string_rit != *++ft_string_rit)
+			return false;
+	}
+
+	typedef std::vector<int>::iterator	it_vector_type;
+
+	std::vector<int>	v;
+	for (int i = 0; i < 7; i++)
+		v.push_back(i);
+
+	it_vector_type	it_vector = v.end();
+
+	std::reverse_iterator<it_vector_type>	std_vector_rit(it_vector);
+	ft::reverse_iterator<it_vector_type>	ft_vector_rit(it_vector);
+
+	for (int i = 1; i <= 6; i++)
+	{
+		if (*++std_vector_rit != *++ft_vector_rit)
+			return false;
+	}
+
+	return true;
+}
+
+inline static bool	__post_incrementation_operator( void )
+{
+	typedef std::string::iterator	it_string_type;
+
+	std::string	str("abcdef");
+	it_string_type	it_string = str.end();
+
+	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
+	ft::reverse_iterator<it_string_type>	ft_string_rit(it_string);
+
+	for (int i = 1; i <= 6; i++)
+	{
+		if (*std_string_rit++ != *ft_string_rit++)
+			return false;
+	}
+
+	typedef std::vector<int>::iterator	it_vector_type;
+
+	std::vector<int>	v;
+	for (int i = 0; i < 7; i++)
+		v.push_back(i);
+
+	it_vector_type	it_vector = v.end();
+
+	std::reverse_iterator<it_vector_type>	std_vector_rit(it_vector);
+	ft::reverse_iterator<it_vector_type>	ft_vector_rit(it_vector);
+
+	for (int i = 1; i <= 6; i++)
+	{
+		if (*std_vector_rit++ != *ft_vector_rit++)
+			return false;
+	}
+
+	return true;
+}
+
 void	test_reverse_iterator( void )
 {
 	t_sub_test	arr[] = {
@@ -203,6 +275,8 @@ void	test_reverse_iterator( void )
 		{__derefence_operator, "operator*"},
 		{__addition_operator, "operator+"},
 		{__substraction_operator, "operator-"},
+		{__pre_incrementation_operator, "operator++ (pre)"},
+		{__post_incrementation_operator, "operator++ (post)"},
 		{NULL, ""}
 	};
 
