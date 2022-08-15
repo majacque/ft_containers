@@ -13,8 +13,9 @@ inline static bool	__default_constructor( void )
 	if (sizeof(std_rit) != sizeof(ft_rit)
 		|| memcmp(&std_rit, &ft_rit, sizeof(std_rit)))
 		return false;
+	else if (std_rit.base() != ft_rit.base())
+		return false;
 
-	 // REMIND test with base()
 	return true;
 }
 
@@ -30,6 +31,8 @@ inline static bool	__initialization_constructor( void )
 
 	if (sizeof(std_rit) != sizeof(ft_rit)
 		|| memcmp(&std_rit, &ft_rit, sizeof(std_rit)))
+		return false;
+	else if (std_rit.base() != ft_rit.base())
 		return false;
 
 	// REMIND compare with operator*
