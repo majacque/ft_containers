@@ -6,6 +6,13 @@
 #include "iterator.hpp"
 #include "tests_define.hpp"
 
+typedef std::string::iterator	it_string_type;
+typedef std::vector<int>::iterator	it_vector_type;
+
+static std::string str("abcdef");
+static int arr[] = {0,1,2,3,4,5,6,7,8,9,10};
+static std::vector<int> v(arr, arr + sizeof(arr) / sizeof(int));
+
 inline static bool	__default_constructor( void )
 {
 	std::reverse_iterator<std::string::iterator>	std_rit;
@@ -22,13 +29,10 @@ inline static bool	__default_constructor( void )
 
 inline static bool	__initialization_constructor( void )
 {
-	typedef std::string::iterator	it_type;
+	it_string_type	it = str.end();
 
-	std::string	str("abcdef");
-	it_type	it = str.end();
-
-	std::reverse_iterator<it_type>	std_rit(it);
-	ft::reverse_iterator<it_type>	ft_rit(it);
+	std::reverse_iterator<it_string_type>	std_rit(it);
+	ft::reverse_iterator<it_string_type>	ft_rit(it);
 
 	if (sizeof(std_rit) != sizeof(ft_rit)
 		|| memcmp(&std_rit, &ft_rit, sizeof(std_rit)))
@@ -43,13 +47,10 @@ inline static bool	__initialization_constructor( void )
 
 inline static bool	__copy_constructor( void )
 {
-	typedef std::string::iterator	it_type;
+	it_string_type	it = str.end();
+	ft::reverse_iterator<it_string_type>	ft_rit0(it);
 
-	std::string	str("abcdef");
-	it_type	it = str.end();
-	ft::reverse_iterator<it_type>	ft_rit0(it);
-
-	ft::reverse_iterator<it_type>	ft_rit1(ft_rit0);
+	ft::reverse_iterator<it_string_type>	ft_rit1(ft_rit0);
 	if (sizeof(ft_rit0) != sizeof(ft_rit1)
 		|| memcmp(&ft_rit0, &ft_rit1, sizeof(ft_rit0)))
 		return false;
@@ -61,27 +62,24 @@ inline static bool	__copy_constructor( void )
 
 inline static bool	__base( void )
 {
-	typedef std::string::iterator	it_type;
+	it_string_type	it = str.end();
 
-	std::string	str("abcdef");
-	it_type	it = str.end();
+	ft::reverse_iterator<it_string_type>	ft_rit(it);
 
-	ft::reverse_iterator<it_type>	ft_rit(it);
-
-	it_type	base = ft_rit.base();
+	it_string_type	base = ft_rit.base();
 	if (sizeof(it) != sizeof(base)
 		|| memcmp(&it, &base, sizeof(it)))
 		return false;
+	else if (ft_rit.base() != it)
+		return false;
 
-	// REMIND compare with operator != or ==
 	return true;
 }
 
+/****************************PUBLIC MEMBER OPERATORS****************************/
+
 inline static bool	__derefence_operator( void )
 {
-	typedef std::string::iterator	it_string_type;
-
-	std::string	str("abcdef");
 	it_string_type	it_string_begin = str.begin();
 	it_string_type	it_string_middle = str.begin() + 2;
 	it_string_type	it_string_end = str.end();
@@ -98,12 +96,6 @@ inline static bool	__derefence_operator( void )
 		*std_string_middle != *ft_string_middle ||
 		*std_string_end	!= *ft_string_end)
 		return false;
-
-	typedef std::vector<int>::iterator	it_vector_type;
-
-	std::vector<int>	v;
-	for (int i = 0; i < 10; i++)
-		v.push_back(i);
 
 	it_vector_type	it_vector_middle = v.begin() + 4;
 	it_vector_type	it_vector_end = v.end();
@@ -123,9 +115,6 @@ inline static bool	__derefence_operator( void )
 
 inline static bool	__structure_derefence_operator( void )
 {
-	typedef std::string::iterator	it_string_type;
-
-	std::string	str("abcdef");
 	it_string_type	it_string_begin = str.begin();
 	it_string_type	it_string_middle = str.begin() + 2;
 	it_string_type	it_string_end = str.end();
@@ -142,12 +131,6 @@ inline static bool	__structure_derefence_operator( void )
 		std_string_middle.operator->() != ft_string_middle.operator->() ||
 		std_string_end.operator->()	!= ft_string_end.operator->())
 		return false;
-
-	typedef std::vector<int>::iterator	it_vector_type;
-
-	std::vector<int>	v;
-	for (int i = 0; i < 10; i++)
-		v.push_back(i);
 
 	it_vector_type	it_vector_middle = v.begin() + 4;
 	it_vector_type	it_vector_end = v.end();
@@ -167,9 +150,6 @@ inline static bool	__structure_derefence_operator( void )
 
 inline static bool	__addition_operator( void )
 {
-	typedef std::string::iterator	it_string_type;
-
-	std::string	str("abcdef");
 	it_string_type	it_string = str.end();
 
 	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
@@ -180,8 +160,6 @@ inline static bool	__addition_operator( void )
 		if (*(std_string_rit + i) != *(ft_string_rit + i))
 			return false;
 	}
-
-	typedef std::vector<int>::iterator	it_vector_type;
 
 	std::vector<int>	v;
 	for (int i = 0; i < 7; i++)
@@ -203,9 +181,6 @@ inline static bool	__addition_operator( void )
 
 inline static bool	__substraction_operator( void )
 {
-	typedef std::string::iterator	it_string_type;
-
-	std::string	str("abcdef");
 	it_string_type	it_string = str.begin();
 
 	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
@@ -216,8 +191,6 @@ inline static bool	__substraction_operator( void )
 		if (*(std_string_rit - i) != *(ft_string_rit - i))
 			return false;
 	}
-
-	typedef std::vector<int>::iterator	it_vector_type;
 
 	std::vector<int>	v;
 	for (int i = 0; i < 7; i++)
@@ -239,9 +212,6 @@ inline static bool	__substraction_operator( void )
 
 inline static bool	__pre_incrementation_operator( void )
 {
-	typedef std::string::iterator	it_string_type;
-
-	std::string	str("abcdef");
 	it_string_type	it_string = str.end();
 
 	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
@@ -252,8 +222,6 @@ inline static bool	__pre_incrementation_operator( void )
 		if (*++std_string_rit != *++ft_string_rit)
 			return false;
 	}
-
-	typedef std::vector<int>::iterator	it_vector_type;
 
 	std::vector<int>	v;
 	for (int i = 0; i < 7; i++)
@@ -275,9 +243,6 @@ inline static bool	__pre_incrementation_operator( void )
 
 inline static bool	__post_incrementation_operator( void )
 {
-	typedef std::string::iterator	it_string_type;
-
-	std::string	str("abcdef");
 	it_string_type	it_string = str.end();
 
 	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
@@ -288,8 +253,6 @@ inline static bool	__post_incrementation_operator( void )
 		if (*std_string_rit++ != *ft_string_rit++)
 			return false;
 	}
-
-	typedef std::vector<int>::iterator	it_vector_type;
 
 	std::vector<int>	v;
 	for (int i = 0; i < 7; i++)
@@ -311,9 +274,6 @@ inline static bool	__post_incrementation_operator( void )
 
 inline static bool	__pre_decrementation_operator( void )
 {
-	typedef std::string::iterator	it_string_type;
-
-	std::string	str("abcdef");
 	it_string_type	it_string = str.begin();
 
 	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
@@ -324,8 +284,6 @@ inline static bool	__pre_decrementation_operator( void )
 		if (*--std_string_rit != *--ft_string_rit)
 			return false;
 	}
-
-	typedef std::vector<int>::iterator	it_vector_type;
 
 	std::vector<int>	v;
 	for (int i = 0; i < 7; i++)
@@ -347,9 +305,6 @@ inline static bool	__pre_decrementation_operator( void )
 
 inline static bool	__post_decrementation_operator( void )
 {
-	typedef std::string::iterator	it_string_type;
-
-	std::string	str("abcdef");
 	it_string_type	it_string = str.begin();
 
 	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
@@ -360,8 +315,6 @@ inline static bool	__post_decrementation_operator( void )
 		if (*std_string_rit-- != *ft_string_rit--)
 			return false;
 	}
-
-	typedef std::vector<int>::iterator	it_vector_type;
 
 	std::vector<int>	v;
 	for (int i = 0; i < 7; i++)
@@ -383,9 +336,6 @@ inline static bool	__post_decrementation_operator( void )
 
 inline static bool	__addition_assignement_operator( void )
 {
-	typedef std::string::iterator	it_string_type;
-
-	std::string	str("abcdef");
 	it_string_type	it_string = str.end();
 
 	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
@@ -398,8 +348,6 @@ inline static bool	__addition_assignement_operator( void )
 		if (*std_string_rit != *ft_string_rit)
 			return false;
 	}
-
-	typedef std::vector<int>::iterator	it_vector_type;
 
 	std::vector<int>	v;
 	for (int i = 0; i < 7; i++)
@@ -423,9 +371,6 @@ inline static bool	__addition_assignement_operator( void )
 
 inline static bool	__substraction_assignement_operator( void )
 {
-	typedef std::string::iterator	it_string_type;
-
-	std::string	str("abcdef");
 	it_string_type	it_string = str.begin();
 
 	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
@@ -438,8 +383,6 @@ inline static bool	__substraction_assignement_operator( void )
 		if (*std_string_rit != *ft_string_rit)
 			return false;
 	}
-
-	typedef std::vector<int>::iterator	it_vector_type;
 
 	std::vector<int>	v;
 	for (int i = 0; i < 7; i++)
@@ -463,9 +406,6 @@ inline static bool	__substraction_assignement_operator( void )
 
 inline static bool	__subscript_operator( void )
 {
-	typedef std::string::iterator	it_string_type;
-
-	std::string	str("abcdef");
 	it_string_type	it_string = str.end();
 
 	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
@@ -476,8 +416,6 @@ inline static bool	__subscript_operator( void )
 		if (std_string_rit[i] != ft_string_rit[i])
 			return false;
 	}
-
-	typedef std::vector<int>::iterator	it_vector_type;
 
 	std::vector<int>	v;
 	for (int i = 0; i < 7; i++)
@@ -496,6 +434,8 @@ inline static bool	__subscript_operator( void )
 
 	return true;
 }
+
+/**************************NON-PUBLIC MEMBER OPERATORS**************************/
 
 void	test_reverse_iterator( void )
 {
