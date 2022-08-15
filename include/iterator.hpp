@@ -148,7 +148,7 @@ public:
 	/**
 	 * @brief Advances the reverse_iterator by one position (pre-increment)
 	 * 
-	 * @return *this
+	 * @return a reference on the instance
 	 */
 	reverse_iterator& operator++()
 	{
@@ -159,7 +159,7 @@ public:
 	/**
 	 * @brief Advances the reverse_iterator by one position (post-increment)
 	 * 
-	 * @return the value *this had before the call
+	 * @return the value the instance had before the call
 	 */
 	reverse_iterator operator++(int)
 	{
@@ -171,7 +171,7 @@ public:
 	/**
 	 * @brief Decreases the reverse_iterator by one position (pre-decrement)
 	 * 
-	 * @return *this
+	 * @return a reference on the instance
 	 */
 	reverse_iterator& operator--()
 	{
@@ -182,13 +182,37 @@ public:
 	/**
 	 * @brief Decreases the reverse_iterator by one position (post-decrement)
 	 * 
-	 * @return the value *this had before the call
+	 * @return the value the instance had before the call
 	 */
 	reverse_iterator operator--(int)
 	{
 		reverse_iterator	tmp(_current);
 		++_current;
 		return tmp;
+	}
+
+	/**
+	 * @brief Advances the reverse_iterator by n element positions
+	 * 
+	 * @param n Number of elements to offset
+	 * @return a reference on the instance
+	 */
+	reverse_iterator& operator+= (difference_type n)
+	{
+		_current -= n;
+		return *this;
+	}
+
+	/**
+	 * @brief Descreases the reverse_iterator by n element positions
+	 * 
+	 * @param n Number of elements to offset
+	 * @return a reference on the instance
+	 */
+	reverse_iterator& operator-= (difference_type n)
+	{
+		_current += n;
+		return *this;
 	}
 
 };
