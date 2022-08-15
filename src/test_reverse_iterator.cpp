@@ -131,13 +131,11 @@ inline static bool	__addition_operator( void )
 	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
 	ft::reverse_iterator<it_string_type>	ft_string_rit(it_string);
 
-	if (*(std_string_rit + 1) != *(ft_string_rit + 1) ||
-		*(std_string_rit + 2) != *(ft_string_rit + 2) ||
-		*(std_string_rit + 3) != *(ft_string_rit + 3) ||
-		*(std_string_rit + 4) != *(ft_string_rit + 4) ||
-		*(std_string_rit + 5) != *(ft_string_rit + 5) ||
-		*(std_string_rit + 6) != *(ft_string_rit + 6))
-		return false;
+	for (int i = 1; i <= 6; i++)
+	{
+		if (*(std_string_rit + i) != *(ft_string_rit + i))
+			return false;
+	}
 
 	typedef std::vector<int>::iterator	it_vector_type;
 
@@ -150,13 +148,11 @@ inline static bool	__addition_operator( void )
 	std::reverse_iterator<it_vector_type>	std_vector_rit(it_vector);
 	ft::reverse_iterator<it_vector_type>	ft_vector_rit(it_vector);
 
-	if (*(std_vector_rit + 1) != *(ft_vector_rit + 1) ||
-		*(std_vector_rit + 2) != *(ft_vector_rit + 2) ||
-		*(std_vector_rit + 3) != *(ft_vector_rit + 3) ||
-		*(std_vector_rit + 4) != *(ft_vector_rit + 4) ||
-		*(std_vector_rit + 5) != *(ft_vector_rit + 5) ||
-		*(std_vector_rit + 6) != *(ft_vector_rit + 6))
-		return false;
+	for (int i = 1; i <= 6; i++)
+	{
+		if (*(std_vector_rit + i) != *(ft_vector_rit + i))
+			return false;
+	}
 
 	return true;
 }
@@ -171,13 +167,11 @@ inline static bool	__substraction_operator( void )
 	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
 	ft::reverse_iterator<it_string_type>	ft_string_rit(it_string);
 
-	if (*(std_string_rit - 1) != *(ft_string_rit - 1) ||
-		*(std_string_rit - 2) != *(ft_string_rit - 2) ||
-		*(std_string_rit - 3) != *(ft_string_rit - 3) ||
-		*(std_string_rit - 4) != *(ft_string_rit - 4) ||
-		*(std_string_rit - 5) != *(ft_string_rit - 5) ||
-		*(std_string_rit - 6) != *(ft_string_rit - 6))
-		return false;
+	for (int i = 1; i <= 6; i++)
+	{
+		if (*(std_string_rit - i) != *(ft_string_rit - i))
+			return false;
+	}
 
 	typedef std::vector<int>::iterator	it_vector_type;
 
@@ -190,13 +184,11 @@ inline static bool	__substraction_operator( void )
 	std::reverse_iterator<it_vector_type>	std_vector_rit(it_vector);
 	ft::reverse_iterator<it_vector_type>	ft_vector_rit(it_vector);
 
-	if (*(std_vector_rit - 1) != *(ft_vector_rit - 1) ||
-		*(std_vector_rit - 2) != *(ft_vector_rit - 2) ||
-		*(std_vector_rit - 3) != *(ft_vector_rit - 3) ||
-		*(std_vector_rit - 4) != *(ft_vector_rit - 4) ||
-		*(std_vector_rit - 5) != *(ft_vector_rit - 5) ||
-		*(std_vector_rit - 6) != *(ft_vector_rit - 6))
-		return false;
+	for (int i = 1; i <= 6; i++)
+	{
+		if (*(std_vector_rit - i) != *(ft_vector_rit - i))
+			return false;
+	}
 
 	return true;
 }
