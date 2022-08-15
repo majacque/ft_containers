@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iterator>
+#include <vector>
 #include <string>
 #include <cstring>
 #include "iterator.hpp"
@@ -74,6 +75,50 @@ inline static bool	__base( void )
 	return true;
 }
 
+inline static bool	__derefence_operator( void )
+{
+	typedef std::string::iterator	it_string;
+
+	std::string	str("abcdef");
+	it_string	it_string_begin = str.begin();
+	it_string	it_string_middle = str.begin() + 2;
+	it_string	it_string_end = str.end();
+
+	std::reverse_iterator<it_string>	std_string_begin(it_string_begin);
+	std::reverse_iterator<it_string>	std_string_middle(it_string_middle);
+	std::reverse_iterator<it_string>	std_string_end(it_string_end);
+
+	ft::reverse_iterator<it_string>	ft_string_begin(it_string_begin);
+	ft::reverse_iterator<it_string>	ft_string_middle(it_string_middle);
+	ft::reverse_iterator<it_string>	ft_string_end(it_string_end);
+
+	if (*std_string_begin != *ft_string_begin ||
+		*std_string_middle != *ft_string_middle ||
+		*std_string_end	!= *ft_string_end)
+		return false;
+
+	typedef std::vector<int>::iterator	it_vector;
+
+	std::vector<int>	v;
+	for (int i = 0; i < 10; i++)
+		v.push_back(i);
+
+	it_vector	it_vector_middle = v.begin() + 4;
+	it_vector	it_vector_end = v.end();
+
+	std::reverse_iterator<it_vector>	std_vector_middle(it_vector_middle);
+	std::reverse_iterator<it_vector>	std_vector_end(it_vector_end);
+
+	ft::reverse_iterator<it_vector>	ft_vector_middle(it_vector_middle);
+	ft::reverse_iterator<it_vector>	ft_vector_end(it_vector_end);
+
+	if (*std_vector_middle != *ft_vector_middle ||
+		*std_vector_end	!= *ft_vector_end)
+		return false;
+
+	return true;
+}
+
 void	test_reverse_iterator( void )
 {
 	t_sub_test	arr[] = {
@@ -81,6 +126,7 @@ void	test_reverse_iterator( void )
 		{__initialization_constructor, "init constructor"},
 		{__copy_constructor, "copy constructor"},
 		{__base, "base"},
+		{__derefence_operator, "operator*"},
 		{NULL, ""}
 	};
 
