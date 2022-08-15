@@ -6,11 +6,11 @@
 #include "iterator.hpp"
 #include "tests_define.hpp"
 
-typedef std::string::iterator	it_string_type;
+typedef std::string::iterator		it_string_type;
 typedef std::vector<int>::iterator	it_vector_type;
 
-static std::string str("abcdef");
-static int arr[] = {0,1,2,3,4,5,6,7,8,9,10};
+static std::string 		str("abcdef");
+static int 				arr[] = {0,1,2,3,4,5,6,7,8,9,10};
 static std::vector<int> v(arr, arr + sizeof(arr) / sizeof(int));
 
 inline static bool	__default_constructor( void )
@@ -437,6 +437,48 @@ inline static bool	__subscript_operator( void )
 
 /**************************NON-PUBLIC MEMBER OPERATORS**************************/
 
+inline static bool	__relational_operators( void )
+{
+	it_string_type	it_string = str.end();
+
+	std::reverse_iterator<it_string_type>	std_string_rit0(it_string);
+	std::reverse_iterator<it_string_type>	std_string_rit1(it_string);
+	ft::reverse_iterator<it_string_type>	ft_string_rit0(it_string);
+	ft::reverse_iterator<it_string_type>	ft_string_rit1(it_string);
+
+	if (std::operator==(std_string_rit0, std_string_rit1) != ft::operator==(ft_string_rit0, ft_string_rit1) ||
+		std::operator!=(std_string_rit0, std_string_rit1) != ft::operator!=(ft_string_rit0, ft_string_rit1) ||
+		std::operator<(std_string_rit0, std_string_rit1) != ft::operator<(ft_string_rit0, ft_string_rit1) ||
+		std::operator<=(std_string_rit0, std_string_rit1) != ft::operator<=(ft_string_rit0, ft_string_rit1) ||
+		std::operator>(std_string_rit0, std_string_rit1) != ft::operator>(ft_string_rit0, ft_string_rit1) ||
+		std::operator>=(std_string_rit0, std_string_rit1) != ft::operator>=(ft_string_rit0, ft_string_rit1))
+		return false;
+	
+	std_string_rit0++;
+	ft_string_rit0++;
+
+	if (std::operator==(std_string_rit0, std_string_rit1) != ft::operator==(ft_string_rit0, ft_string_rit1) ||
+		std::operator!=(std_string_rit0, std_string_rit1) != ft::operator!=(ft_string_rit0, ft_string_rit1) ||
+		std::operator<(std_string_rit0, std_string_rit1) != ft::operator<(ft_string_rit0, ft_string_rit1) ||
+		std::operator<=(std_string_rit0, std_string_rit1) != ft::operator<=(ft_string_rit0, ft_string_rit1) ||
+		std::operator>(std_string_rit0, std_string_rit1) != ft::operator>(ft_string_rit0, ft_string_rit1) ||
+		std::operator>=(std_string_rit0, std_string_rit1) != ft::operator>=(ft_string_rit0, ft_string_rit1))
+		return false;
+
+	std_string_rit1 += 3;
+	ft_string_rit1 += 3;
+
+	if (std::operator==(std_string_rit0, std_string_rit1) != ft::operator==(ft_string_rit0, ft_string_rit1) ||
+		std::operator!=(std_string_rit0, std_string_rit1) != ft::operator!=(ft_string_rit0, ft_string_rit1) ||
+		std::operator<(std_string_rit0, std_string_rit1) != ft::operator<(ft_string_rit0, ft_string_rit1) ||
+		std::operator<=(std_string_rit0, std_string_rit1) != ft::operator<=(ft_string_rit0, ft_string_rit1) ||
+		std::operator>(std_string_rit0, std_string_rit1) != ft::operator>(ft_string_rit0, ft_string_rit1) ||
+		std::operator>=(std_string_rit0, std_string_rit1) != ft::operator>=(ft_string_rit0, ft_string_rit1))
+		return false;
+
+	return true;
+}
+
 void	test_reverse_iterator( void )
 {
 	t_sub_test	arr[] = {
@@ -455,6 +497,7 @@ void	test_reverse_iterator( void )
 		{__addition_assignement_operator, "operator+="},
 		{__substraction_assignement_operator, "operator-="},
 		{__subscript_operator, "operator[]"},
+		{__relational_operators, "operators ==, !=, <, <=, >, >="},
 		{NULL, ""}
 	};
 

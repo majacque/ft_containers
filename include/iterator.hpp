@@ -106,7 +106,7 @@ public:
 	/**
 	 * @brief Returns a copy of the base iterator
 	 */
-	iterator_type	base( void )
+	iterator_type	base( void ) const
 	{
 		return _current;
 	}
@@ -238,7 +238,41 @@ public:
 
 };
 
+template <class Iterator>
+bool operator== (reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const& rhs)
+{
+	return lhs.base() == rhs.base();
+}
 
+template <class Iterator>
+bool operator!= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+{
+	return !(lhs == rhs);
+}
+
+template <class Iterator>
+bool operator< (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+{
+	return lhs.base() > rhs.base();
+}
+
+template <class Iterator>
+bool operator<= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+{
+	return lhs.base() >= rhs.base();
+}
+
+template <class Iterator>
+bool operator> (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+{
+	return !(lhs <= rhs);
+}
+
+template <class Iterator>
+bool operator>= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+{
+	return !(lhs < rhs);
+}
 
 }
 
