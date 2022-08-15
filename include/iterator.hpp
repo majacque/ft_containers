@@ -56,16 +56,30 @@ public:
 	typedef typename iterator_traits<Iterator>::iterator_category	iterator_category;
 
 	/**
-	 * (default constructor)
-	 * Constructs a reverse iterator that points to no object.
-	 * The internal base iterator is value-initialized.
+	 * @brief Construct a new reverse iterator that points to no object
+	 * 
 	 */
 	reverse_iterator( void ): _current()
 	{
 		return;
 	}
 	
+	/**
+	 * @brief Construct a new reverse iterator from some original iterator it
+	 * 
+	 * @param it an iterator
+	 */
 	explicit reverse_iterator( iterator_type it ): _current(it)
+	{
+		return;
+	}
+
+	/**
+	 * @brief Construct a new reverse iterator from some other reverse iterator
+	 * 
+	 * @param rev_it a reverse iterator
+	 */
+	reverse_iterator( reverse_iterator const &rev_it): _current(rev_it._current)
 	{
 		return;
 	}
