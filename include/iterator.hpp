@@ -225,6 +225,17 @@ public:
 		return *this;
 	}
 
+	/**
+	 * @brief Accesses the element located n positions away from the element currently pointed to by the iterator.
+	 * If such an element does not exist, it causes undefined behavior
+	 * @param n Number of elements to offset
+	 * @return A reference to the element n positions away from the element currently pointed by the iterator
+	 */
+	reference operator[] (difference_type n) const
+	{
+		return _current[-(n-1)];
+	}
+
 };
 
 }

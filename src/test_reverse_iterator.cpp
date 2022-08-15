@@ -461,8 +461,39 @@ inline static bool	__substraction_assignement_operator( void )
 	return true;
 }
 
-inline static bool	__structure_dereference_operator( void )
+inline static bool	__subscript_operator( void )
 {
+	typedef std::string::iterator	it_string_type;
+
+	std::string	str("abcdef");
+	it_string_type	it_string = str.end();
+
+	std::reverse_iterator<it_string_type>	std_string_rit(it_string);
+	ft::reverse_iterator<it_string_type>	ft_string_rit(it_string);
+
+	for (int i = 10; i <= 1; i--)
+	{
+		if (std_string_rit[i] != ft_string_rit[i])
+			return false;
+	}
+
+	typedef std::vector<int>::iterator	it_vector_type;
+
+	std::vector<int>	v;
+	for (int i = 0; i < 7; i++)
+		v.push_back(i);
+
+	it_vector_type	it_vector = v.end();
+
+	std::reverse_iterator<it_vector_type>	std_vector_rit(it_vector);
+	ft::reverse_iterator<it_vector_type>	ft_vector_rit(it_vector);
+
+	for (int i = 10; i <= 1; i--)
+	{
+		if (std_vector_rit[i] != ft_vector_rit[i])
+			return false;
+	}
+
 	return true;
 }
 
@@ -483,6 +514,7 @@ void	test_reverse_iterator( void )
 		{__post_decrementation_operator, "operator-- (post)"},
 		{__addition_assignement_operator, "operator+="},
 		{__substraction_assignement_operator, "operator-="},
+		{__subscript_operator, "operator[]"},
 		{NULL, ""}
 	};
 
