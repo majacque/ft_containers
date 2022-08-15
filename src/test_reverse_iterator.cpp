@@ -121,6 +121,50 @@ inline static bool	__derefence_operator( void )
 	return true;
 }
 
+inline static bool	__structure_derefence_operator( void )
+{
+	typedef std::string::iterator	it_string_type;
+
+	std::string	str("abcdef");
+	it_string_type	it_string_begin = str.begin();
+	it_string_type	it_string_middle = str.begin() + 2;
+	it_string_type	it_string_end = str.end();
+
+	std::reverse_iterator<it_string_type>	std_string_begin(it_string_begin);
+	std::reverse_iterator<it_string_type>	std_string_middle(it_string_middle);
+	std::reverse_iterator<it_string_type>	std_string_end(it_string_end);
+
+	ft::reverse_iterator<it_string_type>	ft_string_begin(it_string_begin);
+	ft::reverse_iterator<it_string_type>	ft_string_middle(it_string_middle);
+	ft::reverse_iterator<it_string_type>	ft_string_end(it_string_end);
+
+	if (std_string_begin.operator->() != ft_string_begin.operator->() ||
+		std_string_middle.operator->() != ft_string_middle.operator->() ||
+		std_string_end.operator->()	!= ft_string_end.operator->())
+		return false;
+
+	typedef std::vector<int>::iterator	it_vector_type;
+
+	std::vector<int>	v;
+	for (int i = 0; i < 10; i++)
+		v.push_back(i);
+
+	it_vector_type	it_vector_middle = v.begin() + 4;
+	it_vector_type	it_vector_end = v.end();
+
+	std::reverse_iterator<it_vector_type>	std_vector_middle(it_vector_middle);
+	std::reverse_iterator<it_vector_type>	std_vector_end(it_vector_end);
+
+	ft::reverse_iterator<it_vector_type>	ft_vector_middle(it_vector_middle);
+	ft::reverse_iterator<it_vector_type>	ft_vector_end(it_vector_end);
+
+	if (std_vector_middle.operator->() != ft_vector_middle.operator->() ||
+		std_vector_end.operator->()	!= ft_vector_end.operator->())
+		return false;
+
+	return true;
+}
+
 inline static bool	__addition_operator( void )
 {
 	typedef std::string::iterator	it_string_type;
@@ -417,6 +461,11 @@ inline static bool	__substraction_assignement_operator( void )
 	return true;
 }
 
+inline static bool	__structure_dereference_operator( void )
+{
+	return true;
+}
+
 void	test_reverse_iterator( void )
 {
 	t_sub_test	arr[] = {
@@ -425,6 +474,7 @@ void	test_reverse_iterator( void )
 		{__copy_constructor, "copy constructor"},
 		{__base, "base"},
 		{__derefence_operator, "operator*"},
+		{__structure_derefence_operator, "operatro->"},
 		{__addition_operator, "operator+"},
 		{__substraction_operator, "operator-"},
 		{__pre_incrementation_operator, "operator++ (pre)"},

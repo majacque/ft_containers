@@ -126,6 +126,16 @@ public:
 	}
 
 	/**
+	 * @brief Returns a pointer to the element pointed to by the iterator (in order to access one of its members)
+	 */
+	pointer operator->() const
+	{
+		iterator_type	it(_current);
+		--it;
+		return it.operator->();
+	}
+
+	/**
 	 * @brief Returns a reverse iterator pointing to the element located n positions away from the element the iterator currently points to
 	 * 
 	 * @param n Number of elements to offset
