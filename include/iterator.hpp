@@ -125,9 +125,24 @@ public:
 		return *it;
 	}
 
-	reverse_iterator operator+ (difference_type n) const
+	/**
+	 * @brief Returns a reverse iterator pointing to the element located n positions away from the element the iterator currently points to
+	 * 
+	 * @param n Number of elements to offset
+	 */
+	reverse_iterator operator+(difference_type n) const
 	{
 		return reverse_iterator(_current - n);
+	}
+
+	/**
+	 * @brief Returns a reverse iterator pointing to the element located n positions before the element the iterator currently points to
+	 * 
+	 * @param n Number of elements to offset
+	 */
+	reverse_iterator operator-(difference_type n) const
+	{
+		return reverse_iterator(_current + n);
 	}
 
 };
