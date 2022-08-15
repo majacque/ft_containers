@@ -115,11 +115,19 @@ public:
 	/*                            MEMBER OPERATORS                            */
 	/**************************************************************************/
 
+	/**
+	 * @brief Returns a reference to the element pointed to by the iterator
+	 */
 	reference operator*( void ) const
 	{
 		iterator_type	it(_current);
 		--it;
 		return *it;
+	}
+
+	reverse_iterator operator+ (difference_type n) const
+	{
+		return reverse_iterator(_current - n);
 	}
 
 };
