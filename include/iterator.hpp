@@ -161,10 +161,33 @@ public:
 	 * 
 	 * @return the value *this had before the call
 	 */
-	reverse_iterator operator++(int) // post-increment
+	reverse_iterator operator++(int)
 	{
 		reverse_iterator	tmp(_current);
 		--_current;
+		return tmp;
+	}
+
+	/**
+	 * @brief Decreases the reverse_iterator by one position (pre-decrement)
+	 * 
+	 * @return *this
+	 */
+	reverse_iterator& operator--()
+	{
+		++_current;
+		return *this;
+	}
+
+	/**
+	 * @brief Decreases the reverse_iterator by one position (post-decrement)
+	 * 
+	 * @return the value *this had before the call
+	 */
+	reverse_iterator operator--(int)
+	{
+		reverse_iterator	tmp(_current);
+		++_current;
 		return tmp;
 	}
 
