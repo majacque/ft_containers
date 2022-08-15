@@ -479,6 +479,34 @@ inline static bool	__relational_operators( void )
 	return true;
 }
 
+inline static bool	__nm_addition_operator( void )
+{
+	it_string_type	it(str.end());
+	ft::reverse_iterator<it_string_type>	rit0(it);
+
+	for (int i = 1; i < 6; i++)
+	{
+		ft::reverse_iterator<it_string_type>	rit1 = i + rit0;
+		if (rit1 != rit0 + i)
+			return false;
+	}
+	return true;
+}
+
+inline static bool	__nm_substraction_operator( void )
+{
+	it_string_type	it(str.end());
+	ft::reverse_iterator<it_string_type>	rit0(it);
+
+	for (int i = 1; i < 6; i++)
+	{
+		ft::reverse_iterator<it_string_type>	rit1 = i + rit0;
+		if (rit1 - rit0 != i)
+			return false;
+	}
+	return true;
+}
+
 void	test_reverse_iterator( void )
 {
 	t_sub_test	arr[] = {
@@ -498,6 +526,8 @@ void	test_reverse_iterator( void )
 		{__substraction_assignement_operator, "operator-="},
 		{__subscript_operator, "operator[]"},
 		{__relational_operators, "operators ==, !=, <, <=, >, >="},
+		{__nm_addition_operator, "operator+ (non-member)"},
+		{__nm_substraction_operator, "operator- (non-member)"},
 		{NULL, ""}
 	};
 

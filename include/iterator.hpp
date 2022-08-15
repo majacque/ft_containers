@@ -39,8 +39,6 @@ public:
 	typedef std::random_access_iterator_tag	iterator_category;
 };
 
-// TODO reverse_iterator
-
 template <class Iterator>
 class reverse_iterator
 {
@@ -70,7 +68,7 @@ public:
 	/**
 	 * @brief Construct a new reverse iterator from some original iterator it
 	 * 
-	 * @param it an iterator
+	 * @param it An iterator
 	 */
 	explicit reverse_iterator( iterator_type it ): _current(it)
 	{
@@ -80,7 +78,7 @@ public:
 	/**
 	 * @brief Construct a new reverse iterator from some other reverse iterator
 	 * 
-	 * @param rev_it a reverse iterator
+	 * @param rev_it A reverse iterator
 	 */
 	reverse_iterator( reverse_iterator const &rev_it): _current(rev_it._current)
 	{
@@ -158,7 +156,7 @@ public:
 	/**
 	 * @brief Advances the reverse_iterator by one position (pre-increment)
 	 * 
-	 * @return a reference on the instance
+	 * @return A reference on the instance
 	 */
 	reverse_iterator& operator++()
 	{
@@ -169,7 +167,7 @@ public:
 	/**
 	 * @brief Advances the reverse_iterator by one position (post-increment)
 	 * 
-	 * @return the value the instance had before the call
+	 * @return The value the instance had before the call
 	 */
 	reverse_iterator operator++(int)
 	{
@@ -181,7 +179,7 @@ public:
 	/**
 	 * @brief Decreases the reverse_iterator by one position (pre-decrement)
 	 * 
-	 * @return a reference on the instance
+	 * @return A reference on the instance
 	 */
 	reverse_iterator& operator--()
 	{
@@ -192,7 +190,7 @@ public:
 	/**
 	 * @brief Decreases the reverse_iterator by one position (post-decrement)
 	 * 
-	 * @return the value the instance had before the call
+	 * @return The value the instance had before the call
 	 */
 	reverse_iterator operator--(int)
 	{
@@ -205,7 +203,7 @@ public:
 	 * @brief Advances the reverse_iterator by n element positions
 	 * 
 	 * @param n Number of elements to offset
-	 * @return a reference on the instance
+	 * @return A reference on the instance
 	 */
 	reverse_iterator& operator+= (difference_type n)
 	{
@@ -217,7 +215,7 @@ public:
 	 * @brief Descreases the reverse_iterator by n element positions
 	 * 
 	 * @param n Number of elements to offset
-	 * @return a reference on the instance
+	 * @return A reference on the instance
 	 */
 	reverse_iterator& operator-= (difference_type n)
 	{
@@ -238,40 +236,75 @@ public:
 
 };
 
+/**
+ * @brief Performs the appropriate comparison operation between the reverse_iterator objects lhs and rhs
+ * 
+ * @param lhs A reverse iterator
+ * @param rhs A reverse iterator
+ * @return true if the comparison is true
+ * @return false if the comparison is false
+ */
+
 template <class Iterator>
-bool operator== (reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const& rhs)
+bool operator== ( reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const &rhs )
 {
 	return lhs.base() == rhs.base();
 }
 
 template <class Iterator>
-bool operator!= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+bool operator!= ( reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const &rhs )
 {
 	return !(lhs == rhs);
 }
 
 template <class Iterator>
-bool operator< (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+bool operator< ( reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const &rhs )
 {
 	return lhs.base() > rhs.base();
 }
 
 template <class Iterator>
-bool operator<= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+bool operator<= ( reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const &rhs )
 {
 	return lhs.base() >= rhs.base();
 }
 
 template <class Iterator>
-bool operator> (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+bool operator> ( reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const &rhs )
 {
 	return !(lhs <= rhs);
 }
 
 template <class Iterator>
-bool operator>= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+bool operator>= ( reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const &rhs )
 {
 	return !(lhs < rhs);
+}
+
+/**
+ * @brief Returns a reverse iterator pointing to the element located n positions away from the element pointed to by rev_it
+ * 
+ * @param n Number of elements to offset
+ * @param rev_it A reverse iterator
+ */
+template <class Iterator>
+reverse_iterator<Iterator> operator+ ( typename reverse_iterator<Iterator>::difference_type n,
+										reverse_iterator<Iterator> const &rev_it )
+{
+	return rev_it + n;
+}
+
+/**
+ * @brief Returns the distance between lhs and rhs
+ * 
+ * @param lhs A reverse iterator
+ * @param rhs A reverse iterator
+ */
+template <class Iterator>
+typename reverse_iterator<Iterator>::difference_type operator- ( reverse_iterator<Iterator> const &lhs,
+																 reverse_iterator<Iterator> const &rhs)
+{
+	return rhs.base() - lhs.base();
 }
 
 }
