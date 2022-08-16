@@ -1,6 +1,8 @@
 #ifndef TEST_DEFINE_HPP
 # define TEST_DEFINE_HPP
 
+#include <string>
+
 #ifndef RED
 # define RED "\033[1;31m"
 #endif

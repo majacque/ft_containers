@@ -10,8 +10,7 @@ int	main(int argc, char **argv) {
 
 	if (argc > 2
 	|| (argc == 2 && !(test_to_launch = strtol(argv[1], NULL, 10)))
-	|| test_to_launch > NB_TEST
-	|| test_to_launch < 0)
+	|| test_to_launch > NB_TEST)
 	{
 		std::cerr << "Usage: ./container.out [number of the test to launch]\n";
 		return 1;
@@ -26,6 +25,7 @@ int	main(int argc, char **argv) {
 	t_test	arr[] = {
 		{test_iterator_traits, "iterator traits"},
 		{test_reverse_iterator, "reverse iterator"},
+		{test_type_traits, "type_traits"},
 		{NULL, ""}
 	};
 
