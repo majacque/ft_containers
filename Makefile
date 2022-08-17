@@ -32,6 +32,7 @@ SRC				=	\
 					test_iterator_traits.cpp	\
 					test_reverse_iterator.cpp	\
 					test_type_traits.cpp	\
+					test_algorithm.cpp	\
 
 ######################################
 #            OBJECT FILES            #
