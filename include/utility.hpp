@@ -33,6 +33,20 @@ struct pair
 	{
 		return;
 	}
+
+	/**
+	 * @brief The object is initialized with the contents of the pr pair object.
+	 * The corresponding member of pr is passed to the constructor of each of its members.
+	 * 
+	 * @param pr Another pair object.
+	 * This may be an object of the same type as the object being constructed
+	 * or of a pair type whose element's types are implicitly convertible to those in the pair being constructed.
+	 */
+	template<class U, class V>
+	pair (pair<U,V> const &pr): first(pr.first), second(pr.second)
+	{
+		return;
+	}
 };
 
 // TODO make_pair

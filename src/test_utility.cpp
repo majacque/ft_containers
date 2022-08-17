@@ -54,13 +54,40 @@ inline static bool	__pair_initialization_constructor( void )
 	return true;
 }
 
+inline static bool	__pair_copy_constructor( void )
+{
+	int		i = 42;
+	char	c = '*';
+	ft::pair<int, char>	p0(i, c);
+	ft::pair<int, char>	p1(p0);
+
+	if(typeid(p0.first) != typeid(p1.first) || typeid(p0.second) != typeid(p1.second))
+		return false;
+	else if (p0.first != p1.first || p0.second != p1.second)
+		return false;
+
+	std::string									s("Artus");
+	std::vector<int>							v(6, 7);
+	ft::pair< std::string, std::vector<int> >	p2(s, v);
+	ft::pair< std::string, std::vector<int> >	p3(p2);
+
+	if(typeid(p2.first) != typeid(p3.first) || typeid(p2.second) != typeid(p3.second))
+		return false;
+	else if (p2.first != p3.first || p2.second != p3.second)
+		return false;
+
+	return true;
+}
+
 void	test_utility( void )
 {
 	t_sub_test	arr[] = {
 		{__pair_default_constructor, "pair default constructor"},
 		{__pair_initialization_constructor, "pair init constructor"},
+		{__pair_copy_constructor, "pair copy constructor"},
 		{NULL, ""}
 	};
 
 	run_sub_tests(arr);
 }
+
