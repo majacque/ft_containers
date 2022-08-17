@@ -1,13 +1,8 @@
 #ifndef UTILITY_HPP
 # define UTILITY_HPP
 
-// DBG
-#include <iostream>
-
 namespace ft
 {
-
-// TODO pair
 
 template <class T1, class T2> 
 struct pair
@@ -141,7 +136,23 @@ bool operator>=( pair<T1,T2> const &lhs, pair<T1,T2> const &rhs )
 	return !(lhs < rhs);
 }
 
-// TODO make_pair
+/**
+ * @brief Constructs a pair object with its first element set to x and its second element set to y
+ * 
+ * @par The template types can be implicitly deduced from the arguments passed to make_pair.
+ * pair objects can be constructed from other pair objects containing different types,
+ * if the respective types are implicitly convertible.
+ * 
+ * @param x Values for the member first of the pair object being constructed
+ * @param y Values for the member second of the pair object being constructed
+ * @return A pair object whose elements first and second are set to x and y respectivelly.
+ * The template parameters can be implicitly deduced.
+ */
+template <class T1,class T2>
+pair<T1,T2> make_pair( T1 x, T2 y )
+{
+	return pair<T1,T2>(x,y);
+}
 
 }
 

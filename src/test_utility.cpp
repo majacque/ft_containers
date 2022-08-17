@@ -1,12 +1,9 @@
 #include "tests_define.hpp"
 #include "utility.hpp"
+#include <utility>
 #include <typeinfo>
 #include <string>
 #include <vector>
-
-// DBG
-#include <utility>
-#include <iostream>
 
 static int				nb = 42;
 static char				c = '*';
@@ -145,6 +142,25 @@ inline static bool	__pair_relational_operators( void )
 	return true;
 }
 
+inline static bool	__make_pair( void )
+{
+	// template explicitly declared
+	ft::pair<int,char>	p0(nb,c);
+	ft::pair<int,char>	p1 = ft::make_pair<int,char>(nb,c);
+
+	if (p0 != p1)
+		return false;
+
+	// template implicitly deduced
+	ft::pair<std::string, std::vector<int> >	p2(str,vec);
+	ft::pair<std::string, std::vector<int> >	p3 = ft::make_pair(str,vec);
+
+	if (p2 != p3)
+		return false;
+
+	return true;
+}
+
 void	test_utility( void )
 {
 	t_sub_test	arr[] = {
@@ -153,6 +169,7 @@ void	test_utility( void )
 		{__pair_copy_constructor, "pair copy constructor"},
 		{__pair_assignment_operator, "pair operator="},
 		{__pair_relational_operators, "pair operators ==, !=, <, <=, >, >="},
+		{__make_pair, "make_pair"},
 		{NULL, ""}
 	};
 
