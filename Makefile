@@ -29,10 +29,11 @@ vpath %.cpp $(foreach dir, $(SRC_DIR), $(dir):)
 SRC				=	\
 					main.cpp	\
 					run_sub_tests.cpp	\
+					test_algorithm.cpp	\
 					test_iterator_traits.cpp	\
 					test_reverse_iterator.cpp	\
 					test_type_traits.cpp	\
-					test_algorithm.cpp	\
+					test_utility.cpp	\
 
 ######################################
 #            OBJECT FILES            #

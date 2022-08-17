@@ -27,6 +27,7 @@ int	main(int argc, char **argv) {
 		{test_reverse_iterator, "reverse iterator"},
 		{test_type_traits, "type_traits"},
 		{test_algorithm, "algorithm"},
+		{test_utility, "utility"},
 		{NULL, ""}
 	};
 

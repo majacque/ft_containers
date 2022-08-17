@@ -4,12 +4,13 @@
 #include "tests_define.hpp"
 
 #ifndef NB_TEST
-# define NB_TEST 4
+# define NB_TEST 5
 #endif
 
 void	test_iterator_traits( void );
 void	test_reverse_iterator( void );
 void	test_type_traits( void );
 void	test_algorithm( void );
+void	test_utility( void );
 
 #endif
