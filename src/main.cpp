@@ -28,6 +28,7 @@ int	main(int argc, char **argv) {
 		{test_type_traits, "type_traits"},
 		{test_algorithm, "algorithm"},
 		{test_utility, "utility"},
+		{test_vector, "vector"},
 		{NULL, ""}
 	};
 
