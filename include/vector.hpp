@@ -30,10 +30,34 @@ private:
 	pointer	_end_of_storage;
 
 public:
-	explicit vector (allocator_type const &alloc = allocator_type()): _head(pointer()), _tail(_head), _end_of_storage(_head)
+
+	/**
+	 * @brief Constructs an empty vector, with no elements.
+	 * 
+	 * @param alloc Allocator object.
+	 */
+	explicit vector (allocator_type const &alloc __attribute__((unused)) = allocator_type()):
+										_head(pointer()), _tail(_head), _end_of_storage(_head)
 	{
 		return;
 	}
+
+	/**
+	 * @brief Constructs a vector with n elements. Each element is a copy of val.
+	 * 
+	 * @param n Initial container size (i.e., the number of elements in the container at construction).
+	 * @param val Value to fill the container with. Each of the n elements in the container will be initialized to a copy of this value.
+	 * @param alloc Allocator object.
+	 */
+	explicit vector (size_type n, value_type const &val = value_type(), allocator_type const &alloc = allocator_type()):
+																					_head(), _tail(), _end_of_storage()
+	{
+		// TODO insert() (fill) or __insert_fill()
+		return;
+	}
+
+	// TODO size()
+	// TODO operator[]
 
 };
 

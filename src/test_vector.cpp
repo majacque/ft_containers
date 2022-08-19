@@ -2,6 +2,7 @@
 #include "vector.hpp"
 #include <vector>
 #include <cstring>
+#include <string>
 
 inline static bool	__default_constructor( void )
 {
@@ -18,10 +19,34 @@ inline static bool	__default_constructor( void )
 	return true;
 }
 
+inline static bool	__fill_constructor( void )
+{
+	std::vector<int>			std_v_int(6,7);
+	ft::vector<int>				ft_v_int(6,7);
+	std::vector<std::string>	std_v_string(3, "Factorio");
+	ft::vector<std::string>		ft_v_string(3, "Factorio");
+
+	for (size_t i = 0; i < std_v_int.size() && i < ft_v_int.size(); i++)
+	{
+		if (std_v_int[i] != ft_v_int[i])
+			return false;
+	}
+
+	for (size_t i = 0; i < std_v_string.size() && i < ft_v_string.size(); i++)
+	{
+		if (std_v_string[i] != ft_v_string[i])
+			return false;
+	}
+
+	// REMIND test with size(), capacity(), empty()
+	return true;
+}
+
 void	test_vector( void )
 {
 	t_sub_test	arr[] = {
 		{__default_constructor, "default constructor"},
+		{__fill_constructor, "fill constructor"},
 		{NULL, ""}
 	};
 
