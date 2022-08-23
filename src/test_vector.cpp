@@ -21,17 +21,16 @@ inline static bool	__default_constructor( void )
 
 inline static bool	__fill_constructor( void )
 {
-	std::vector<int>			std_v_int(6,7);
-	ft::vector<int>				ft_v_int(6,7);
-	std::vector<std::string>	std_v_string(3, "Factorio");
-	ft::vector<std::string>		ft_v_string(3, "Factorio");
-
+	std::vector<int>	std_v_int(6,7);
+	ft::vector<int>		ft_v_int(6,7);
 	for (size_t i = 0; i < std_v_int.size() && i < ft_v_int.size(); i++)
 	{
 		if (std_v_int[i] != ft_v_int[i])
 			return false;
 	}
 
+	std::vector<std::string>	std_v_string(3, "Factorio");
+	ft::vector<std::string>		ft_v_string(3, "Factorio");
 	for (size_t i = 0; i < std_v_string.size() && i < ft_v_string.size(); i++)
 	{
 		if (std_v_string[i] != ft_v_string[i])
