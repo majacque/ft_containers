@@ -109,6 +109,35 @@ struct is_integral<unsigned long int> : public true_type {};
 // template <>
 // struct is_integral<unsigned long long int> : public true_type {};
 
+template <typename T>
+class is_trivially_copyable : public false_type {};
+template <>
+class is_trivially_copyable<bool> : public true_type {};
+template <>
+class is_trivially_copyable<wchar_t> : public true_type {};
+template <>
+class is_trivially_copyable<signed char> : public true_type {};
+template <>
+class is_trivially_copyable<signed short> : public true_type {};
+template <>
+class is_trivially_copyable<signed int> : public true_type {};
+template <>
+class is_trivially_copyable<signed long> : public true_type {};
+template <>
+class is_trivially_copyable<unsigned char> : public true_type {};
+template <>
+class is_trivially_copyable<unsigned short> : public true_type {};
+template <>
+class is_trivially_copyable<unsigned int> : public true_type {};
+template <>
+class is_trivially_copyable<unsigned long> : public true_type {};
+template <>
+class is_trivially_copyable<float> : public true_type {};
+template <>
+class is_trivially_copyable<double> : public true_type {};
+template <>
+class is_trivially_copyable<long double> : public true_type {};
+
 }
 
 #endif
