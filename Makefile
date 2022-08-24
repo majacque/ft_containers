@@ -48,10 +48,10 @@ DEP				= ${OBJ:.o=.d}
 #                FLAGS                #
 #######################################
 CXXFLAGS			= -Wall -Wextra -Werror -Wno-unused
-CXXFLAGS			+= -I${INC_DIR} -I${PRV_DIR}
 CXXFLAGS			+= -std=c++98
 CXXFLAGS			+= -MMD -MP
-# CXXFLAGS			+= -Weffc++ -pedantic
+CXXFLAGS			+= -Weffc++ -pedantic
+CXXFLAGS			+= -I${INC_DIR} -I${PRV_DIR}
 
 LDFLAGS			=
 

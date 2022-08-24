@@ -64,12 +64,12 @@ typedef integral_constant<bool, false>	false_type;
  * short int
  * int
  * long int
- * long long int
+ * long long int // C++11
  * unsigned char
  * unsigned short int
  * unsigned int
  * unsigned long int
- * unsigned long long int
+ * unsigned long long int // C++11
  * 
  * All fundamental integral types, along with all their aliases (like those in cstdint),
  * are considered integral types by this class, including their const and volatile qualified variants.
@@ -96,8 +96,8 @@ template <>
 struct is_integral<int> : public true_type {};
 template <>
 struct is_integral<long int> : public true_type {};
-template <>
-struct is_integral<long long int> : public true_type {};
+// template <>
+// struct is_integral<long long int> : public true_type {};
 template <>
 struct is_integral<unsigned char> : public true_type {};
 template <>
@@ -106,8 +106,8 @@ template <>
 struct is_integral<unsigned int> : public true_type {};
 template <>
 struct is_integral<unsigned long int> : public true_type {};
-template <>
-struct is_integral<unsigned long long int> : public true_type {};
+// template <>
+// struct is_integral<unsigned long long int> : public true_type {};
 
 }
 
