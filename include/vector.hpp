@@ -335,7 +335,7 @@ private:
 		if (!n)
 			return;
 
-		size_type const	offset = this->end() - position;
+		size_type const	offset = position - this->begin();
 		allocator_type	alloc;
 
 		if (this->size() + n <= this->capacity())

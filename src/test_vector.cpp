@@ -144,16 +144,81 @@ inline static bool	__size( void )
 
 inline static bool	__capacity( void )
 {
+	t_vector_int	v_int_default;
+	t_vector_str	v_str_default;
+
+	if (v_int_default.capacity() ||
+		v_str_default.capacity())
+		return false;
+
+	size_t			length = 0;
+	t_vector_int	v0_int(length, 7);
+	t_vector_str	v0_str(length, "421");
+	if (v0_int.capacity() != length ||
+		v0_str.capacity() != length)
+		return false;
+
+	length = 6;
+	t_vector_int	v6_int(length, 7);
+	t_vector_str	v6_str(length, "421");
+	if (v6_int.capacity() != length ||
+		v6_str.capacity() != length)
+		return false;
+
+	// REMIND test after reserve(), insert(), push_back()...
 	return true;
 }
 
 inline static bool	__access_element_operator( void )
 {
+	t_vector_int	v_int(6,7);
+
+	try
+	{
+		v_int[0] = 0;
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << "Error: operator[]: " << e.what() << std::endl;
+		return false;
+	}
+
+	// REMIND test with different data
 	return true;
 }
 
 inline static bool	__insert_fill( void )
 {
+	t_vector_int	v_int_default;
+	size_t			length = 6;
+	int				val = 7;
+
+	v_int_default.insert(v_int_default.begin(), length, val);
+
+	if (v_int_default.size() != length ||
+		v_int_default.capacity() != length)
+		return false;
+
+	for (size_t i = 0; i < length; i++)
+	{
+		if (v_int_default[i] != val)
+			return false;
+	}
+
+	val = 1;
+	v_int_default.insert(v_int_default.begin() + 1, length, val);
+
+	if (v_int_default.size() != length * 2 ||
+		v_int_default.capacity() != length * 2)
+		return false;
+
+	for (size_t i = 1; i < length + 1; i++)
+	{
+		if (v_int_default[i] != val)
+			return false;
+	}
+
+	// REMIND test for size() != capacity()
 	return true;
 }
 
@@ -165,6 +230,9 @@ void	test_vector( void )
 		{__begin, "begin"},
 		{__end, "end"},
 		{__size, "size"},
+		{__capacity, "capacity"},
+		{__access_element_operator, "operator[]"},
+		{__insert_fill, "insert (fill)"},
 		{NULL, ""}
 	};
 
