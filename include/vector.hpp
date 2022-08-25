@@ -2,8 +2,10 @@
 # define VECTOR_HPP
 
 #include "iterator.hpp"
+#include "type_traits.hpp"
 #include <memory>
-#include <iostream>
+#include <cstring>
+#include <exception>
 
 namespace ft
 {
@@ -11,147 +13,8 @@ namespace ft
 template < class T, class Alloc = std::allocator<T> >
 class vector
 {
-public:
-	typedef T													value_type;
-	typedef Alloc												allocator_type;
-	typedef typename allocator_type::reference					reference;
-	typedef typename allocator_type::const_reference			const_reference;
-	typedef typename allocator_type::pointer					pointer;
-	typedef typename allocator_type::const_pointer				const_pointer;
-	typedef typename ft::vector_iterator<pointer>				iterator;
-	typedef typename ft::vector_iterator<const_pointer>			const_iterator;
-	typedef typename ft::reverse_iterator<iterator>				reverse_iterator;
-	typedef typename ft::reverse_iterator<const_iterator>		const_reverse_iterator;
-	typedef typename iterator_traits<iterator>::difference_type	difference_type;
-	typedef size_t												size_type;
-
 private:
-	pointer	_head;
-	pointer	_tail;
-	pointer	_end_of_storage;
-
-public:
-	/**************************************************************************/
-	/*                               CONSTRUCTOR                              */
-	/**************************************************************************/
-
-	/**
-	 * @brief Constructs an empty vector, with no elements.
-	 * 
-	 * @param alloc Allocator object.
-	 */
-	explicit vector (allocator_type const &alloc __attribute__((unused)) = allocator_type()):
-										_head(pointer()), _tail(_head), _end_of_storage(_head)
-	{
-		return;
-	}
-
-	/**
-	 * @brief Constructs a vector with n elements. Each element is a copy of val.
-	 * 
-	 * @param n Initial container size (i.e., the number of elements in the container at construction).
-	 * @param val Value to fill the container with. Each of the n elements in the container will be initialized to a copy of this value.
-	 * @param alloc Allocator object.
-	 */
-	explicit vector (size_type n, value_type const &val = value_type(), allocator_type const &alloc = allocator_type()):
-																					_head(), _tail(), _end_of_storage()
-	{
-		// _insert_fill()
-		return;
-	}
-
-	/**************************************************************************/
-	/*                               DESTRUCTOR                               */
-	/**************************************************************************/
-
-	// TODO begin()
-	// TODO end()
-	// TODO size()
-	// TODO capacity()
-	// TODO operator[]
-
-	/**************************************************************************/
-	/*                            MEMBER FUNCTIONS                            */
-	/**************************************************************************/
-
-	iterator insert (iterator position, value_type const &val)
-	{
-		size_type const	offset = position - this->begin();
-		_insert_fill(position, 1, val);
-		return this->begin() + offset;
-	}
-
-	void insert (iterator position, size_type n, value_type const &val)
-	{
-		_insert_fill(position, n, val);
-		return;
-	}
-
-	/**************************************************************************/
-	/*                            MEMBER OPERATORS                            */
-	/**************************************************************************/
-
-private:
-	// TODO _insert_fill()
-	void _insert_fill (iterator position, size_type n, value_type const &val)
-	{
-		if (!n)
-			return;
-
-		size_type const	offset = this->end() - position;
-
-		if (this->size() + n <= this->capacity())
-		{
-			// déplace [offset, end()] -> offset + n
-		}
-		else
-		{
-			allocator_type	alloc;
-			size_t	new_capacity = this->size() * 2;
-			if (new_capacity < this->size() + n)
-				new_capacity = this->size() + n;
-
-			pointer	new_head = alloc.allocate(new_capacity, _head);
-			pointer	new_tail = new_head + this->size() + n;
-			if (_head)
-			{
-				// copie _head -> new_head jusqu'à offset - 1
-				// copie [_head + offset, end()] -> new_head + offset + n
-				alloc.deallocate(_head, this->capacity());
-			}
-			_head = new_head;
-			_tail = new_tail;
-			_end_of_storage = _head + new_capacity;
-		}
-
-		// _head + offset -> _head + offset + n - 1 = val
-
-		return;
-	}
-
-/* 
- * insert range input iterator
- * {
- * 	récupérer pos -> end dans un tableau à part [save_end]
- * 	copier ce qui passe dans l'espace déjà allouer
- * 	s'il est possible de rajouter save_end return; / sinon:
- * 	loop: tant que first != last
- * 	  alloc size x2
- * 	  copie s'il y a qqch à copier
- * 	une fois que tout est copier:
- * 	  allouer size() + size de save_end
- * 	  copier tout
- * 	  copier save_end
- * }
- * 
- * faire en sorte qu'il soit obligatoire de passer des input iterator
- * 	faire une fonction qui prend un booléen qui vérifie is_integral du type de first & last
- * 	si bool == true -> utiliser l'autre insert
- * 	si bool == false -> utiliser celui ci en lui passant iterator_category de first & last
- * 	insert range ne prend que input_iterator_tag en category
- */
-
-	template <class Tp>
+	template < typename Tp >
 	class vector_iterator
 	{
 	public:
@@ -180,7 +43,7 @@ private:
 			return;
 		}
 
-		vector_iterator( vector_iterator const &rhs ): _current(rhs._current);
+		vector_iterator( vector_iterator const &rhs ): _current(rhs._current)
 		{
 			return;
 		}
@@ -209,6 +72,7 @@ private:
 
 		vector_iterator&	operator=( vector_iterator const& rhs)
 		{
+			_current = rhs.base();
 			return *this;
 		}
 
@@ -275,57 +139,348 @@ private:
 			return *this;
 		}
 
+		difference_type	operator-( vector_iterator const & rhs )
+		{
+			return _current - rhs._current;
+		}
+
 	};
 
-	template <class Tp>
-	bool	operator==( vector_iterator<Tp> const &lhs, vector_iterator<Tp> const &rhs )
+public:
+	typedef T													value_type;
+	typedef Alloc												allocator_type;
+	typedef typename allocator_type::reference					reference;
+	typedef typename allocator_type::const_reference			const_reference;
+	typedef typename allocator_type::pointer					pointer;
+	typedef typename allocator_type::const_pointer				const_pointer;
+	typedef vector_iterator<pointer>							iterator;
+	typedef vector_iterator<const_pointer>						const_iterator;
+	typedef typename ft::reverse_iterator<iterator>				reverse_iterator;
+	typedef typename ft::reverse_iterator<const_iterator>		const_reverse_iterator;
+	typedef typename iterator_traits<iterator>::difference_type	difference_type;
+	typedef size_t												size_type;
+
+private:
+	pointer	_head;
+	pointer	_tail;
+	pointer	_end_of_storage;
+
+public:
+	/**************************************************************************/
+	/*                               CONSTRUCTOR                              */
+	/**************************************************************************/
+
+	/**
+	 * @brief Constructs an empty vector, with no elements.
+	 * 
+	 * @param alloc Allocator object.
+	 */
+	explicit vector( allocator_type const & = allocator_type() ):
+										_head(pointer()), _tail(_head), _end_of_storage(_head)
 	{
-		return lsh.base() == rhs.base();
+		return;
 	}
 
-	template <class Tp>
-	bool	operator!=( vector_iterator<Tp> const &lhs, vector_iterator<Tp> const &rhs )
+	/**
+	 * @brief Constructs a vector with n elements. Each element is a copy of val.
+	 * 
+	 * @param n Initial container size (i.e., the number of elements in the container at construction).
+	 * @param val Value to fill the container with. Each of the n elements in the container will be initialized to a copy of this value.
+	 * @param alloc Allocator object.
+	 */
+	explicit vector( size_type n, value_type const &val = value_type(), allocator_type const & = allocator_type() ):
+																					_head(), _tail(), _end_of_storage()
 	{
-		return lsh.base() != rhs.base();
+		if (n > this->max_size())
+			throw std::length_error("cannot create std::vector larger than max_size()");
+
+		__insert_fill(this->begin(), n, val);
+		return;
 	}
 
-	template <class Tp>
-	bool	operator<( vector_iterator<Tp> const &lhs, vector_iterator<Tp> const &rhs )
+	/**************************************************************************/
+	/*                               DESTRUCTOR                               */
+	/**************************************************************************/
+
+	~vector( void )
 	{
-		return lsh.base() < rhs.base();
+		if (_head)
+		{
+			this->clear();
+			allocator_type().deallocate(_head, this->capacity());
+		}
+		return;
 	}
 
-	template <class Tp>
-	bool	operator<=( vector_iterator<Tp> const &lhs, vector_iterator<Tp> const &rhs )
+	/**************************************************************************/
+	/*                            MEMBER FUNCTIONS                            */
+	/**************************************************************************/
+
+	// ITERATOR
+
+	iterator	begin( void )
 	{
-		return lsh.base() <= rhs.base();
+		return iterator(_head);
 	}
 
-	template <class Tp>
-	bool	operator>( vector_iterator<Tp> const &lhs, vector_iterator<Tp> const &rhs )
+	const_iterator	begin( void ) const
 	{
-		return lsh.base() > rhs.base();
+		return iterator(_head);
 	}
 
-	template <class Tp>
-	bool	operator>=( vector_iterator<Tp> const &lhs, vector_iterator<Tp> const &rhs )
+	iterator	end( void )
 	{
-		return lsh.base() >= rhs.base();
+		return iterator(_tail);
 	}
 
-	template <class Tp>
-	vector_iterator<Tp>	operator+( typename vector_iterator<Tp>::difference_type n, vector_iterator<Tp> const &it )
+	const_iterator	end( void ) const
 	{
-		return it + n;
+		return iterator(_tail);
 	}
 
-	template <class Tp>
-	typename vector_iterator<Tp>::difference_type	operator-( vector_iterator<Tp> const &lhs, vector_iterator<Tp> const &rhs)
+	// CAPACITY
+
+	size_type	size( void ) const
 	{
-		return lhs.base() - rhs.base();
+		return _tail - _head;
 	}
+
+	size_type	max_size( void ) const
+	{
+		return allocator_type().max_size();
+	}
+
+	size_type	capacity( void ) const
+	{
+		return _end_of_storage - _head;
+	}
+
+	// MODIFIERS
+
+	iterator	insert( iterator position, value_type const &val )
+	{
+		size_type const	offset = position - this->begin();
+		__insert_fill(position, 1, val);
+		return this->begin() + offset;
+	}
+
+	void	insert( iterator position, size_type n, value_type const &val )
+	{
+		__insert_fill(position, n, val);
+		return;
+	}
+
+	void	clear( void )
+	{
+		allocator_type	alloc;
+
+		--_tail;
+		for (; _tail != _head; --_tail)
+			alloc.destroy(_tail);
+		alloc.destroy(_tail);
+		return;
+	}
+
+	// ELEMENT ACCESS
+
+	reference	operator[]( size_type n )
+	{
+		return _head[n];
+	}
+
+	/**************************************************************************/
+	/*                            MEMBER OPERATORS                            */
+	/**************************************************************************/
+
+	/**************************************************************************/
+	/*                           INTERNAL FUNCTIONS                           */
+	/**************************************************************************/
+
+private:
+
+	void __value_move( pointer dst, pointer first, pointer last, true_type)
+	{
+		memmove(dst, first, (last - first) * sizeof(value_type));
+		return;
+	}
+
+	void __value_move( pointer dst, pointer first, pointer last, false_type)
+	{
+		allocator_type	alloc;
+
+		if (dst < first)
+		{
+			for ( ; first != last ; ++first, ++dst)
+			{
+				alloc.construct(dst, *first);
+				alloc.destroy(first);
+			}
+		}
+		else if (dst > first)
+		{
+			dst += (last - first - 1);
+			--first;
+			--last;
+			for (; first != last; --last, --dst)
+			{
+				alloc.construct(dst, *last);
+				alloc.destroy(last);
+			}
+		}
+		return;
+	}
+
+	void __insert_fill( iterator position, size_type n, value_type const &val )
+	{
+		if (!n)
+			return;
+
+		size_type const	offset = this->end() - position;
+		allocator_type	alloc;
+
+		if (this->size() + n <= this->capacity())
+			__value_move(_head + offset + n, _head + offset, _tail, is_trivially_copyable<value_type>());
+		else
+		{
+			size_t	new_capacity = this->size() * 2;
+			if (new_capacity < this->size() + n)
+				new_capacity = this->size() + n;
+
+			pointer	new_head = alloc.allocate(new_capacity, _head);
+			pointer	new_tail = new_head + this->size() + n;
+			if (_head)
+			{
+				__value_move(new_head, _head, _head + offset, is_trivially_copyable<value_type>());
+				__value_move(new_head + offset + n, _head + offset, _tail, is_trivially_copyable<value_type>());
+				alloc.deallocate(_head, this->capacity());
+			}
+			_head = new_head;
+			_tail = new_tail;
+			_end_of_storage = _head + new_capacity;
+		}
+
+		pointer end = _head + offset + n;
+		for (pointer begin = _head + offset; begin != end; ++begin)
+			alloc.construct(begin, val);
+
+		return;
+	}
+
+/* 
+ * insert range input iterator
+ * {
+ * 	récupérer pos -> end dans un tableau à part [save_end]
+ * 	copier ce qui passe dans l'espace déjà allouer
+ * 	s'il est possible de rajouter save_end return; / sinon:
+ * 	loop: tant que first != last
+ * 	  alloc size x2
+ * 	  copie s'il y a qqch à copier
+ * 	une fois que tout est copier:
+ * 	  allouer size() + size de save_end
+ * 	  copier tout
+ * 	  copier save_end
+ * }
+ * 
+ * faire en sorte qu'il soit obligatoire de passer des input iterator
+ * 	faire une fonction qui prend un booléen qui vérifie is_integral du type de first & last
+ * 	si bool == true -> utiliser l'autre insert
+ * 	si bool == false -> utiliser celui ci en lui passant iterator_category de first & last
+ * 	insert range ne prend que input_iterator_tag en category
+ */
 
 };
+
+template <class T>
+bool	operator==( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
+{
+	return lhs.base() == rhs.base();
+}
+
+template <class T, class U>
+bool	operator==( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
+{
+	return lhs.base() == rhs.base();
+}
+
+template <class T>
+bool	operator!=( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
+{
+	return lhs.base() != rhs.base();
+}
+
+template <class T, class U>
+bool	operator!=( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
+{
+	return lhs.base() != rhs.base();
+}
+
+template <class T>
+bool	operator<( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
+{
+	return lhs.base() < rhs.base();
+}
+
+template <class T, class U>
+bool	operator<( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
+{
+	return lhs.base() < rhs.base();
+}
+
+template <class T>
+bool	operator<=( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
+{
+	return lhs.base() <= rhs.base();
+}
+
+template <class T, class U>
+bool	operator<=( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
+{
+	return lhs.base() <= rhs.base();
+}
+
+template <class T>
+bool	operator>( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
+{
+	return lhs.base() > rhs.base();
+}
+
+template <class T, class U>
+bool	operator>( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
+{
+	return lhs.base() > rhs.base();
+}
+
+template <class T>
+bool	operator>=( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
+{
+	return lhs.base() >= rhs.base();
+}
+
+template <class T, class U>
+bool	operator>=( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
+{
+	return lhs.base() >= rhs.base();
+}
+
+template <class T>
+typename vector<T>::iterator	operator+( typename vector<T>::iterator::difference_type n, typename vector<T>::iterator const &it )
+{
+	return it + n;
+}
+
+// template <class T>
+// typename vector<T>::iterator::difference_type
+// 	operator-( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
+// {
+// 	return lhs.base() - rhs.base();
+// }
+
+// template <class T, class U>
+// typename vector<U>::iterator::difference_type
+// 	operator-( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
+// {
+// 	return lhs.base() - rhs.base();
+// }
 
 }
 

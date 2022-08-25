@@ -2,6 +2,7 @@
 # define TEST_DEFINE_HPP
 
 #include <string>
+#include <iostream>
 
 #ifndef RED
 # define RED "\033[1;31m"
