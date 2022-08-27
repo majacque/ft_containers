@@ -222,6 +222,36 @@ inline static bool	__insert_fill( void )
 	return true;
 }
 
+inline static bool	__insert_range( void )
+{
+	t_vector_int	v0(6,7);
+	t_vector_int	v1(6,2);
+
+	v0.insert(v0.begin() + 1, v1.begin(), v1.end());
+
+	if (v0.size() != 12 || v0.capacity() != 12)
+		return false;
+
+	size_t	i = 0;
+	if (v0[i] != 7)
+		return false;
+
+	++i;
+	for (; i < 7; ++i)
+	{
+		if (v0[i] != 2)
+			return false;
+	}
+	for (; i < 6; ++i)
+	{
+		if (v0[i] != 7)
+			return false;
+	}
+
+	// REMIND test with different data
+	return true;
+}
+
 void	test_vector( void )
 {
 	t_sub_test	arr[] = {
@@ -233,6 +263,7 @@ void	test_vector( void )
 		{__capacity, "capacity"},
 		{__access_element_operator, "operator[]"},
 		{__insert_fill, "insert (fill)"},
+		{__insert_range, "insert (range)"},
 		{NULL, ""}
 	};
 

@@ -144,6 +144,36 @@ private:
 			return _current - rhs._current;
 		}
 
+		bool	operator==( vector_iterator const &rhs )
+		{
+			return _current == rhs.base();
+		}
+
+		bool	operator!=( vector_iterator const &rhs )
+		{
+			return _current != rhs.base();
+		}
+
+		bool	operator<( vector_iterator const &rhs )
+		{
+			return _current < rhs.base();
+		}
+
+		bool	operator<=( vector_iterator const &rhs )
+		{
+			return _current <= rhs.base();
+		}
+
+		bool	operator>( vector_iterator const &rhs )
+		{
+			return _current > rhs.base();
+		}
+
+		bool	operator>=( vector_iterator const &rhs )
+		{
+			return _current >= rhs.base();
+		}
+
 	};
 
 public:
@@ -216,6 +246,13 @@ public:
 	/*                            MEMBER FUNCTIONS                            */
 	/**************************************************************************/
 
+	// TODO operator=
+	// vector&	operator=( vector const &rhs )
+	// {
+	// 	// assign(rhs.begin(), rhs.end());
+	// 	return *this;
+	// }
+
 	// ITERATOR
 
 	iterator	begin( void )
@@ -270,6 +307,13 @@ public:
 		return;
 	}
 
+	template <class InputIterator>
+	void	insert( iterator position, InputIterator first, InputIterator last )
+	{
+		this->__insert_dispatch(position, first, last, is_integral<InputIterator>());
+		return;
+	}
+
 	void	clear( void )
 	{
 		allocator_type	alloc;
@@ -298,13 +342,13 @@ public:
 
 private:
 
-	void __value_move( pointer dst, pointer first, pointer last, true_type)
+	inline void __value_move( pointer dst, pointer first, pointer last, true_type)
 	{
 		memmove(dst, first, (last - first) * sizeof(value_type));
 		return;
 	}
 
-	void __value_move( pointer dst, pointer first, pointer last, false_type)
+	inline void __value_move( pointer dst, pointer first, pointer last, false_type)
 	{
 		allocator_type	alloc;
 
@@ -366,27 +410,81 @@ private:
 		return;
 	}
 
-/* 
- * insert range input iterator
- * {
- * 	récupérer pos -> end dans un tableau à part [save_end]
- * 	copier ce qui passe dans l'espace déjà allouer
- * 	s'il est possible de rajouter save_end return; / sinon:
- * 	loop: tant que first != last
- * 	  alloc size x2
- * 	  copie s'il y a qqch à copier
- * 	une fois que tout est copier:
- * 	  allouer size() + size de save_end
- * 	  copier tout
- * 	  copier save_end
- * }
- * 
- * faire en sorte qu'il soit obligatoire de passer des input iterator
- * 	faire une fonction qui prend un booléen qui vérifie is_integral du type de first & last
- * 	si bool == true -> utiliser l'autre insert
- * 	si bool == false -> utiliser celui ci en lui passant iterator_category de first & last
- * 	insert range ne prend que input_iterator_tag en category
- */
+	// TODO insert_range()
+	template <class InputIterator>
+	void	__insert_range( iterator position, InputIterator first, InputIterator last )
+	{
+		allocator_type	alloc;
+		size_t const	end_size = this->end() - position;
+		pointer const	end_save = alloc.allocate(end_size, _head);
+
+		__value_move(end_save, position.base(), _tail, is_trivially_copyable<value_type>()); // déplace la fin dans une sauvegarde
+		_tail = position.base();
+
+		for (; this->size() < this->capacity() && first != last; ++first) // copie ce qui passe dans l'espace déjà allouer
+		{
+			alloc.construct(_tail, *first);
+			++_tail;
+		}
+
+		size_t	new_capacity;
+		pointer	new_head;
+		pointer	new_tail;
+		size_t	i = 0;
+		while (first != last) // alloue le double de la size et copie jusqu'à ce qu'il n'y ai plus rien à copier
+		{
+			new_capacity = this->size() * 2;
+			new_head = alloc.allocate(new_capacity, _head);
+			new_tail = new_head + this->size();
+			__value_move(new_head, _head, _tail, is_trivially_copyable<value_type>());
+			alloc.deallocate(_head, this->capacity());
+			_head = new_head;
+			_tail = new_tail;
+			_end_of_storage = _head + new_capacity;
+			for(; this->size() < this->capacity() && first != last; ++first)
+			{
+				alloc.construct(_tail, *first);
+				++_tail;
+			}
+			++i;
+		}
+
+		// met ce qu'il y a dans _head + dans end_save --> un espace pile de la bonne taille
+		if (i > 1 || (this->size() + end_size) > this->capacity())
+		{
+			new_capacity = this->size() + end_size;
+			new_head = alloc.allocate(new_capacity, _head);
+			__value_move(new_head, _head, _tail, is_trivially_copyable<value_type>());
+			__value_move(new_head + this->size(), end_save, end_save + end_size, is_trivially_copyable<value_type>());
+			alloc.deallocate(_head, this->capacity());
+			_head = new_head;
+			_tail = _head + new_capacity;
+			_end_of_storage = _tail;
+		}
+		else
+		{
+			__value_move(_head + this->size(), end_save, end_save + end_size, is_trivially_copyable<value_type>());
+			_tail += end_size;
+		}
+
+		alloc.deallocate(end_save, end_size);
+
+		return;
+	}
+
+	template<typename U>
+	inline void	__insert_dispatch(iterator const position, U const param1, U const param2, true_type const)
+	{
+		this->__insert_fill(position, param1, param2);
+		return;
+	}
+
+	template<typename U>
+	inline void	__insert_dispatch(iterator const position, U const param1, U const param2, false_type const)
+	{
+		this->__insert_range(position, param1, param2);
+		return;
+	}
 
 };
 
@@ -468,19 +566,19 @@ typename vector<T>::iterator	operator+( typename vector<T>::iterator::difference
 	return it + n;
 }
 
-// template <class T>
-// typename vector<T>::iterator::difference_type
-// 	operator-( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
-// {
-// 	return lhs.base() - rhs.base();
-// }
+template <class T>
+typename vector<T>::iterator::difference_type
+	operator-( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
+{
+	return lhs.base() - rhs.base();
+}
 
-// template <class T, class U>
-// typename vector<U>::iterator::difference_type
-// 	operator-( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
-// {
-// 	return lhs.base() - rhs.base();
-// }
+template <class T, class U>
+typename vector<U>::iterator::difference_type
+	operator-( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
+{
+	return lhs.base() - rhs.base();
+}
 
 }
 
