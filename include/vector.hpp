@@ -228,6 +228,21 @@ public:
 		return;
 	}
 
+	template <class InputIterator>
+	vector( InputIterator first, InputIterator last, allocator_type const & = allocator_type() ):
+																_head(), _tail(), _end_of_storage()
+	{
+		__insert_dispatch(iterator(_head), first, last, is_integral<InputIterator>());
+		return;
+	}
+
+	vector( vector const &rhs ): _head(), _tail(), _end_of_storage()
+	{
+		__insert_dispatch(iterator(_head), rhs.begin(), rhs.end(), is_integral<iterator>());
+		// this->insert(iterator(_head), rhs.begin(), rhs.end());
+		return;
+	}
+
 	/**************************************************************************/
 	/*                               DESTRUCTOR                               */
 	/**************************************************************************/
@@ -262,7 +277,7 @@ public:
 
 	const_iterator	begin( void ) const
 	{
-		return iterator(_head);
+		return const_iterator(_head);
 	}
 
 	iterator	end( void )
@@ -272,7 +287,7 @@ public:
 
 	const_iterator	end( void ) const
 	{
-		return iterator(_tail);
+		return const_iterator(_tail);
 	}
 
 	// CAPACITY
@@ -410,7 +425,6 @@ private:
 		return;
 	}
 
-	// TODO insert_range()
 	template <class InputIterator>
 	void	__insert_range( iterator position, InputIterator first, InputIterator last )
 	{
@@ -434,6 +448,8 @@ private:
 		while (first != last) // alloue le double de la size et copie jusqu'à ce qu'il n'y ai plus rien à copier
 		{
 			new_capacity = this->size() * 2;
+			if (new_capacity == 0)
+				++new_capacity;
 			new_head = alloc.allocate(new_capacity, _head);
 			new_tail = new_head + this->size();
 			__value_move(new_head, _head, _tail, is_trivially_copyable<value_type>());
@@ -473,14 +489,14 @@ private:
 	}
 
 	template<typename U>
-	inline void	__insert_dispatch(iterator const position, U const param1, U const param2, true_type const)
+	inline void	__insert_dispatch(iterator position, U param1, U param2, true_type const)
 	{
 		this->__insert_fill(position, param1, param2);
 		return;
 	}
 
 	template<typename U>
-	inline void	__insert_dispatch(iterator const position, U const param1, U const param2, false_type const)
+	inline void	__insert_dispatch(iterator position, U param1, U param2, false_type const)
 	{
 		this->__insert_range(position, param1, param2);
 		return;

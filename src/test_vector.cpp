@@ -89,6 +89,44 @@ inline static bool	__fill_constructor( void )
 	return true;
 }
 
+inline static bool	__range_constructor( void )
+{
+	t_vector_int	v0(6,7);
+	t_vector_int	v1(v0.begin(), v0.end());
+
+	if (v0.size() != v1.size() ||
+		v0.capacity() != v1.capacity())
+		return false;
+
+	for (size_t i = 0; i < 6; i++)
+	{
+		if (v0[i] != v1[i])
+			return false;
+	}
+
+	// REMIND test with v0 != v1
+	return true;
+}
+
+inline static bool	__copy_constructor( void )
+{
+	t_vector_int	v0(6,7);
+	t_vector_int	v1(v0);
+
+	if (v0.size() != v1.size() ||
+		v0.capacity() != v1.capacity())
+		return false;
+
+	for (size_t i = 0; i < 6; i++)
+	{
+		if (v0[i] != v1[i])
+			return false;
+	}
+
+	// REMIND test with v0 != v1
+	return true;
+}
+
 inline static bool	__begin( void )
 {
 	t_vector_int	v_int_empty;
@@ -249,14 +287,17 @@ inline static bool	__insert_range( void )
 	}
 
 	// REMIND test with different data
+	// test with (pos, end, begin)
 	return true;
 }
 
 void	test_vector( void )
 {
 	t_sub_test	arr[] = {
-		{__default_constructor, "default constructor"},
-		{__fill_constructor, "fill constructor"},
+		{__default_constructor, "constructor (default)"},
+		{__fill_constructor, "constructor (fill)"},
+		{__range_constructor, "constructor (rang)"},
+		{__copy_constructor, "constructor (copy)"},
 		{__begin, "begin"},
 		{__end, "end"},
 		{__size, "size"},
