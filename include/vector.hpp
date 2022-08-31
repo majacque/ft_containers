@@ -421,6 +421,16 @@ public:
 		return;
 	}
 
+	void	pop_back( void )
+	{
+		if (_tail && _tail != _head)
+		{
+			--_tail;
+			allocator_type().destroy(_tail);
+		}
+		return;
+	}
+
 	iterator	insert( iterator position, value_type const &val )
 	{
 		size_type const	offset = position - this->begin();
@@ -455,6 +465,14 @@ public:
 		__value_move(first.base(), last.base(), _tail, is_trivially_copyable<value_type>());
 		_tail -= last - first;
 		return first;
+	}
+
+	void	swap( vector &x )
+	{
+		vector	tmp(x);
+		x = *this;
+		*this = tmp;
+		return;
 	}
 
 	void	clear( void )

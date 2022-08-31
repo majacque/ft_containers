@@ -503,6 +503,37 @@ inline static bool	__push_back( void )
 	return true;
 }
 
+inline static bool	__pop_back( void )
+{
+	t_vector_int	v(6,7);
+
+	v.pop_back();
+
+	if (v.size() != 5 ||
+		v.capacity() != 6)
+		return false;
+
+	v.pop_back();
+	v.pop_back();
+	v.pop_back();
+
+	if (v.size() != 2 ||
+		v.capacity() != 6)
+		return false;
+
+	v.pop_back();
+	v.pop_back();
+
+	if (v.empty() == false ||
+		v.capacity() != 6)
+		return false;
+
+	v.pop_back();
+	v.pop_back();
+
+	return true;
+}
+
 inline static bool	__insert_fill( void )
 {
 	t_vector_int	v_int_default;
@@ -600,6 +631,33 @@ inline static bool	__erase( void )
 	return true;
 }
 
+inline static bool	__swap( void )
+{
+	t_vector_int	v0(6,7);
+	t_vector_int	v1(7,6);
+
+	v0.swap(v1);
+
+	if (v0.size() != 7 ||
+		v1.size() != 6)
+		return false;
+
+	for (size_t i = 0; i < v0.size(); ++i)
+	{
+		if (v0[i] != 6)
+			return false;
+	}
+
+	for (size_t i = 0; i < v1.size(); ++i)
+	{
+		if (v1[i] != 7)
+			return false;
+	}
+
+	// REMIND test with different data
+	return true;
+}
+
 void	test_vector( void )
 {
 	t_sub_test	arr[] = {
@@ -625,9 +683,11 @@ void	test_vector( void )
 		{__assign_fill, "assign (fill)"},
 		{__assign_range, "assign (range)"},
 		{__push_back, "push_back"},
+		{__pop_back, "pop_back"},
 		{__insert_fill, "insert (fill)"},
 		{__insert_range, "insert (range)"},
 		{__erase, "erase"},
+		{__swap, "swap"},
 		{NULL, ""}
 	};
 
