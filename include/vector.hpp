@@ -44,7 +44,8 @@ private:
 			return;
 		}
 
-		vector_iterator( vector_iterator const &rhs ): _current(rhs._current)
+		template <typename _Iterator>
+		vector_iterator( vector_iterator<_Iterator> const &rhs ): _current(rhs.base())
 		{
 			return;
 		}
@@ -108,7 +109,7 @@ private:
 			return *this;
 		}
 
-		vector_iterator&	operator++( int )
+		vector_iterator	operator++( int )
 		{
 			vector_iterator	tmp(_current);
 			++_current;
@@ -121,7 +122,7 @@ private:
 			return *this;
 		}
 
-		vector_iterator&	operator--( int )
+		vector_iterator	operator--( int )
 		{
 			vector_iterator	tmp(_current);
 			--_current;
@@ -470,9 +471,17 @@ public:
 
 	void	swap( vector &x )
 	{
-		vector	tmp(x);
-		x = *this;
-		*this = tmp;
+		pointer	tmp_head = x._head;
+		pointer	tmp_tail = x._tail;
+		pointer	tmp_end_of_storage = x._end_of_storage;
+
+		x._head = _head;
+		x._tail = _tail;
+		x._end_of_storage = _end_of_storage;
+
+		_head = tmp_head;
+		_tail = tmp_tail;
+		_end_of_storage = tmp_end_of_storage;
 		return;
 	}
 
@@ -753,8 +762,6 @@ typename vector<U>::iterator::difference_type
 
 // VECTOR RELATIONAL OPERATORS
 
-/* template <class T, class Alloc>
-  bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) */
 template <class T, class Alloc>
 bool	operator==( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
 {
@@ -805,9 +812,7 @@ bool	operator>=( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
 template <class T, class Alloc>
 void	swap( vector<T, Alloc> &x, vector<T, Alloc> &y )
 {
-	vector<T, Alloc>	tmp(x);
-	x = y;
-	y = tmp;
+	x.swap(y);
 	return;
 }
 
