@@ -489,6 +489,13 @@ public:
 		return;
 	}
 
+	// ALLOCATOR
+
+	allocator_type	get_allocator( void ) const
+	{
+		return allocator_type();
+	}
+
 	/**************************************************************************/
 	/*                            MEMBER OPERATORS                            */
 	/**************************************************************************/
@@ -739,6 +746,15 @@ typename vector<U>::iterator::difference_type
 	operator-( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
 {
 	return lhs.base() - rhs.base();
+}
+
+template <class T, class Alloc>
+void	swap( vector<T, Alloc> &x, vector<T, Alloc> &y )
+{
+	vector<T, Alloc>	tmp(x);
+	x = y;
+	y = tmp;
+	return;
 }
 
 }

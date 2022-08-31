@@ -671,6 +671,35 @@ inline static bool	__clear( void )
 	return true;
 }
 
+// NON MEMBER
+
+inline static bool	__nm_swap( void )
+{
+	t_vector_int	v0(6,7);
+	t_vector_int	v1(7,6);
+
+	ft::swap(v0, v1);
+
+	if (v0.size() != 7 ||
+		v1.size() != 6)
+		return false;
+
+	for (size_t i = 0; i < v0.size(); ++i)
+	{
+		if (v0[i] != 6)
+			return false;
+	}
+
+	for (size_t i = 0; i < v1.size(); ++i)
+	{
+		if (v1[i] != 7)
+			return false;
+	}
+
+	// REMIND test with different data
+	return true;
+}
+
 void	test_vector( void )
 {
 	t_sub_test	arr[] = {
@@ -702,6 +731,7 @@ void	test_vector( void )
 		{__erase, "erase"},
 		{__swap, "swap"},
 		{__clear, "clear"},
+		{__nm_swap, "swap (non member)"},
 		{NULL, ""}
 	};
 
