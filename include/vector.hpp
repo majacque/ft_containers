@@ -333,6 +333,11 @@ public:
 		return _end_of_storage - _head;
 	}
 
+	bool	empty( void ) const
+	{
+		return _head == _tail;
+	}
+
 	// MODIFIERS
 
 	template <class InputIterator>

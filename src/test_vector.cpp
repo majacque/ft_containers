@@ -290,6 +290,25 @@ inline static bool	__capacity( void )
 	return true;
 }
 
+inline static bool	__empty( void )
+{
+	t_vector_int	v;
+
+	if (v.empty() == false)
+		return false;
+
+	v.insert(v.begin(), 6, 7);
+
+	if (v.empty() == true)
+		return false;
+
+	v.clear();
+
+	if (v.empty() == false)
+		return false;
+	return true;
+}
+
 // MODIFIERS
 
 inline static bool	__assign_fill( void )
@@ -458,6 +477,7 @@ void	test_vector( void )
 		{__max_size, "max size"},
 		{__resize, "resize"},
 		{__capacity, "capacity"},
+		{__empty, "empty"},
 		{__assign_fill, "assign (fill)"},
 		{__assign_range, "assign (range)"},
 		{__insert_fill, "insert (fill)"},
