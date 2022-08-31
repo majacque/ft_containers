@@ -309,6 +309,47 @@ inline static bool	__empty( void )
 	return true;
 }
 
+inline static bool	__reserve_length_error( void )
+{
+	try
+	{
+		t_vector_int	v;
+
+		v.reserve(-1);
+	}
+	catch(const std::length_error& e)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+inline static bool	__reserve( void )
+{
+	t_vector_int	v(6,7);
+
+	v.reserve(5);
+
+	if (v.size() != 6 ||
+		v.capacity() != 6)
+		return false;
+
+	v.reserve(12);
+
+	if (v.size() != 6 ||
+		v.capacity() != 12)
+		return false;
+
+	for (size_t i = 0; i < 6; ++i)
+	{
+		if (v[i] != 7)
+			return false;
+	}
+
+	return __reserve_length_error();
+}
+
 // MODIFIERS
 
 inline static bool	__assign_fill( void )
@@ -478,6 +519,7 @@ void	test_vector( void )
 		{__resize, "resize"},
 		{__capacity, "capacity"},
 		{__empty, "empty"},
+		{__reserve, "reserve"},
 		{__assign_fill, "assign (fill)"},
 		{__assign_range, "assign (range)"},
 		{__insert_fill, "insert (fill)"},

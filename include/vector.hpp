@@ -338,6 +338,25 @@ public:
 		return _head == _tail;
 	}
 
+	void	reserve( size_type const n )
+	{
+		allocator_type	alloc;
+
+		if (n <= this->capacity())
+			return ;
+		else if (n > alloc.max_size())
+			throw std::length_error("vector::reserve");
+
+		pointer			newHead = alloc.allocate(n, _head);
+		pointer			newTail = newHead + this->size();
+
+		__value_move(newHead, _head, _tail, is_trivially_copyable<value_type>());
+		alloc.deallocate(_head, this->capacity());
+		_head = newHead;
+		_tail = newTail;
+		_end_of_storage = _head + n;
+	}
+
 	// MODIFIERS
 
 	template <class InputIterator>
