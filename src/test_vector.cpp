@@ -402,6 +402,36 @@ inline static bool	__at( void )
 	return __at_out_of_range();
 }
 
+inline static bool	__front( void )
+{
+	t_vector_int	v(6,7);
+
+	t_vector_int::reference	rf = v.front();
+	t_vector_int::const_reference	crf = v.front();
+
+	if (&rf != v.begin().base() ||
+		&crf != v.begin().base())
+		return false;
+
+	// REMIND test with empty vector
+	return true;
+}
+
+inline static bool	__back( void )
+{
+	t_vector_int	v(6,7);
+
+	t_vector_int::reference	rf = v.back();
+	t_vector_int::const_reference	crf = v.back();
+
+	if (&rf != (v.end() - 1).base() ||
+		&crf != (v.end() - 1).base())
+		return false;
+
+	// REMIND test with empty vector
+	return true;
+}
+
 // MODIFIERS
 
 inline static bool	__assign_fill( void )
@@ -554,6 +584,8 @@ void	test_vector( void )
 		{__reserve, "reserve"},
 		{__access_element_operator, "operator[]"},
 		{__at, "at"},
+		{__front, "front"},
+		{__back, "back"},
 		{__assign_fill, "assign (fill)"},
 		{__assign_range, "assign (range)"},
 		{__insert_fill, "insert (fill)"},

@@ -378,6 +378,26 @@ public:
 		return _head[n];
 	}
 
+	reference	front( void )
+	{
+		return *_head;
+	}
+
+	const_reference	front( void ) const
+	{
+		return *_head;
+	}
+
+	reference	back( void )
+	{
+		return *(_tail - 1);
+	}
+
+	const_reference	back( void ) const
+	{
+		return *(_tail - 1);
+	}
+
 	// MODIFIERS
 
 	template <class InputIterator>
