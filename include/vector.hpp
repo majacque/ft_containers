@@ -222,7 +222,7 @@ public:
 																					_head(), _tail(), _end_of_storage()
 	{
 		if (n > this->max_size())
-			throw std::length_error("cannot create std::vector larger than max_size()");
+			throw std::length_error("cannot create ft::vector larger than max_size()");
 
 		__insert_fill(this->begin(), n, val);
 		return;
@@ -286,6 +286,26 @@ public:
 	const_iterator	end( void ) const
 	{
 		return const_iterator(_tail);
+	}
+
+	reverse_iterator	rbegin( void )
+	{
+		return reverse_iterator(this->end());
+	}
+
+	const_reverse_iterator	rbegin( void ) const
+	{
+		return const_reverse_iterator(this->end());
+	}
+
+	reverse_iterator	rend( void )
+	{
+		return reverse_iterator(this->begin());
+	}
+
+	const_reverse_iterator	rend( void ) const
+	{
+		return const_reverse_iterator(this->begin());
 	}
 
 	// CAPACITY

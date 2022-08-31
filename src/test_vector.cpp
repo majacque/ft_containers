@@ -180,6 +180,28 @@ inline static bool	__end( void )
 	return true;
 }
 
+inline static bool	__rbegin( void )
+{
+	t_vector_int	v(6,7);
+
+	if (v.rbegin().base().base() != v.end().base())
+		return false;
+
+	// REMIND test with different data
+	return true;
+}
+
+inline static bool	__rend( void )
+{
+	t_vector_int	v(6,7);
+
+	if (v.begin().base() != v.rend().base().base())
+		return false;
+
+	// REMIND test with different data
+	return true;
+}
+
 // CAPACITY
 
 inline static bool	__size( void )
@@ -367,6 +389,8 @@ void	test_vector( void )
 		{__assign_operator, "operator="},
 		{__begin, "begin"},
 		{__end, "end"},
+		{__rbegin, "rbegin"},
+		{__rend, "rend"},
 		{__size, "size"},
 		{__capacity, "capacity"},
 		{__assign_fill, "assign (fill)"},
