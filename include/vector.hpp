@@ -415,6 +415,12 @@ public:
 		return;
 	}
 
+	void	push_back( value_type const &val )
+	{
+		__insert_fill(this->end(), 1, val);
+		return;
+	}
+
 	iterator	insert( iterator position, value_type const &val )
 	{
 		size_type const	offset = position - this->begin();

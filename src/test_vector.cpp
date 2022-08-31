@@ -467,6 +467,42 @@ inline static bool	__assign_range( void )
 	return true;
 }
 
+inline static bool	__push_back( void )
+{
+	t_vector_int		v_ft;
+	std::vector<int>	v_std;
+
+	v_ft.push_back(1);
+	v_std.push_back(1);
+
+	if (v_ft.size() != v_std.size() ||
+		v_ft.capacity() != v_std.capacity() ||
+		v_ft[0] != v_std[0])
+		return false;
+
+
+	v_ft.push_back(2);
+	v_std.push_back(2);
+	v_ft.push_back(3);
+	v_std.push_back(3);
+	v_ft.push_back(4);
+	v_std.push_back(4);
+	v_ft.push_back(5);
+	v_std.push_back(5);
+
+	if (v_ft.size() != v_std.size() ||
+		v_ft.capacity() != v_std.capacity())
+		return false;
+
+	for (size_t i = 0; i < 5; ++i)
+	{
+		if (v_ft[i] != v_std[i])
+			return false;
+	}
+
+	return true;
+}
+
 inline static bool	__insert_fill( void )
 {
 	t_vector_int	v_int_default;
@@ -588,6 +624,7 @@ void	test_vector( void )
 		{__back, "back"},
 		{__assign_fill, "assign (fill)"},
 		{__assign_range, "assign (range)"},
+		{__push_back, "push_back"},
 		{__insert_fill, "insert (fill)"},
 		{__insert_range, "insert (range)"},
 		{__erase, "erase"},
