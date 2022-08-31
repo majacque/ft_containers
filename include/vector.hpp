@@ -320,7 +320,7 @@ public:
 		return allocator_type().max_size();
 	}
 
-	void	resize( size_type const n, value_type const val = value_type() )
+	void	resize( size_type n, value_type const val = value_type() )
 	{
 		if (n < this->size())
 			this->erase(iterator(_head + n), this->end());
@@ -338,7 +338,7 @@ public:
 		return _head == _tail;
 	}
 
-	void	reserve( size_type const n )
+	void	reserve( size_type n )
 	{
 		allocator_type	alloc;
 
@@ -355,6 +355,27 @@ public:
 		_head = newHead;
 		_tail = newTail;
 		_end_of_storage = _head + n;
+	}
+
+	// ELEMENT ACCESS
+
+	reference	operator[]( size_type n )
+	{
+		return _head[n];
+	}
+
+	reference	at( size_type n )
+	{
+		if (n > this->size())
+			throw std::out_of_range("vector::at");
+		return _head[n];
+	}
+
+	const_reference	at( size_type n ) const
+	{
+		if (n > this->size())
+			throw std::out_of_range("vector::at");
+		return _head[n];
 	}
 
 	// MODIFIERS
@@ -394,12 +415,12 @@ public:
 		return;
 	}
 
-	iterator	erase(iterator const pos)
+	iterator	erase( iterator pos )
 	{
 		return this->erase(pos, pos + 1);
 	}
 
-	iterator	erase( iterator const first, iterator const last )
+	iterator	erase( iterator first, iterator last )
 	{
 		allocator_type	alloc;
 
@@ -422,13 +443,6 @@ public:
 			alloc.destroy(_tail);
 		alloc.destroy(_tail);
 		return;
-	}
-
-	// ELEMENT ACCESS
-
-	reference	operator[]( size_type n )
-	{
-		return _head[n];
 	}
 
 	/**************************************************************************/
