@@ -658,6 +658,19 @@ inline static bool	__swap( void )
 	return true;
 }
 
+inline static bool	__clear( void )
+{
+	t_vector_int	v(6,7);
+
+	v.clear();
+
+	if (v.empty() == false ||
+		v.capacity() != 6)
+		return false;
+
+	return true;
+}
+
 void	test_vector( void )
 {
 	t_sub_test	arr[] = {
@@ -688,6 +701,7 @@ void	test_vector( void )
 		{__insert_range, "insert (range)"},
 		{__erase, "erase"},
 		{__swap, "swap"},
+		{__clear, "clear"},
 		{NULL, ""}
 	};
 
