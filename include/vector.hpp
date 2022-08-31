@@ -3,6 +3,7 @@
 
 #include "iterator.hpp"
 #include "type_traits.hpp"
+#include "algorithm.hpp"
 #include <memory>
 #include <cstring>
 #include <exception>
@@ -656,6 +657,8 @@ private:
 
 };
 
+// ITERATOR RELATIONAL OPERATORS
+
 template <class T>
 bool	operator==( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
 {
@@ -746,6 +749,57 @@ typename vector<U>::iterator::difference_type
 	operator-( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
 {
 	return lhs.base() - rhs.base();
+}
+
+// VECTOR RELATIONAL OPERATORS
+
+/* template <class T, class Alloc>
+  bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) */
+template <class T, class Alloc>
+bool	operator==( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
+{
+	if (lhs.size() != rhs.size())
+		return false;
+
+	size_t	size = lhs.size();
+	for (size_t i = 0; i < size; ++i)
+	{
+		if (lhs[i] != rhs[i])
+			return false;
+	}
+
+	return true;
+}
+
+template <class T, class Alloc>
+bool	operator!=( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
+{
+	return !(lhs == rhs);
+}
+
+
+template <class T, class Alloc>
+bool	operator<( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
+{
+	return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
+
+template <class T, class Alloc>
+bool	operator<=( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
+{
+	return !(rhs<lhs);
+}
+
+template <class T, class Alloc>
+bool	operator>( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
+{
+	return rhs<lhs;
+}
+
+template <class T, class Alloc>
+bool	operator>=( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
+{
+	return !(lhs<rhs);
 }
 
 template <class T, class Alloc>

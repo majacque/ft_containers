@@ -700,6 +700,42 @@ inline static bool	__nm_swap( void )
 	return true;
 }
 
+inline static bool	__relational_operators( void )
+{
+	t_vector_int	v0(6,7);
+	t_vector_int	v1(6,7);
+
+	if ((v0 == v1) == false ||
+		(v0 != v1) == true ||
+		(v0 < v1) == true ||
+		(v0 <= v1) == false ||
+		(v0 > v1) == true ||
+		(v0 >= v1) == false)
+		return false;
+
+	v1[5] += 6;
+
+	if ((v0 == v1) == true ||
+		(v0 != v1) == false ||
+		(v0 < v1) == false ||
+		(v0 <= v1) == false ||
+		(v0 > v1) == true ||
+		(v0 >= v1) == true)
+		return false;
+
+	v0[5] += 8;
+
+	if ((v0 == v1) == true ||
+		(v0 != v1) == false ||
+		(v0 < v1) == true ||
+		(v0 <= v1) == true ||
+		(v0 > v1) == false ||
+		(v0 >= v1) == false)
+		return false;
+
+	return true;
+}
+
 void	test_vector( void )
 {
 	t_sub_test	arr[] = {
@@ -732,6 +768,7 @@ void	test_vector( void )
 		{__swap, "swap"},
 		{__clear, "clear"},
 		{__nm_swap, "swap (non member)"},
+		{__relational_operators, "relational operators"},
 		{NULL, ""}
 	};
 
