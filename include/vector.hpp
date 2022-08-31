@@ -260,12 +260,11 @@ public:
 	/*                            MEMBER FUNCTIONS                            */
 	/**************************************************************************/
 
-	// TODO operator=
-	// vector&	operator=( vector const &rhs )
-	// {
-	// 	// assign(rhs.begin(), rhs.end());
-	// 	return *this;
-	// }
+	vector&	operator=( vector const &rhs )
+	{
+		assign(rhs.begin(), rhs.end());
+		return *this;
+	}
 
 	// ITERATOR
 
@@ -345,6 +344,9 @@ public:
 
 	void	clear( void )
 	{
+		if (_head == _tail)
+			return;
+
 		allocator_type	alloc;
 
 		--_tail;

@@ -13,6 +13,8 @@ inline static bool	__( void )
 typedef ft::vector<int>	t_vector_int;
 typedef ft::vector<std::string>	t_vector_str;
 
+// CONSTRUCTOR
+
 inline static bool	__default_constructor( void )
 {
 	std::vector<int>	std_v_int;
@@ -127,6 +129,31 @@ inline static bool	__copy_constructor( void )
 	return true;
 }
 
+// OPERATOR=
+
+inline static bool	__assign_operator( void )
+{
+	t_vector_int	v0(6,7);
+	t_vector_int	v1;
+
+	v1 = v0;
+
+	if (v1.size() != v0.size() ||
+		v1.capacity() != v0.capacity())
+		return false;
+
+	for (size_t i = 0; i < 6; ++i)
+	{
+		if (v1[i] != v0[i])
+			return false;
+	}
+
+	// REMIND test with v0 != v1
+	return true;
+}
+
+// ITERATOR
+
 inline static bool	__begin( void )
 {
 	t_vector_int	v_int_empty;
@@ -152,6 +179,8 @@ inline static bool	__end( void )
 	// REMIND test with vector not empty
 	return true;
 }
+
+// CAPACITY
 
 inline static bool	__size( void )
 {
@@ -207,23 +236,7 @@ inline static bool	__capacity( void )
 	return true;
 }
 
-inline static bool	__access_element_operator( void )
-{
-	t_vector_int	v_int(6,7);
-
-	try
-	{
-		v_int[0] = 0;
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << "Error: operator[]: " << e.what() << std::endl;
-		return false;
-	}
-
-	// REMIND test with different data
-	return true;
-}
+// MODIFIERS
 
 inline static bool	__assign_fill( void )
 {
@@ -324,6 +337,26 @@ inline static bool	__insert_range( void )
 	return true;
 }
 
+// ELEMENT ACCESS
+
+inline static bool	__access_element_operator( void )
+{
+	t_vector_int	v_int(6,7);
+
+	try
+	{
+		v_int[0] = 0;
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << "Error: operator[]: " << e.what() << std::endl;
+		return false;
+	}
+
+	// REMIND test with different data
+	return true;
+}
+
 void	test_vector( void )
 {
 	t_sub_test	arr[] = {
@@ -331,15 +364,16 @@ void	test_vector( void )
 		{__fill_constructor, "constructor (fill)"},
 		{__range_constructor, "constructor (rang)"},
 		{__copy_constructor, "constructor (copy)"},
+		{__assign_operator, "operator="},
 		{__begin, "begin"},
 		{__end, "end"},
 		{__size, "size"},
 		{__capacity, "capacity"},
-		{__access_element_operator, "operator[]"},
 		{__assign_fill, "assign (fill)"},
 		{__assign_range, "assign (range)"},
 		{__insert_fill, "insert (fill)"},
 		{__insert_range, "insert (range)"},
+		{__access_element_operator, "operator[]"},
 		{NULL, ""}
 	};
 
