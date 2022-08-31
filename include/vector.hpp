@@ -239,7 +239,6 @@ public:
 	vector( vector const &rhs ): _head(), _tail(), _end_of_storage()
 	{
 		__insert_dispatch(iterator(_head), rhs.begin(), rhs.end(), is_integral<iterator>());
-		// this->insert(iterator(_head), rhs.begin(), rhs.end());
 		return;
 	}
 
@@ -308,6 +307,21 @@ public:
 	}
 
 	// MODIFIERS
+
+	template <class InputIterator>
+	void	assign( InputIterator first, InputIterator last )
+	{
+		this->clear();
+		__insert_dispatch(this->begin(), first, last, is_integral<InputIterator>());
+		return;
+	}
+
+	void	assign( size_type n, value_type const &val )
+	{
+		this->clear();
+		__insert_fill(this->begin(), n, val);
+		return;
+	}
 
 	iterator	insert( iterator position, value_type const &val )
 	{
@@ -398,7 +412,10 @@ private:
 		allocator_type	alloc;
 
 		if (this->size() + n <= this->capacity())
+		{
 			__value_move(_head + offset + n, _head + offset, _tail, is_trivially_copyable<value_type>());
+			_tail += n;
+		}
 		else
 		{
 			size_t	new_capacity = this->size() * 2;

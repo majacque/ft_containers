@@ -225,6 +225,39 @@ inline static bool	__access_element_operator( void )
 	return true;
 }
 
+inline static bool	__assign_fill( void )
+{
+	t_vector_int	v(6,7);
+
+	v.assign(5,6);
+
+	if (v.size() != 5 ||
+		v.capacity() != 6)
+		return false;
+
+	// REMIND test with different data
+	return true;
+}
+
+inline static bool	__assign_range( void )
+{
+	t_vector_int	v0(6,7);
+	t_vector_int	v1(6,2);
+
+	v1.assign(v0.begin(), v0.end());
+
+	if (v1.size() != 6 ||
+		v1.capacity() != 6)
+		return false;
+
+	for (size_t i = 0; i < 6; ++i)
+	{
+		if (v1[i] != 7)
+			return false;
+	}
+	return true;
+}
+
 inline static bool	__insert_fill( void )
 {
 	t_vector_int	v_int_default;
@@ -303,6 +336,8 @@ void	test_vector( void )
 		{__size, "size"},
 		{__capacity, "capacity"},
 		{__access_element_operator, "operator[]"},
+		{__assign_fill, "assign (fill)"},
+		{__assign_range, "assign (range)"},
 		{__insert_fill, "insert (fill)"},
 		{__insert_range, "insert (range)"},
 		{NULL, ""}
