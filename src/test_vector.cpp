@@ -359,6 +359,37 @@ inline static bool	__insert_range( void )
 	return true;
 }
 
+inline static bool	__erase( void )
+{
+	t_vector_int	v(6,7);
+
+	for (size_t i = 0; i < 6; ++i)
+		v[i] += i;
+
+	t_vector_int::iterator it = v.erase(v.begin());
+
+	if (v.size() != 5 ||
+		v.capacity() != 6 ||
+		it != v.begin())
+		return false;
+
+	for (int i = 0; i < 5; ++i)
+	{
+		if (v[i] != i + 8)
+			return false;
+	}
+
+	v.erase(v.begin() + 1, v.end());
+
+	if (v.size() != 1 ||
+		v.capacity() != 6 ||
+		v[0] != 8)
+		return false;
+
+	// REMIND test with different data
+	return true;
+}
+
 // ELEMENT ACCESS
 
 inline static bool	__access_element_operator( void )
@@ -397,6 +428,7 @@ void	test_vector( void )
 		{__assign_range, "assign (range)"},
 		{__insert_fill, "insert (fill)"},
 		{__insert_range, "insert (range)"},
+		{__erase, "erase"},
 		{__access_element_operator, "operator[]"},
 		{NULL, ""}
 	};

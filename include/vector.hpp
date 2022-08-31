@@ -139,7 +139,7 @@ private:
 			return *this;
 		}
 
-		difference_type	operator-( vector_iterator const & rhs )
+		difference_type	operator-( vector_iterator const & rhs ) const
 		{
 			return _current - rhs._current;
 		}
@@ -360,6 +360,22 @@ public:
 	{
 		this->__insert_dispatch(position, first, last, is_integral<InputIterator>());
 		return;
+	}
+
+	iterator	erase(iterator const pos)
+	{
+		return this->erase(pos, pos + 1);
+	}
+
+	iterator	erase( iterator const first, iterator const last )
+	{
+		allocator_type	alloc;
+
+		for (iterator it = first ; it != last ; ++it)
+			alloc.destroy(it.base());
+		__value_move(first.base(), last.base(), _tail, is_trivially_copyable<value_type>());
+		_tail -= last - first;
+		return first;
 	}
 
 	void	clear( void )
