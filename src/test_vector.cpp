@@ -231,6 +231,38 @@ inline static bool	__size( void )
 	return true;
 }
 
+inline static bool	__max_size( void )
+{
+	t_vector_int	v;
+
+	if (v.max_size() != std::allocator<int>().max_size())
+		return false;
+	return true;
+}
+
+inline static bool	__resize( void )
+{
+	t_vector_int	v(6,7);
+
+	v.resize(3);
+
+	if (v.size() != 3 ||
+		v.capacity() != 6)
+		return false;
+
+	v.resize(5);
+
+	if (v.size() != 5 ||
+		v.capacity() != 6)
+		return false;
+
+	if (v[3] || v[4])
+		return false;
+
+	// REMIND test with different data
+	return true;
+}
+
 inline static bool	__capacity( void )
 {
 	t_vector_int	v_int_default;
@@ -423,6 +455,8 @@ void	test_vector( void )
 		{__rbegin, "rbegin"},
 		{__rend, "rend"},
 		{__size, "size"},
+		{__max_size, "max size"},
+		{__resize, "resize"},
 		{__capacity, "capacity"},
 		{__assign_fill, "assign (fill)"},
 		{__assign_range, "assign (range)"},

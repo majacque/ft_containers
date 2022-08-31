@@ -320,6 +320,14 @@ public:
 		return allocator_type().max_size();
 	}
 
+	void	resize( size_type const n, value_type const val = value_type() )
+	{
+		if (n < this->size())
+			this->erase(iterator(_head + n), this->end());
+		else if (n > this->size())
+			__insert_fill(this->end(), n - this->size(), val);
+	}
+
 	size_type	capacity( void ) const
 	{
 		return _end_of_storage - _head;
