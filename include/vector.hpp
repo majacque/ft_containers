@@ -229,16 +229,39 @@ public:
 
 	// CAPACITY
 
+	/**
+	 * @brief Returns the number of elements in the vector.
+	 * This is the number of actual objects held in the vector, which is not necessarily equal to its storage capacity.
+	 */
 	size_type	size( void ) const
 	{
 		return _tail - _head;
 	}
 
+	/**
+	 * @brief Returns the maximum number of elements that the vector can hold.
+	 * 
+	 * @par This is the maximum potential size the container can reach due to known system or library implementation limitations,
+	 * but the container is by no means guaranteed to be able to reach that size:
+	 * it can still fail to allocate storage at any point before that size is reached.
+	 */
 	size_type	max_size( void ) const
 	{
 		return allocator_type().max_size();
 	}
 
+	/**
+	 * @brief Resizes the container so that it contains @a n elements.
+	 * 
+	 * @par If @a n is smaller than the current container size, the content is reduced to its first @a n elements, removing those beyond (and destroying them).
+	 * If @a n is greater than the current container size, the content is expanded by inserting at the end as many elements as needed to reach a size of @a n.
+	 * If @a val is specified, the new elements are initialized as copies of @a val, otherwise, they are value-initialized.
+	 * If @a n is also greater than the current container capacity, an automatic reallocation of the allocated storage space takes place.
+	 * 
+	 * @param n New container size, expressed in number of elements.
+	 * @param val Object whose content is copied to the added elements in case that n is greater than the current container size.
+	 * If not specified, the default constructor is used instead.
+	 */
 	void	resize( size_type n, value_type const val = value_type() )
 	{
 		if (n < this->size())
@@ -247,16 +270,35 @@ public:
 			__insert_fill(this->end(), n - this->size(), val);
 	}
 
+	/**
+	 * @brief Returns the size of the storage space currently allocated for the vector, expressed in terms of elements.
+	 * This @a capacity is not necessarily equal to the vector size.
+	 * It can be equal or greater, with the extra space allowing to accommodate for growth without the need to reallocate on each insertion.
+	 */
 	size_type	capacity( void ) const
 	{
 		return _end_of_storage - _head;
 	}
 
+	/**
+	 * @brief Returns whether the vector is empty (i.e. whether its size is 0).
+	 * 
+	 * @return true if the container size is 0, false otherwise.
+	 */
 	bool	empty( void ) const
 	{
 		return _head == _tail;
 	}
 
+	/**
+	 * @brief Requests that the vector capacity be at least enough to contain @a n elements.
+	 * 
+	 * @par If n is greater than the current vector capacity,
+	 * the function causes the container to reallocate its storage increasing its capacity to n (or greater).
+	 * In all other cases, the function call does not cause a reallocation and the vector capacity is not affected.
+	 * 
+	 * @param n Minimum capacity for the vector.
+	 */
 	void	reserve( size_type n )
 	{
 		allocator_type	alloc;
