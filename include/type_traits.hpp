@@ -138,6 +138,13 @@ class is_trivially_copyable<double> : public true_type {};
 template <>
 class is_trivially_copyable<long double> : public true_type {};
 
+//is_same
+template <class T, class U>
+struct is_same : public false_type {};
+
+template<typename _Tp>
+struct is_same<_Tp, _Tp> : public true_type {};
+
 }
 
 #endif

@@ -14,170 +14,6 @@ namespace ft
 template < class T, class Alloc = std::allocator<T> >
 class vector
 {
-private:
-	template < typename Tp >
-	class vector_iterator
-	{
-	public:
-		typedef typename iterator_traits<Tp>::difference_type	difference_type;
-		typedef typename iterator_traits<Tp>::value_type		value_type;
-		typedef typename iterator_traits<Tp>::pointer			pointer;
-		typedef typename iterator_traits<Tp>::reference			reference;
-		typedef typename iterator_traits<Tp>::iterator_category	iterator_category;
-
-	private:
-		Tp	_current;
-
-	public:
-
-		/**************************************************************************/
-		/*                               CONSTRUCTOR                              */
-		/**************************************************************************/
-
-		vector_iterator( void ): _current()
-		{
-			return;
-		}
-
-		explicit vector_iterator( Tp const &current ): _current(current)
-		{
-			return;
-		}
-
-		template <typename _Iterator>
-		vector_iterator( vector_iterator<_Iterator> const &rhs ): _current(rhs.base())
-		{
-			return;
-		}
-
-		/**************************************************************************/
-		/*                               DESTRUCTOR                               */
-		/**************************************************************************/
-
-		~vector_iterator( void )
-		{
-			return;
-		}
-
-		/**************************************************************************/
-		/*                            MEMBER FUNCTIONS                            */
-		/**************************************************************************/
-
-		Tp const&	base( void ) const
-		{
-			return _current;
-		}
-
-		/**************************************************************************/
-		/*                            MEMBER OPERATORS                            */
-		/**************************************************************************/
-
-		vector_iterator&	operator=( vector_iterator const& rhs)
-		{
-			_current = rhs.base();
-			return *this;
-		}
-
-		reference	operator*( void ) const
-		{
-			return *_current;
-		}
-
-		pointer	operator->( void ) const
-		{
-			return &(*_current);
-		}
-
-		reference	operator[]( difference_type n ) const
-		{
-			return _current[n];
-		}
-
-		vector_iterator	operator+( difference_type n ) const
-		{
-			return vector_iterator(_current + n);
-		}
-
-		vector_iterator	operator-( difference_type n ) const
-		{
-			return vector_iterator(_current - n);
-		}
-
-		vector_iterator&	operator++( void )
-		{
-			++_current;
-			return *this;
-		}
-
-		vector_iterator	operator++( int )
-		{
-			vector_iterator	tmp(_current);
-			++_current;
-			return tmp;
-		}
-
-		vector_iterator&	operator--( void )
-		{
-			--_current;
-			return *this;
-		}
-
-		vector_iterator	operator--( int )
-		{
-			vector_iterator	tmp(_current);
-			--_current;
-			return tmp;
-		}
-
-		vector_iterator&	operator+=( difference_type n )
-		{
-			_current += n;
-			return *this;
-		}
-
-		vector_iterator&	operator-=( difference_type n )
-		{
-			_current -= n;
-			return *this;
-		}
-
-		difference_type	operator-( vector_iterator const & rhs ) const
-		{
-			return _current - rhs._current;
-		}
-
-		bool	operator==( vector_iterator const &rhs )
-		{
-			return _current == rhs.base();
-		}
-
-		bool	operator!=( vector_iterator const &rhs )
-		{
-			return _current != rhs.base();
-		}
-
-		bool	operator<( vector_iterator const &rhs )
-		{
-			return _current < rhs.base();
-		}
-
-		bool	operator<=( vector_iterator const &rhs )
-		{
-			return _current <= rhs.base();
-		}
-
-		bool	operator>( vector_iterator const &rhs )
-		{
-			return _current > rhs.base();
-		}
-
-		bool	operator>=( vector_iterator const &rhs )
-		{
-			return _current >= rhs.base();
-		}
-
-	};
-
 public:
 	typedef T													value_type;
 	typedef Alloc												allocator_type;
@@ -185,8 +21,8 @@ public:
 	typedef typename allocator_type::const_reference			const_reference;
 	typedef typename allocator_type::pointer					pointer;
 	typedef typename allocator_type::const_pointer				const_pointer;
-	typedef vector_iterator<pointer>							iterator;
-	typedef vector_iterator<const_pointer>						const_iterator;
+	typedef __ft::__normal_iterator<pointer>					iterator;
+	typedef __ft::__normal_iterator<const_pointer>				const_iterator;
 	typedef typename ft::reverse_iterator<iterator>				reverse_iterator;
 	typedef typename ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 	typedef typename iterator_traits<iterator>::difference_type	difference_type;
@@ -362,6 +198,11 @@ public:
 	// ELEMENT ACCESS
 
 	reference	operator[]( size_type n )
+	{
+		return _head[n];
+	}
+
+	const_reference	operator[]( size_type n ) const
 	{
 		return _head[n];
 	}
@@ -567,7 +408,7 @@ private:
 			if (new_capacity < this->size() + n)
 				new_capacity = this->size() + n;
 
-			pointer	new_head = alloc.allocate(new_capacity, _head);
+			pointer	new_head = alloc.allocate(new_capacity/* , _head */);
 			pointer	new_tail = new_head + this->size() + n;
 			if (_head)
 			{
@@ -666,104 +507,8 @@ private:
 
 };
 
-// ITERATOR RELATIONAL OPERATORS
-
-template <class T>
-bool	operator==( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
-{
-	return lhs.base() == rhs.base();
-}
-
-template <class T, class U>
-bool	operator==( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
-{
-	return lhs.base() == rhs.base();
-}
-
-template <class T>
-bool	operator!=( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
-{
-	return lhs.base() != rhs.base();
-}
-
-template <class T, class U>
-bool	operator!=( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
-{
-	return lhs.base() != rhs.base();
-}
-
-template <class T>
-bool	operator<( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
-{
-	return lhs.base() < rhs.base();
-}
-
-template <class T, class U>
-bool	operator<( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
-{
-	return lhs.base() < rhs.base();
-}
-
-template <class T>
-bool	operator<=( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
-{
-	return lhs.base() <= rhs.base();
-}
-
-template <class T, class U>
-bool	operator<=( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
-{
-	return lhs.base() <= rhs.base();
-}
-
-template <class T>
-bool	operator>( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
-{
-	return lhs.base() > rhs.base();
-}
-
-template <class T, class U>
-bool	operator>( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
-{
-	return lhs.base() > rhs.base();
-}
-
-template <class T>
-bool	operator>=( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
-{
-	return lhs.base() >= rhs.base();
-}
-
-template <class T, class U>
-bool	operator>=( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
-{
-	return lhs.base() >= rhs.base();
-}
-
-template <class T>
-typename vector<T>::iterator	operator+( typename vector<T>::iterator::difference_type n, typename vector<T>::iterator const &it )
-{
-	return it + n;
-}
-
-template <class T>
-typename vector<T>::iterator::difference_type
-	operator-( typename vector<T>::iterator const &lhs, typename vector<T>::iterator const &rhs )
-{
-	return lhs.base() - rhs.base();
-}
-
-template <class T, class U>
-typename vector<U>::iterator::difference_type
-	operator-( typename vector<T>::iterator const &lhs, typename vector<U>::iterator const &rhs )
-{
-	return lhs.base() - rhs.base();
-}
-
-// VECTOR RELATIONAL OPERATORS
-
 template <class T, class Alloc>
-bool	operator==( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
+bool	operator==( vector<T,Alloc> const &lhs, vector<T,Alloc> const &rhs )
 {
 	if (lhs.size() != rhs.size())
 		return false;
@@ -779,32 +524,31 @@ bool	operator==( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
 }
 
 template <class T, class Alloc>
-bool	operator!=( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
+bool	operator!=( vector<T,Alloc> const &lhs, vector<T,Alloc> const &rhs )
 {
 	return !(lhs == rhs);
 }
 
-
 template <class T, class Alloc>
-bool	operator<( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
+bool	operator<( vector<T,Alloc> const &lhs, vector<T,Alloc> const &rhs )
 {
-	return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 }
 
 template <class T, class Alloc>
-bool	operator<=( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
+bool	operator<=( vector<T,Alloc> const &lhs, vector<T,Alloc> const &rhs )
 {
 	return !(rhs<lhs);
 }
 
 template <class T, class Alloc>
-bool	operator>( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
+bool	operator>( vector<T,Alloc> const &lhs, vector<T,Alloc> const &rhs )
 {
 	return rhs<lhs;
 }
 
 template <class T, class Alloc>
-bool	operator>=( vector<T,Alloc> &lhs, vector<T,Alloc> &rhs )
+bool	operator>=( vector<T,Alloc> const &lhs, vector<T,Alloc> const &rhs )
 {
 	return !(lhs<rhs);
 }
