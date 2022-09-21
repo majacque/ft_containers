@@ -320,16 +320,33 @@ public:
 
 	// ELEMENT ACCESS
 
+	/**
+	 * @brief Returns a reference to the element at position @a n in the vector container.
+	 * 
+	 * @param n Position of an element in the container.
+	 */
 	reference	operator[]( size_type n )
 	{
 		return _head[n];
 	}
 
+	/**
+	 * @brief Returns a const reference to the element at position @a n in the vector container.
+	 * 
+	 * @param n Position of an element in the container.
+	 */
 	const_reference	operator[]( size_type n ) const
 	{
 		return _head[n];
 	}
 
+	/**
+	 * @brief Returns a reference to the element at position @a n in the vector.
+	 * The function automatically checks whether @a n is within the bounds of valid elements in the vector,
+	 * throwing an out_of_range exception if it is not (i.e., if @a n is greater than, or equal to, its size).
+	 * 
+	 * @param n Position of an element in the container.
+	 */
 	reference	at( size_type n )
 	{
 		if (n > this->size())
@@ -337,6 +354,13 @@ public:
 		return _head[n];
 	}
 
+	/**
+	 * @brief Returns a const reference to the element at position @a n in the vector.
+	 * The function automatically checks whether @a n is within the bounds of valid elements in the vector,
+	 * throwing an out_of_range exception if it is not (i.e., if @a n is greater than, or equal to, its size).
+	 * 
+	 * @param n Position of an element in the container.
+	 */
 	const_reference	at( size_type n ) const
 	{
 		if (n > this->size())
@@ -344,21 +368,33 @@ public:
 		return _head[n];
 	}
 
+	/**
+	 * @brief Returns a reference to the first element in the vector.
+	 */
 	reference	front( void )
 	{
 		return *_head;
 	}
 
+	/**
+	 * @brief Returns a const reference to the first element in the vector.
+	 */
 	const_reference	front( void ) const
 	{
 		return *_head;
 	}
 
+	/**
+	 * @brief Returns a reference to the last element in the vector.
+	 */
 	reference	back( void )
 	{
 		return *(_tail - 1);
 	}
 
+	/**
+	 * @brief Returns a const reference to the last element in the vector.
+	 */
 	const_reference	back( void ) const
 	{
 		return *(_tail - 1);
