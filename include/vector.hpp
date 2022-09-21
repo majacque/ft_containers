@@ -117,6 +117,15 @@ public:
 	/*                            MEMBER FUNCTIONS                            */
 	/**************************************************************************/
 
+	/**
+	 * @brief Copies all the elements from @a rhs into the container.
+	 * 
+	 * @par The container preserves its current allocator, which is used to allocate storage in case of reallocation.
+	 * Any elements held in the container before the call are either assigned to or destroyed.
+	 * 
+	 * @param rhs A vector object of the same type (i.e., with the same template parameters, T and Alloc).
+	 * @return A reference to the instance.
+	 */
 	vector&	operator=( vector const &rhs )
 	{
 		assign(rhs.begin(), rhs.end());
@@ -125,41 +134,94 @@ public:
 
 	// ITERATOR
 
+	/**
+	 * @brief Returns an iterator pointing to the first element in the vector.
+	 * If the container is empty, the returned iterator value shall not be dereferenced.
+	 * 
+	 * @return An iterator to the beginning of the sequence container.
+	 */
 	iterator	begin( void )
 	{
 		return iterator(_head);
 	}
 
+	/**
+	 * @brief Returns a const iterator pointing to the first element in the vector.
+	 * If the container is empty, the returned const iterator value shall not be dereferenced.
+	 * 
+	 * @return A const iterator to the beginning of the sequence container.
+	 */
 	const_iterator	begin( void ) const
 	{
 		return const_iterator(_head);
 	}
 
+	/**
+	 * @brief Returns an iterator referring to the @a past-the-end element in the vector container.
+	 * 
+	 * @par The @a past-the-end element is the theoretical element that would follow the last element in the vector.
+	 * It does not point to any element, and thus shall not be dereferenced.
+	 * 
+	 * @return An iterator to the element past the end of the sequence.
+	 */
 	iterator	end( void )
 	{
 		return iterator(_tail);
 	}
 
+	/**
+	 * @brief Returns a const iterator referring to the @a past-the-end element in the vector container.
+	 * 
+	 * @par The @a past-the-end element is the theoretical element that would follow the last element in the vector.
+	 * It does not point to any element, and thus shall not be dereferenced.
+	 * 
+	 * @return A const iterator to the element past the end of the sequence.
+	 */
 	const_iterator	end( void ) const
 	{
 		return const_iterator(_tail);
 	}
 
+	/**
+	 * @brief Returns a reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).
+	 * Points to the element right before the one that would be pointed to by member @a end.
+	 * 
+	 * @return A reverse iterator to the reverse beginning of the sequence container.
+	 */
 	reverse_iterator	rbegin( void )
 	{
 		return reverse_iterator(this->end());
 	}
 
+
+	/**
+	 * @brief Returns a const reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).
+	 * Points to the element right before the one that would be pointed to by member @a end.
+	 * 
+	 * @return A const reverse iterator to the reverse beginning of the sequence container.
+	 */
 	const_reverse_iterator	rbegin( void ) const
 	{
 		return const_reverse_iterator(this->end());
 	}
 
+	/**
+	 * @brief Returns a reverse iterator pointing to the theoretical element preceding the first element in the vector
+	 * (which is considered its reverse end).
+	 * 
+	 * @return A reverse iterator to the reverse end of the sequence container.
+	 */
 	reverse_iterator	rend( void )
 	{
 		return reverse_iterator(this->begin());
 	}
 
+	/**
+	 * @brief Returns a const reverse iterator pointing to the theoretical element preceding the first element in the vector
+	 * (which is considered its reverse end).
+	 * 
+	 * @return A const reverse iterator to the reverse end of the sequence container.
+	 */
 	const_reverse_iterator	rend( void ) const
 	{
 		return const_reverse_iterator(this->begin());
