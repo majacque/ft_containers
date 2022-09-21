@@ -50,7 +50,7 @@ public:
 	}
 
 	/**
-	 * @brief Constructs a vector with n elements. Each element is a copy of val.
+	 * @brief Constructs a vector with @a n elements. Each element is a copy of @a val.
 	 * 
 	 * @param n Initial container size (i.e., the number of elements in the container at construction).
 	 * @param val Value to fill the container with. Each of the n elements in the container will be initialized to a copy of this value.
@@ -66,6 +66,16 @@ public:
 		return;
 	}
 
+	/**
+	 * @brief Constructs a container with as many elements as the range [first,last),
+	 * with each element constructed from its corresponding element in that range, in the same order.
+	 * 
+	 * @par The range used is [first,last), which includes all the elements between @a first and @a last,
+	 * including the element pointed by @a first but not the element pointed by @a last.
+	 * 
+	 * @param first An input iterator to the initial position in a range.
+	 * @param last An input iterator to the final position in a range.
+	 */
 	template <class InputIterator>
 	vector( InputIterator first, InputIterator last, allocator_type const & = allocator_type() ):
 																_head(), _tail(), _end_of_storage()
@@ -74,6 +84,12 @@ public:
 		return;
 	}
 
+	/**
+	 * @brief Constructs a container with a copy of each of the elements in @a rhs, in the same order.
+	 * 
+	 * @param rhs Another vector object of the same type (with the same class template arguments T and Alloc),
+	 * whose contents are either copied or acquired.
+	 */
 	vector( vector const &rhs ): _head(), _tail(), _end_of_storage()
 	{
 		__insert_dispatch(iterator(_head), rhs.begin(), rhs.end(), is_integral<iterator>());
@@ -84,6 +100,9 @@ public:
 	/*                               DESTRUCTOR                               */
 	/**************************************************************************/
 
+	/**
+	 * @brief Destroys the container object.
+	 */
 	~vector( void )
 	{
 		if (_head)
