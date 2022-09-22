@@ -402,6 +402,19 @@ public:
 
 	// MODIFIERS
 
+	/**
+	 * @brief Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly.
+	 * The new contents are elements constructed from each of the elements in the range between @a first and @a last, in the same order.
+	 * The range used is [first,last), which includes all the elements between @a first and @a last,
+	 * including the element pointed by first but not the element pointed by @a last.
+	 * 
+	 * @par Any elements held in the container before the call are destroyed and replaced by newly constructed elements
+	 * (no assignments of elements take place). This causes an automatic reallocation of the allocated storage space if
+	 * -and only if- the new vector size surpasses the current vector capacity.
+	 * 
+	 * @param first An input iterator to the initial position in a sequence.
+	 * @param last An input iterator to the final position in a sequence.
+	 */
 	template <class InputIterator>
 	void	assign( InputIterator first, InputIterator last )
 	{
@@ -410,6 +423,13 @@ public:
 		return;
 	}
 
+	/**
+	 * @brief Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly.
+	 * The new contents are @a n elements, each initialized to a copy of @a val.
+	 * 
+	 * @param n New size for the container.
+	 * @param val Value to fill the container with. Each of the @a n elements in the container will be initialized to a copy of this value.
+	 */
 	void	assign( size_type n, value_type const &val )
 	{
 		this->clear();
@@ -417,12 +437,20 @@ public:
 		return;
 	}
 
+	/**
+	 * @brief Adds a new element at the end of the vector, after its current last element. The content of @a val is copied (or moved) to the new element.
+	 * 
+	 * @param val Value to be copied (or moved) to the new element.
+	 */
 	void	push_back( value_type const &val )
 	{
 		__insert_fill(this->end(), 1, val);
 		return;
 	}
 
+	/**
+	 * @brief Removes the last element in the vector, effectively reducing the container size by one.
+	 */
 	void	pop_back( void )
 	{
 		if (_tail && _tail != _head)
@@ -433,6 +461,15 @@ public:
 		return;
 	}
 
+	/**
+	 * @brief The vector is extended by inserting new elements before the element at the specified position,
+	 * effectively increasing the container size by the number of elements inserted.
+	 * This causes an automatic reallocation of the allocated storage space if -and only if- the new vector size surpasses the current vector capacity.
+	 * 
+	 * @param position Position in the vector where the new elements are inserted.
+	 * @param val Value to be copied (or moved) to the inserted elements.
+	 * @return An iterator that points to the first of the newly inserted elements.
+	 */
 	iterator	insert( iterator position, value_type const &val )
 	{
 		size_type const	offset = position - this->begin();
@@ -440,12 +477,35 @@ public:
 		return this->begin() + offset;
 	}
 
+	/**
+	 * @brief The vector is extended by inserting new elements before the element at the specified position,
+	 * effectively increasing the container size by the number of elements inserted.
+	 * This causes an automatic reallocation of the allocated storage space if -and only if- the new vector size surpasses the current vector capacity.
+	 * 
+	 * @param position Position in the vector where the new elements are inserted.
+	 * @param n Number of elements to insert. Each element is initialized to a copy of val.
+	 * @param val Value to be copied (or moved) to the inserted elements.
+	 */
 	void	insert( iterator position, size_type n, value_type const &val )
 	{
 		__insert_fill(position, n, val);
 		return;
 	}
 
+	/**
+	 * @brief The vector is extended by inserting new elements before the element at the specified position,
+	 * effectively increasing the container size by the number of elements inserted.
+	 * This causes an automatic reallocation of the allocated storage space if -and only if- the new vector size surpasses the current vector capacity.
+	 * 
+	 * @par @a first and @a last specifies a range of elements.
+	 * Copies of the elements in the range [first,last) are inserted at @a position (in the same order).
+	 * Notice that the range includes all the elements between @a first and @a last,
+	 * including the element pointed by @a first but not the one pointed by @a last.
+	 * 
+	 * @param position Position in the vector where the new elements are inserted.
+	 * @param first An input iterator to the initial position in a sequence.
+	 * @param last An input iterator to the final position in a sequence.
+	 */
 	template <class InputIterator>
 	void	insert( iterator position, InputIterator first, InputIterator last )
 	{
@@ -453,11 +513,30 @@ public:
 		return;
 	}
 
+	/**
+	 * @brief Removes from the vector a single element which is destroyed. This effectively reduces the container size.
+	 * 
+	 * @param pos An iterator pointing to a single element to be removed from the vector.
+	 * @return An iterator pointing to the new location of the element that followed the element erased by the function call.
+	 * This is the container @a end if the operation erased the last element in the sequence.
+	 */
 	iterator	erase( iterator pos )
 	{
 		return this->erase(pos, pos + 1);
 	}
 
+	/**
+	 * @brief Removes from the vector a range of elements ([first,last)).
+	 * This effectively reduces the container size by the number of elements removed, which are destroyed.
+	 * 
+	 * @par Iterators specifying a range within the vector to be removed: [first,last).
+	 * i.e., the range includes all the elements between @a first and @a last, including the element pointed by @a first but not the one pointed by @a last.
+	 * 
+	 * @param first An input iterator to the initial position in a sequence.
+	 * @param last An input iterator to the final position in a sequence.
+	 * @return An iterator pointing to the new location of the element that followed the last element erased by the function call.
+	 * This is the container @a end if the operation erased the last element in the sequence.
+	 */
 	iterator	erase( iterator first, iterator last )
 	{
 		allocator_type	alloc;
@@ -469,6 +548,13 @@ public:
 		return first;
 	}
 
+	/**
+	 * @brief Exchanges the content of the container by the content of @a x, which is another vector object of the same type. Sizes may differ.
+	 * All iterators, references and pointers remain valid for the swapped objects.
+	 * 
+	 * @param x Another vector container of the same type (i.e., instantiated with the same template parameters, T and Alloc)
+	 * whose content is swapped with that of this container.
+	 */
 	void	swap( vector &x )
 	{
 		pointer	tmp_head = x._head;
@@ -485,6 +571,10 @@ public:
 		return;
 	}
 
+	/**
+	 * @brief Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
+	 * A reallocation is not guaranteed to happen, and the vector capacity is not guaranteed to change due to calling this function.
+	 */
 	void	clear( void )
 	{
 		if (_head == _tail)
