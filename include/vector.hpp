@@ -591,14 +591,13 @@ public:
 
 	// ALLOCATOR
 
+	/**
+	 * @brief Returns a copy of the allocator object associated with the vector.
+	 */
 	allocator_type	get_allocator( void ) const
 	{
 		return allocator_type();
 	}
-
-	/**************************************************************************/
-	/*                            MEMBER OPERATORS                            */
-	/**************************************************************************/
 
 	/**************************************************************************/
 	/*                           INTERNAL FUNCTIONS                           */
@@ -756,6 +755,20 @@ private:
 
 };
 
+/**
+ * @brief Performs the appropriate comparison operation between the vector containers @a lhs and @a rhs.
+ * 
+ * @par The equality comparison (operator==) is performed by first comparing sizes, and if they match,
+ * the elements are compared sequentially using operator==, stopping at the first mismatch (as if using algorithm equal).
+ * The less-than comparison (operator<) behaves as if using algorithm lexicographical_compare,
+ * which compares the elements sequentially using operator< in a reciprocal manner (i.e., checking both a<b and b<a) and stopping at the first occurrence.
+ * The other operations also use the operators == and < internally to compare the elements.
+ * 
+ * @param lhs A vector container having the same template parameters than @a rhs.
+ * @param rhs A vector container having the same template parameters than @a lhs.
+ * @return true if the condition holds, and false otherwise.
+ */
+
 template <class T, class Alloc>
 bool	operator==( vector<T,Alloc> const &lhs, vector<T,Alloc> const &rhs )
 {
@@ -802,6 +815,13 @@ bool	operator>=( vector<T,Alloc> const &lhs, vector<T,Alloc> const &rhs )
 	return !(lhs<rhs);
 }
 
+/**
+ * @brief The contents of container @a x are exchanged with those of @a y.
+ * Both container objects must be of the same type (same template parameters), although sizes may differ.
+ * 
+ * @param x A vector containers of the same type as @a y.
+ * @param y A vector containers of the same type as @a x.
+ */
 template <class T, class Alloc>
 void	swap( vector<T, Alloc> &x, vector<T, Alloc> &y )
 {
