@@ -7,7 +7,7 @@
 namespace ft
 {
 
-template<class Iterator>
+template <class Iterator>
 class iterator_traits
 {
 public:
@@ -18,7 +18,7 @@ public:
 	typedef typename Iterator::iterator_category	iterator_category;
 };
 
-template<class T>
+template <class T>
 class iterator_traits<T*>
 {
 public:
@@ -29,7 +29,7 @@ public:
 	typedef std::random_access_iterator_tag	iterator_category;
 };
 
-template<class T>
+template <class T>
 class iterator_traits<const T*>
 {
 public:
@@ -81,8 +81,8 @@ public:
 	 * 
 	 * @param rev_it A reverse iterator
 	 */
-	template <typename _Iterator>
-	reverse_iterator( reverse_iterator<_Iterator> const &rev_it): _current(rev_it.base())
+	template <typename _Tp>
+	reverse_iterator( reverse_iterator<_Tp> const &rev_it): _current(rev_it.base())
 	{
 		return;
 	}
@@ -357,53 +357,61 @@ typename reverse_iterator<IteratorL>::difference_type operator- ( reverse_iterat
 namespace __ft
 {
 
-template<typename _Iterator>
+template <typename T>
 class __normal_iterator
 {
 protected:
-	_Iterator _current;
+	T _current;
 
-	typedef ft::iterator_traits<_Iterator>			traits_type;
+	typedef ft::iterator_traits<T>					traits_type;
 
 public:
-	typedef _Iterator								iterator_type;
+	typedef T										iterator_type;
 	typedef typename traits_type::iterator_category	iterator_category;
-	typedef typename traits_type::value_type  		value_type;
-	typedef typename traits_type::difference_type 	difference_type;
-	typedef typename traits_type::reference 		reference;
-	typedef typename traits_type::pointer   		pointer;
+	typedef typename traits_type::value_type		value_type;
+	typedef typename traits_type::difference_type	difference_type;
+	typedef typename traits_type::reference			reference;
+	typedef typename traits_type::pointer			pointer;
 
-	__normal_iterator(): _current(_Iterator())
+	/**************************************************************************/
+	/*                               CONSTRUCTOR                              */
+	/**************************************************************************/
+
+	__normal_iterator(): _current(iterator_type())
 	{
 		return;
 	}
 
-	explicit __normal_iterator(const _Iterator& it): _current(it)
+	explicit __normal_iterator(const iterator_type& it): _current(it)
 	{
 		return;
 	}
 
-	template<typename _Iter>
-	__normal_iterator(__normal_iterator<_Iter> const & rhs)
+	template <typename _T>
+	__normal_iterator(__normal_iterator<_T> const & rhs)
 		: _current(rhs.base())
 	{
 		return;
 	}
 
+	/**************************************************************************/
+	/*                            MEMBER OPERATOR                             */
+	/**************************************************************************/
+
 	reference	operator*( void ) const
 	{
-		return (*_current);
+		return *_current;
 	}
 
 	pointer	operator->( void ) const
 	{
-		return (&(*_current));
+		return &(*_current);
 	}
 
 	__normal_iterator&	operator++( void )
 	{
 		++_current;
-		return (*this);
+		return *this;
 	}
 
 	__normal_iterator	operator++( int )
@@ -416,7 +424,7 @@ public:
 	__normal_iterator&	operator--( void )
 	{
 		--_current;
-		return (*this);
+		return *this;
 	}
 
 	__normal_iterator	operator--( int )
@@ -428,131 +436,135 @@ public:
 
 	reference	operator[]( difference_type n ) const
 	{
-		return (_current[n]);
+		return _current[n];
 	}
 
 	__normal_iterator&	operator+=( difference_type n )
 	{
 		_current += n;
-		return (*this);
+		return *this;
 	}
 
 	__normal_iterator	operator+( difference_type n ) const
 	{
-		return (__normal_iterator(_current + n));
+		return __normal_iterator(_current + n);
 	}
 
 	__normal_iterator&	operator-=( difference_type n )
 	{
 		_current -= n;
-		return (*this);
+		return *this;
 	}
 
 	__normal_iterator	operator-( difference_type n ) const
 	{
-		return (__normal_iterator(_current - n));
+		return __normal_iterator(_current - n);
 	}
 
-	const _Iterator&	base( void ) const
+	const iterator_type&	base( void ) const
 	{
-		return (_current);
+		return _current;
 	}
 };
 
-template<typename _IteratorL, typename _IteratorR>
-bool	operator==( __normal_iterator<_IteratorL> const & lhs, __normal_iterator<_IteratorR> const & rhs )
+/**************************************************************************/
+/*                          NON-MEMBER OPERATOR                           */
+/**************************************************************************/
+
+template <typename _TpL, typename _TpR>
+bool	operator==( __normal_iterator<_TpL> const & lhs, __normal_iterator<_TpR> const & rhs )
 {
-	return (lhs.base() == rhs.base());
+	return lhs.base() == rhs.base();
 }
 
-template<typename _Iterator>
-bool	operator==( __normal_iterator<_Iterator> const & lhs, __normal_iterator<_Iterator> const & rhs )
+template <typename _Tp>
+bool	operator==( __normal_iterator<_Tp> const & lhs, __normal_iterator<_Tp> const & rhs )
 {
-	return (lhs.base() == rhs.base());
+	return lhs.base() == rhs.base();
 }
 
-template<typename _IteratorL, typename _IteratorR>
-bool	operator!=( __normal_iterator<_IteratorL> const & lhs, __normal_iterator<_IteratorR> const & rhs )
+template <typename _TpL, typename _TpR>
+bool	operator!=( __normal_iterator<_TpL> const & lhs, __normal_iterator<_TpR> const & rhs )
 {
 	return lhs.base() != rhs.base();
 }
 
-template<typename _Iterator>
-bool	operator!=( __normal_iterator<_Iterator> const & lhs, __normal_iterator<_Iterator> const & rhs )
+template <typename _Tp>
+bool	operator!=( __normal_iterator<_Tp> const & lhs, __normal_iterator<_Tp> const & rhs )
 {
-	return (lhs.base() != rhs.base());
+	return lhs.base() != rhs.base();
 }
 
-template<typename _IteratorL, typename _IteratorR>
-bool	operator<( __normal_iterator<_IteratorL> const & lhs, __normal_iterator<_IteratorR> const & rhs )
+template <typename _TpL, typename _TpR>
+bool	operator<( __normal_iterator<_TpL> const & lhs, __normal_iterator<_TpR> const & rhs )
 {
-	return (lhs.base() < rhs.base());
+	return lhs.base() < rhs.base();
 }
 
-template<typename _Iterator>
-bool	operator<( __normal_iterator<_Iterator> const & lhs, __normal_iterator<_Iterator> const & rhs )
+template <typename _Tp>
+bool	operator<( __normal_iterator<_Tp> const & lhs, __normal_iterator<_Tp> const & rhs )
 {
-	return (lhs.base() < rhs.base());
+	return lhs.base() < rhs.base();
 }
 
-template<typename _IteratorL, typename _IteratorR>
-bool	operator>( __normal_iterator<_IteratorL> const & lhs, __normal_iterator<_IteratorR> const & rhs )
+template <typename _TpL, typename _TpR>
+bool	operator>( __normal_iterator<_TpL> const & lhs, __normal_iterator<_TpR> const & rhs )
 {
-	return (lhs.base() > rhs.base());
+	return lhs.base() > rhs.base();
 }
 
-template<typename _Iterator>
-bool	operator>( __normal_iterator<_Iterator> const & lhs, __normal_iterator<_Iterator> const & rhs )
+template <typename _Tp>
+bool	operator>( __normal_iterator<_Tp> const & lhs, __normal_iterator<_Tp> const & rhs )
 {
-	return (lhs.base() > rhs.base());
+	return lhs.base() > rhs.base();
 }
 
-template<typename _IteratorL, typename _IteratorR>
-bool	operator<=( __normal_iterator<_IteratorL> const & lhs, __normal_iterator<_IteratorR> const & rhs )
+template <typename _TpL, typename _TpR>
+bool	operator<=( __normal_iterator<_TpL> const & lhs, __normal_iterator<_TpR> const & rhs )
 {
-	return (lhs.base() <= rhs.base());
+	return lhs.base() <= rhs.base();
 }
 
-template<typename _Iterator>
-bool	operator<=( __normal_iterator<_Iterator> const & lhs, __normal_iterator<_Iterator> const & rhs )
+template <typename _Tp>
+bool	operator<=( __normal_iterator<_Tp> const & lhs, __normal_iterator<_Tp> const & rhs )
 {
-	return (lhs.base() <= rhs.base());
+	return lhs.base() <= rhs.base();
 }
 
-template<typename _IteratorL, typename _IteratorR>
-bool	operator>=( __normal_iterator<_IteratorL> const & lhs, __normal_iterator<_IteratorR> const & rhs )
+template <typename _TpL, typename _TpR>
+bool	operator>=( __normal_iterator<_TpL> const & lhs, __normal_iterator<_TpR> const & rhs )
 {
-	return (lhs.base() >= rhs.base());
+	return lhs.base() >= rhs.base();
 }
 
-template<typename _Iterator>
-bool	operator>=( __normal_iterator<_Iterator> const & lhs, __normal_iterator<_Iterator> const & rhs )
+template <typename _Tp>
+bool	operator>=( __normal_iterator<_Tp> const & lhs, __normal_iterator<_Tp> const & rhs )
 {
-	return (lhs.base() >= rhs.base());
+	return lhs.base() >= rhs.base();
 }
 
-template<typename _IteratorL, typename _IteratorR>
-typename __normal_iterator<_IteratorL>::difference_type
-	operator-( __normal_iterator<_IteratorL> const & lhs,
-			__normal_iterator<_IteratorR> const & rhs )
+template <typename _TpL, typename _TpR>
+typename __normal_iterator<_TpL>::difference_type
+	operator-( __normal_iterator<_TpL> const & lhs,
+			__normal_iterator<_TpR> const & rhs )
 {
-	return (lhs.base() - rhs.base());
+	return lhs.base() - rhs.base();
 }
 
-template<typename _Iterator>
-typename __normal_iterator<_Iterator>::difference_type
-	operator-( __normal_iterator<_Iterator> const & lhs,
-			__normal_iterator<_Iterator> const & rhs )
+template <typename _Tp>
+typename __normal_iterator<_Tp>::difference_type
+	operator-( __normal_iterator<_Tp> const & lhs,
+			__normal_iterator<_Tp> const & rhs )
 {
-	return (lhs.base() - rhs.base());
+	return lhs.base() - rhs.base();
 }
 
-template<typename _Iterator>
-__normal_iterator<_Iterator>
-	operator+( typename __normal_iterator<_Iterator>::difference_type n,
-			__normal_iterator<_Iterator> const & it )
+template <typename _Tp>
+__normal_iterator<_Tp>
+	operator+( typename __normal_iterator<_Tp>::difference_type n,
+			__normal_iterator<_Tp> const & it )
 {
-	return (__normal_iterator<_Iterator>(it.base() + n));
+	return __normal_iterator<_Tp>(it.base() + n);
 }
 
 }
