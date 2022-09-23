@@ -5,7 +5,7 @@
 
 namespace ft {
 
-template <typename T>
+template < class T >
 struct rb_node
 {
 	typedef T	value_type;
