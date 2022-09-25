@@ -5,6 +5,9 @@
 #include <functional>
 #include <memory>
 
+// TODO add a nil element to do a past-the-end
+// the root parent point on it
+// his left child point on the max
 namespace ft
 {
 	template < class T, class Compare = std::less<T>, class Alloc = std::allocator<rb_node<T> > >
@@ -30,7 +33,7 @@ namespace ft
 		// typedef reverse_iterator<iterator>								reverse_iterator;
 
 		// typedef typename iterator_traits<iterator>::difference_type		difference_type;
-	
+
 	private:
 		pointer			_root;
 		pointer			_min;
@@ -47,7 +50,7 @@ namespace ft
 		 * @brief Constructs an empty rb tree, with no elements.
 		 * 
 		 */
-		rb_tree( void ): _root(), _min(), _max(), _size(), alloc() // REMIND see if we can take an argument like vector default constructor
+		rb_tree( void ): _root(), _min(), _max(), _size(), _alloc() // REMIND see if we can take an argument like vector default constructor
 		{
 			return;
 		}

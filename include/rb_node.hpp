@@ -11,7 +11,7 @@ struct rb_node
 	typedef T	value_type;
 
 	value_type	val;
-	bool		color;
+	int			color;
 	rb_node*	parent;
 	rb_node*	childs[2];
 
@@ -20,6 +20,31 @@ struct rb_node
 		return;
 	}
 };
+
+template <typename _Tp>
+bool	operator==( rb_node<_Tp> const & lhs, rb_node<_Tp> const & rhs )
+{
+	return lhs.val == rhs.val;
+}
+
+template <typename _TpL, typename _TpR>
+bool	operator==( rb_node<_TpL> const & lhs, rb_node<_TpR> const & rhs )
+{
+	return lhs.val == rhs.val;
+}
+
+template <typename _Tp>
+bool	operator!=( rb_node<_Tp> const & lhs, rb_node<_Tp> const & rhs )
+{
+	return lhs.val != rhs.val;
+}
+
+template <typename _TpL, typename _TpR>
+bool	operator!=( rb_node<_TpL> const & lhs, rb_node<_TpR> const & rhs )
+{
+	return lhs.val != rhs.val;
+}
+
 }
 
 #endif
