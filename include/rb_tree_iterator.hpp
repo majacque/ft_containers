@@ -105,7 +105,7 @@ namespace __ft
 				while (_current->childs[RIGHT])
 					_current = _current->childs[RIGHT];
 			}
-			else if (_current->parent && _current->parent->color != PTENODE)
+			else if (_current->parent && _current->parent->color != PTENODE && _current->childs[RIGHT])
 			{
 				while (_current->parent && _current == _current->parent->childs[LEFT])
 					_current = _current->parent;
