@@ -27,8 +27,8 @@ namespace ft
 		typedef typename allocator_type::const_reference				const_reference;
 		typedef typename allocator_type::reference						reference;
 
-		typedef __ft::__rb_tree_iterator<const_pointer>					const_iterator;
-		typedef __ft::__rb_tree_iterator<pointer>						iterator;
+		typedef __ft::__rb_tree_iterator<const_pointer, const value_type>					const_iterator;
+		typedef __ft::__rb_tree_iterator<pointer, value_type>						iterator;
 		typedef reverse_iterator<const_iterator>						const_reverse_iterator;
 		typedef reverse_iterator<iterator>								reverse_iterator;
 
@@ -97,6 +97,44 @@ namespace ft
 		/**************************************************************************/
 
 		// TODO operator=()
+
+		// Iterators
+
+		/**
+		 * @brief Returns an iterator referring to the first element of the rb tree.
+		 * If the tree is empty returns an iterator equivalent to @a end().
+		 */
+		iterator	begin( void )
+		{
+			return iterator(_min);
+		}
+
+		/**
+		 * @brief Returns a const iterator referring to the first element of the rb tree.
+		 * If the tree is empty returns a const iterator equivalent to @a end().
+		 */
+		const_iterator	begin( void ) const
+		{
+			return const_iterator(_min);
+		}
+
+		/**
+		 * @brief Returns an iterator to the element following the last element of the rb tree.
+		 * This element acts as a placeholder; attempting to access it results in undefined behavior.
+		 */
+		iterator	end( void )
+		{
+			return iterator(_nil_node);
+		}
+
+		/**
+		 * @brief Returns a const iterator to the element following the last element of the rb tree.
+		 * This element acts as a placeholder; attempting to access it results in undefined behavior.
+		 */
+		const_iterator	end( void ) const
+		{
+			return const_iterator(_nil_node);
+		}
 
 		// Capacity
 

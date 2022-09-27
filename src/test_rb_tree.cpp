@@ -12,6 +12,41 @@ inline static bool	__default_constructor( void )
 	return true;
 }
 
+inline static bool	__begin( void )
+{
+	ft::rb_tree<int>	tree;
+
+	tree.insert(10);
+	tree.insert(1);
+	tree.insert(20);
+	tree.insert(0);
+	tree.insert(42);
+
+	ft::rb_tree<int>::iterator	it = tree.begin();
+	ft::rb_tree<int>::const_iterator	cit = tree.begin();
+	if (*it != 0 || *cit != 0)
+		return false;
+	return true;
+}
+
+inline static bool	__end( void )
+{
+	ft::rb_tree<int>	tree;
+
+	tree.insert(10);
+	tree.insert(1);
+	tree.insert(20);
+	tree.insert(0);
+	tree.insert(42);
+
+	ft::rb_tree<int>::iterator	it = tree.end();
+	--it;
+	ft::rb_tree<int>::const_iterator	cit(it);
+	if (*it != 42 || *cit != 42)
+		return false;
+	return true;
+}
+
 inline static bool	__insert_single_element( void )
 {
 	ft::rb_tree<int>	tree;
@@ -46,6 +81,8 @@ void	test_rb_tree( void )
 {
 	t_sub_test	arr[] = {
 		{__default_constructor, "constructor (default)"},
+		{__begin, "begin"},
+		{__end, "end"},
 		{__insert_single_element, "insert (single element)"},
 		{NULL, ""}
 	};

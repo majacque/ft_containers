@@ -5,7 +5,7 @@
 
 namespace __ft
 {
-	template < class T >
+	template < class T , class NodeValue >
 	class __rb_tree_iterator
 	{
 	protected:
@@ -33,8 +33,8 @@ namespace __ft
 			return;
 		}
 
-		template <typename _T>
-		__rb_tree_iterator(__rb_tree_iterator<_T> const & rhs)
+		template <typename _T, typename _NodeValue>
+		__rb_tree_iterator(__rb_tree_iterator<_T, _NodeValue> const & rhs)
 			: _current(rhs.base())
 		{
 			return;
@@ -59,12 +59,12 @@ namespace __ft
 			return *this;
 		}
 
-		typename node_type::value_type&	operator*( void ) const
+		NodeValue&	operator*( void ) const
 		{
 			return _current->val;
 		}
 
-		typename node_type::value_type*	operator->( void ) const
+		NodeValue*	operator->( void ) const
 		{
 			return &_current->val;
 		}
@@ -130,26 +130,26 @@ namespace __ft
 	/*                          NON-MEMBER OPERATOR                           */
 	/**************************************************************************/
 
-	template <typename _T>
-	bool	operator==( __rb_tree_iterator<_T> const & lhs, __rb_tree_iterator<_T> const & rhs )
+	template <typename _T, typename _NodeValue>
+	bool	operator==( __rb_tree_iterator<_T, _NodeValue> const & lhs, __rb_tree_iterator<_T, _NodeValue> const & rhs )
 	{
 		return lhs.base() == rhs.base();
 	}
 
-	template <typename _TpL, typename _TpR>
-	bool	operator==( __rb_tree_iterator<_TpL> const & lhs, __rb_tree_iterator<_TpR> const & rhs )
+	template <typename _TpL, typename _NodeValueL, typename _TpR, typename _NodeValueR>
+	bool	operator==( __rb_tree_iterator<_TpL, _NodeValueL> const & lhs, __rb_tree_iterator<_TpR, _NodeValueR> const & rhs )
 	{
 		return lhs.base() == rhs.base();
 	}
 
-	template <typename _T>
-	bool	operator!=( __rb_tree_iterator<_T> const & lhs, __rb_tree_iterator<_T> const & rhs )
+	template <typename _T, typename _NodeValue>
+	bool	operator!=( __rb_tree_iterator<_T, _NodeValue> const & lhs, __rb_tree_iterator<_T, _NodeValue> const & rhs )
 	{
 		return lhs.base() != rhs.base();
 	}
 
-	template <typename _TpL, typename _TpR>
-	bool	operator!=( __rb_tree_iterator<_TpL> const & lhs, __rb_tree_iterator<_TpR> const & rhs )
+	template <typename _TpL, typename _NodeValueL, typename _TpR, typename _NodeValueR>
+	bool	operator!=( __rb_tree_iterator<_TpL, _NodeValueL> const & lhs, __rb_tree_iterator<_TpR, _NodeValueR> const & rhs )
 	{
 		return lhs.base() != rhs.base();
 	}
