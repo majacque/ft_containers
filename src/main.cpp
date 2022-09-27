@@ -29,6 +29,7 @@ int	main(int argc, char **argv) {
 		{test_algorithm, "algorithm"},
 		{test_utility, "utility"},
 		{test_vector, "vector"},
+		{test_rb_tree, "red black tree"},
 		{NULL, ""}
 	};
 

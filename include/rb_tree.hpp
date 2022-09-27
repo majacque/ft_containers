@@ -4,12 +4,11 @@
 #include "rb_node.hpp"
 #include "rb_tree_iterator.hpp"
 #include "iterator.hpp"
+#include "utility.hpp"
+#include "algorithm.hpp"
 #include <functional>
 #include <memory>
 
-// TODO add a nil element to do a past-the-end
-// the root parent point on it
-// his left child point on the max
 namespace ft
 {
 	template < class T, class Compare = std::less<T>, class Alloc = std::allocator<rb_node<T> > >
@@ -34,6 +33,11 @@ namespace ft
 		typedef typename iterator_traits<iterator>::difference_type		difference_type;
 
 	private:
+		/* 
+		* _nil_node rules:
+		* 	- the root parent point on it
+		* 	- his left child point on the max
+		*/
 		pointer			_nil_node;
 		pointer			_root;
 		pointer			_min;
@@ -52,7 +56,7 @@ namespace ft
 		rb_tree( void ): _nil_node(), _root(), _min(), _max(), _size(), _alloc() // REMIND see if we can take an argument like vector default constructor
 		{
 			_nil_node = _alloc.allocate(1LU);
-			_alloc.construct(_nil_node, 0);
+			_alloc.construct(_nil_node, rb_node<T>());
 			return;
 		}
 
@@ -77,6 +81,8 @@ namespace ft
 		/**************************************************************************/
 		/*                            MEMBER FUNCTIONS                            */
 		/**************************************************************************/
+
+		// TODO operator=()
 
 		// Capacity
 
@@ -110,29 +116,142 @@ namespace ft
 
 		// Modifiers
 
+		pair<iterator, bool>	insert( value_type const & val )
+		{
+			if (!_root)
+			{
+				_root = _alloc.allocate(1LU);
+				_alloc.construct(_root, rb_node<T>(val));
+				_root->color = BLACKNODE;
+				_root->parent = _nil_node;
+				_min = _root;
+				_nil_node->childs[LEFT] = _max = _root;
+				++_size;
+				return pair<iterator, bool>(iterator(&_root), true);
+			}
+
+			pointer position = _root;
+			while (position->childs[RIGHT] && position->childs[LEFT])
+			{
+				if (compare_type(val, position->val))
+					position = position->childs[LEFT];
+				else if (compare_type(position->val, val))
+					position = position->childs[RIGHT];
+				else
+					return pair<iterator, bool>(position, false);
+			}
+			if (!compare_type(val, position->val) && !compare_type(position->val, val))
+				return pair<iterator, bool>(position, false);
+
+			pointer new_node = _alloc.allocate(1LU);
+			_alloc.construct(new_node, rb_node<T>(val));
+			new_node->parent = position;
+			if (compare_type(val, position->val))
+			{
+				position->childs[LEFT] = new_node;
+				if (position == _min)
+					_min = new_node;
+			}
+			else if (compare_type(position->val, val))
+			{
+				position->childs[RIGHT] = new_node;
+				if (position == _max)
+					_nil_node.childs[LEFT] = _max = new_node;
+			}
+
+			rb_tree::_balance_insert(new_node);
+
+			return pair<iterator, bool>(iterator(new_node), true);
+		}
+
 		/**
 		 * @brief Removes all elements from the rb tree (which are destroyed), leaving the rb tree with a size of 0.
 		 */
 		void	clear( void )
 		{
-			rb_tree::__clear(_root);
+			this->__clear(_root);
 			_root = NULL;
 			_min = NULL;
 			_max = NULL;
 			_size = 0LU;
-			_nil_node.childs[LEFT] = NULL;
+			_nil_node->childs[LEFT] = NULL;
 		}
 
 	private:
+		static void	_rotate( pointer src, pointer dst, int direction )
+		{
+			pointer	parent = dst->parent;
 
-		static void	__clear( pointer node )
+			if (parent->color != PTENODE)
+				parent->childs[direction] = src;
+			
+			pointer	tmp = src->childs[direction];
+
+			src->childs[direction] = dst;
+			dst->parent = src;
+			dst->childs[!direction] = tmp;
+			if (tmp)
+				tmp->parent = dst;
+
+			return;
+		}
+
+		static void	_balance_insert( pointer node )
+		{
+			pointer	parent = node->parent;
+			if (parent->color == BLACKNODE)
+				return;
+			else if (parent->color == PTENODE)
+			{
+				node->color = BLACKNODE;
+				return;
+			}
+
+			pointer grandparent = parent->parent;
+			if (grandparent->color == PTENODE)
+			{
+				parent->color = BLACKNODE;
+				return;
+			}
+
+			int	direction = RIGHT;
+			if (parent == grandparent->childs[LEFT])
+				direction = LEFT;
+
+			pointer uncle = grandparent->childs[!direction];
+			if (!uncle || uncle->color == BLACKNODE)
+			{
+				if (node == parent->childs[!direction])
+				{
+					rb_tree::_rotate(node, parent, direction);
+					ft::swap<pointer>(node, parent);
+				}
+
+				rb_tree::_rotate(parent, grandparent, !direction);
+				parent->color = BLACKNODE;
+				grandparent->color = REDNODE;
+				uncle->color = BLACKNODE;
+			}
+			else
+			{
+				parent->color = BLACKNODE;
+				uncle->color = BLACKNODE;
+				grandparent->color = REDNODE;
+				rb_tree::_balance_insert(grandparent);
+				// REMIND try with a goto with a label 'begin'
+			}
+
+			return;
+		}
+
+		void	__clear( pointer node )
 		{
 			if (!node)
 				return;
-			rb_tree::__clear(node.childs[RIGHT]);
-			node.childs[RIGHT] = NULL;
-			rb_tree::__clear(node.childs[LEFT]);
-			node.childs[LEFT] = NULL;
+			rb_tree::__clear(node->childs[RIGHT]);
+			node->childs[RIGHT] = NULL;
+			rb_tree::__clear(node->childs[LEFT]);
+			node->childs[LEFT] = NULL;
 			_alloc.destroy(node);
 			_alloc.deallocate(node, 1LU);
 			return;

@@ -17,7 +17,7 @@ namespace ft
  * @return true if all the elements in the range [first1,last1) compare equal to those of the range starting at first2, and false otherwise
  */
 template <class InputIterator1, class InputIterator2>
-bool equal( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2 )
+bool	equal( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2 )
 {
 	while (first1 != last1) 
 	{
@@ -45,7 +45,7 @@ bool equal( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2 )
  * @return true if all the elements in the range [first1,last1) compare equal to those of the range starting at first2, and false otherwise
  */
 template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate pred)
+bool	equal( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate pred )
 {
 	while (first1 != last1) 
 	{
@@ -72,7 +72,7 @@ bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, B
  * @param first2 @param last2 Input iterators to the initial and final positions of the second sequence. The range used is [first2,last2).
  */
 template <class InputIterator1, class InputIterator2>
-bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
+bool	lexicographical_compare( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2 )
 {
 	while (first1 != last1)
 	{
@@ -105,8 +105,8 @@ bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputI
  * This can either be a function pointer or a function object.
  */
 template <class InputIterator1, class InputIterator2, class Compare>
-bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2,
-							Compare comp)
+bool	lexicographical_compare( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2,
+							Compare comp )
 {
 	while (first1 != last1)
 	{
@@ -118,6 +118,17 @@ bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, Input
 	++first2;
 	}
 	return first2 != last2;
+}
+
+/**
+ * @brief Exchanges the values of a and b.
+ */
+template <class T>
+void	swap( T& a, T& b)
+{
+	T	tmp = a;
+	a = b;
+	b = tmp;
 }
 
 }
