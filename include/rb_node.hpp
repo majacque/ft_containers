@@ -10,12 +10,12 @@ struct rb_node
 {
 	typedef T	value_type;
 
-	value_type	val;
-	int			color;
 	rb_node*	parent;
 	rb_node*	childs[2];
+	value_type	val;
+	int			color;
 
-	rb_node( value_type const & val = value_type() ): val(val), color(REDNODE), parent(), childs()
+	rb_node( value_type const & val = value_type() ):  parent(), childs(), val(val), color(REDNODE)
 	{
 		return;
 	}

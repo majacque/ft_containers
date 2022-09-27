@@ -8,6 +8,8 @@
 #include "algorithm.hpp"
 #include <functional>
 #include <memory>
+#include <list> // _validity_check()
+#include <cstdlib> // _validity_check()
 
 namespace ft
 {
@@ -46,6 +48,17 @@ namespace ft
 		allocator_type	_alloc;
 
 	public:
+		bool	_validity_check( void )
+		{
+			if (__integrityCheck(_root))
+				return false;
+
+			if (__propertiesCheck(_root, compare_type()))
+				return false;
+
+			return true;
+		}
+
 		/**************************************************************************/
 		/*                               CONSTRUCTOR                              */
 		/**************************************************************************/
@@ -57,6 +70,7 @@ namespace ft
 		{
 			_nil_node = _alloc.allocate(1LU);
 			_alloc.construct(_nil_node, rb_node<T>());
+			_nil_node->color = PTENODE;
 			return;
 		}
 
@@ -118,6 +132,8 @@ namespace ft
 
 		pair<iterator, bool>	insert( value_type const & val )
 		{
+			compare_type	cmp;
+
 			if (!_root)
 			{
 				_root = _alloc.allocate(1LU);
@@ -127,37 +143,40 @@ namespace ft
 				_min = _root;
 				_nil_node->childs[LEFT] = _max = _root;
 				++_size;
-				return pair<iterator, bool>(iterator(&_root), true);
+
+				return pair<iterator, bool>(iterator(_root), true);
 			}
 
-			pointer position = _root;
-			while (position->childs[RIGHT] && position->childs[LEFT])
+			pointer	position = _root;
+			pointer	parent;
+			while (position)
 			{
-				if (compare_type(val, position->val))
+				parent = position;
+
+				if (cmp(val, position->val) == true)
 					position = position->childs[LEFT];
-				else if (compare_type(position->val, val))
+				else if (cmp(position->val, val) == true)
 					position = position->childs[RIGHT];
 				else
-					return pair<iterator, bool>(position, false);
+					return pair<iterator, bool>(iterator(position), false);
 			}
-			if (!compare_type(val, position->val) && !compare_type(position->val, val))
-				return pair<iterator, bool>(position, false);
 
 			pointer new_node = _alloc.allocate(1LU);
 			_alloc.construct(new_node, rb_node<T>(val));
-			new_node->parent = position;
-			if (compare_type(val, position->val))
+			new_node->parent = parent;
+			if (cmp(val, parent->val) == true)
 			{
-				position->childs[LEFT] = new_node;
-				if (position == _min)
+				parent->childs[LEFT] = new_node;
+				if (parent == _min)
 					_min = new_node;
 			}
-			else if (compare_type(position->val, val))
+			else if (cmp(parent->val, val) == true)
 			{
-				position->childs[RIGHT] = new_node;
-				if (position == _max)
-					_nil_node.childs[LEFT] = _max = new_node;
+				parent->childs[RIGHT] = new_node;
+				if (parent == _max)
+					_nil_node->childs[LEFT] = _max = new_node;
 			}
+			++_size;
 
 			rb_tree::_balance_insert(new_node);
 
@@ -248,15 +267,73 @@ namespace ft
 		{
 			if (!node)
 				return;
-			rb_tree::__clear(node->childs[RIGHT]);
+			this->__clear(node->childs[RIGHT]);
 			node->childs[RIGHT] = NULL;
-			rb_tree::__clear(node->childs[LEFT]);
+			this->__clear(node->childs[LEFT]);
 			node->childs[LEFT] = NULL;
 			_alloc.destroy(node);
 			_alloc.deallocate(node, 1LU);
 			return;
 		}
 	};
+
+template <typename T>
+inline static void    __blackSteps(ft::rb_node<T> const *const node, std::list<int> &lst, int const steps)
+{
+    if (!node)
+        return lst.push_back(steps);
+    __blackSteps(node->childs[LEFT], lst, steps + (node->color == BLACKNODE));
+    __blackSteps(node->childs[RIGHT], lst, steps + (node->color == BLACKNODE));
+}
+
+template <typename T, typename Compare>
+inline static int    __propertiesCheck(ft::rb_node<T> const *const node, Compare const cmp)
+{
+    std::list<int>                    lst;
+    std::list<int>::const_iterator    it;
+
+    if (!node)
+        return EXIT_SUCCESS;
+    // Color check
+    {
+        if (node->color != REDNODE && node->color != BLACKNODE)
+            return EXIT_FAILURE;
+    }
+    // Order check
+    {
+        if ((node->childs[LEFT] && !cmp(node->childs[LEFT]->val, node->val)) ||
+            (node->childs[RIGHT] && !cmp(node->val, node->childs[RIGHT]->val)))
+            return EXIT_FAILURE;
+    }
+    // Red violation check
+    {
+        if (node->color == REDNODE &&
+            ((node->childs[LEFT] && node->childs[LEFT]->color == REDNODE) ||
+            (node->childs[RIGHT] && node->childs[RIGHT]->color == REDNODE)))
+            return EXIT_FAILURE;
+    }
+    // Black violation check
+    {
+        __blackSteps(node, lst, 0U);
+        for (it = lst.begin() ; it != lst.end() ; ++it)
+            if (*it != *lst.begin())
+                return EXIT_FAILURE;
+    }
+    return __propertiesCheck(node->childs[LEFT], cmp) || __propertiesCheck(node->childs[RIGHT], cmp);
+}
+
+template <typename T>
+inline static int    __integrityCheck(ft::rb_node<T> const *const node)
+{
+    if (!node)
+        return EXIT_SUCCESS;
+    if (node->childs[LEFT] && node->childs[LEFT]->parent != node)
+        return EXIT_FAILURE;
+    if (node->childs[RIGHT] && node->childs[RIGHT]->parent != node)
+        return EXIT_FAILURE;
+    return __integrityCheck(node->childs[LEFT]) || __integrityCheck(node->childs[RIGHT]);
+}
+
 }
 
 #endif
