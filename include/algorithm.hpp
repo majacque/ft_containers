@@ -126,7 +126,7 @@ bool	lexicographical_compare( InputIterator1 first1, InputIterator1 last1, Input
 template <class T>
 void	swap( T& a, T& b)
 {
-	T	tmp = a;
+	T	tmp(a);
 	a = b;
 	b = tmp;
 }

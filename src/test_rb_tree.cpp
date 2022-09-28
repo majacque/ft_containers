@@ -47,6 +47,28 @@ inline static bool	__end( void )
 	return true;
 }
 
+inline static bool	__rbegin( void )
+{
+	ft::rb_tree<int>	tree;
+
+	tree.insert(10);
+
+	if (tree.rbegin().base().base() != tree.end().base())
+		return false;
+	return true;
+}
+
+inline static bool	__rend( void )
+{
+	ft::rb_tree<int>	tree;
+
+	tree.insert(10);
+
+	if (tree.rend().base().base() != tree.begin().base())
+		return false;
+	return true;
+}
+
 inline static bool	__insert_single_element( void )
 {
 	ft::rb_tree<int>	tree;
@@ -72,8 +94,52 @@ inline static bool	__insert_single_element( void )
 	if (ret.second == true || *ret.first != 42 || tree._validity_check() == false)
 		return false;
 
-	if (tree.size() != 5 || tree.empty() == true)
+	ret = tree.insert(43);
+	if (ret.second == false || *ret.first != 43 || tree._validity_check() == false)
 		return false;
+
+	if (tree.size() != 6 || tree.empty() == true)
+		return false;
+	return true;
+}
+
+inline static bool	__insert_hint( void )
+{
+	ft::rb_tree<int>	tree;
+	ft::rb_tree<int>::iterator	it;
+	ft::rb_tree<int>::iterator	ret;
+
+	it = tree.insert(10).first;
+
+	ret = tree.insert(it, 1);
+	if (*ret != 1 || tree._validity_check() == false)
+		return false;
+
+	it = ret;
+	ret = tree.insert(it, 20);
+	if (*ret != 20 || tree._validity_check() == false)
+		return false;
+
+	it = ret;
+	ret = tree.insert(it, 0);
+	if (*ret != 0 || tree._validity_check() == false)
+		return false;
+
+	it = ret;
+	ret = tree.insert(it, 42);
+	if (*ret != 42 || tree._validity_check() == false)
+		return false;
+
+	it = ret;
+	ret = tree.insert(it, 42);
+	if (*ret != 42 || tree._validity_check() == false)
+		return false;
+
+	it = ret;
+	ret = tree.insert(it, 43);
+	if (*ret != 43 || tree._validity_check() == false)
+		return false;
+
 	return true;
 }
 
@@ -83,7 +149,10 @@ void	test_rb_tree( void )
 		{__default_constructor, "constructor (default)"},
 		{__begin, "begin"},
 		{__end, "end"},
+		{__rbegin, "rbegin"},
+		{__rend, "rend"},
 		{__insert_single_element, "insert (single element)"},
+		{__insert_hint, "insert (hint)"},
 		{NULL, ""}
 	};
 

@@ -15,7 +15,7 @@ struct rb_node
 	value_type	val;
 	int			color;
 
-	rb_node( value_type const & val = value_type() ):  parent(), childs(), val(val), color(REDNODE)
+	rb_node( value_type const & val = value_type() ): parent(), childs(), val(val), color(REDNODE)
 	{
 		return;
 	}

@@ -17,22 +17,22 @@ namespace ft
 	class rb_tree
 	{
 	public:
-		typedef T														value_type;
-		typedef Compare													compare_type;
-		typedef Alloc													allocator_type;
-		typedef size_t													size_type;
+		typedef T															value_type;
+		typedef Compare														compare_type;
+		typedef Alloc														allocator_type;
+		typedef size_t														size_type;
 
-		typedef typename allocator_type::const_pointer					const_pointer;
-		typedef typename allocator_type::pointer						pointer;
-		typedef typename allocator_type::const_reference				const_reference;
-		typedef typename allocator_type::reference						reference;
+		typedef typename allocator_type::const_pointer						const_pointer;
+		typedef typename allocator_type::pointer							pointer;
+		typedef typename allocator_type::const_reference					const_reference;
+		typedef typename allocator_type::reference							reference;
 
-		typedef __ft::__rb_tree_iterator<const_pointer, const value_type>					const_iterator;
-		typedef __ft::__rb_tree_iterator<pointer, value_type>						iterator;
-		typedef reverse_iterator<const_iterator>						const_reverse_iterator;
-		typedef reverse_iterator<iterator>								reverse_iterator;
+		typedef __ft::__rb_tree_iterator<const_pointer, const value_type>	const_iterator;
+		typedef __ft::__rb_tree_iterator<pointer, value_type>				iterator;
+		typedef reverse_iterator<const_iterator>							const_reverse_iterator;
+		typedef reverse_iterator<iterator>									reverse_iterator;
 
-		typedef typename iterator_traits<iterator>::difference_type		difference_type;
+		typedef typename iterator_traits<iterator>::difference_type			difference_type;
 
 	private:
 		/* 
@@ -46,6 +46,7 @@ namespace ft
 		pointer			_max;
 		size_type		_size;
 		allocator_type	_alloc;
+		compare_type	_cmp;
 
 	public:
 		bool	_validity_check( void )
@@ -66,7 +67,7 @@ namespace ft
 		/**
 		 * @brief Constructs an empty rb tree, with no elements.
 		 */
-		rb_tree( void ): _nil_node(), _root(), _min(), _max(), _size(), _alloc() // REMIND see if we can take an argument like vector default constructor
+		rb_tree( void ): _nil_node(), _root(), _min(), _max(), _size(), _alloc(), _cmp() // REMIND see if we can take an argument like vector default constructor
 		{
 			_nil_node = _alloc.allocate(1LU);
 			_alloc.construct(_nil_node, rb_node<T>());
@@ -136,6 +137,44 @@ namespace ft
 			return const_iterator(_nil_node);
 		}
 
+		/**
+		 * @brief Returns a reverse iterator to the first element of the reversed rb tree.
+		 * It corresponds to the last element of the non-reversed rb tree. If the tree is empty, the returned iterator is equal to rend().
+		 */
+		reverse_iterator	rbegin( void )
+		{
+			return reverse_iterator(this->end());
+		}
+
+		/**
+		 * @brief Returns a const reverse iterator to the first element of the reversed rb tree.
+		 * It corresponds to the last element of the non-reversed rb tree. If the tree is empty, the returned iterator is equal to rend().
+		 */
+		const_reverse_iterator	rbegin( void ) const
+		{
+			return const_reverse_iterator(this->end());
+		}
+
+		/**
+		 * @brief Returns a reverse iterator to the element following the last element of the reversed rb tree.
+		 * It corresponds to the element preceding the first element of the non-reversed rb tree.
+		 * This element acts as a placeholder, attempting to access it results in undefined behavior.
+		 */
+		reverse_iterator	rend( void )
+		{
+			return reverse_iterator(this->begin());
+		}
+
+		/**
+		 * @brief Returns a const reverse iterator to the element following the last element of the reversed rb tree.
+		 * It corresponds to the element preceding the first element of the non-reversed rb tree.
+		 * This element acts as a placeholder, attempting to access it results in undefined behavior.
+		 */
+		const_reverse_iterator	rend( void ) const
+		{
+			return const_reverse_iterator(this->begin());
+		}
+
 		// Capacity
 
 		/**
@@ -168,10 +207,28 @@ namespace ft
 
 		// Modifiers
 
+		/**
+		 * @brief Removes all elements from the rb tree (which are destroyed), leaving the rb tree with a size of 0.
+		 */
+		void	clear( void )
+		{
+			this->__clear(_root);
+			_root = NULL;
+			_min = NULL;
+			_max = NULL;
+			_size = 0LU;
+			_nil_node->childs[LEFT] = NULL;
+		}
+
+		/**
+		 * @brief Inserts element(s) into the rb tree, if the rb tree doesn't already contain an element with an equivalent key.
+		 * 
+		 * @param val Element value to insert.
+		 * @return Returns a pair consisting of an iterator to the inserted element (or to the element that prevented the insertion)
+		 * and a bool value set to true if the insertion took place.
+		 */
 		pair<iterator, bool>	insert( value_type const & val )
 		{
-			compare_type	cmp;
-
 			if (!_root)
 			{
 				_root = _alloc.allocate(1LU);
@@ -191,9 +248,9 @@ namespace ft
 			{
 				parent = position;
 
-				if (cmp(val, position->val) == true)
+				if (_cmp(val, position->val))
 					position = position->childs[LEFT];
-				else if (cmp(position->val, val) == true)
+				else if (_cmp(position->val, val))
 					position = position->childs[RIGHT];
 				else
 					return pair<iterator, bool>(iterator(position), false);
@@ -202,36 +259,139 @@ namespace ft
 			pointer new_node = _alloc.allocate(1LU);
 			_alloc.construct(new_node, rb_node<T>(val));
 			new_node->parent = parent;
-			if (cmp(val, parent->val) == true)
+			if (_cmp(val, parent->val))
 			{
 				parent->childs[LEFT] = new_node;
 				if (parent == _min)
 					_min = new_node;
 			}
-			else if (cmp(parent->val, val) == true)
+			else if (_cmp(parent->val, val))
 			{
 				parent->childs[RIGHT] = new_node;
 				if (parent == _max)
 					_nil_node->childs[LEFT] = _max = new_node;
 			}
 			++_size;
-
 			rb_tree::_balance_insert(new_node);
 
 			return pair<iterator, bool>(iterator(new_node), true);
 		}
 
 		/**
-		 * @brief Removes all elements from the rb tree (which are destroyed), leaving the rb tree with a size of 0.
+		 * @brief Inserts element(s) into the rb tree, if the rb tree doesn't already contain an element with an equivalent key.
+		 * Inserts @a val in the position as close as possible to @a hint.
+		 * 
+		 * @param hint An iterator used as a suggestion as to where to start the search.
+		 * @param val Element value to insert.
+		 * @return An iterator to the inserted element, or to the element that prevented the insertion.
 		 */
-		void	clear( void )
+		iterator	insert( iterator hint, value_type const & val )
 		{
-			this->__clear(_root);
-			_root = NULL;
-			_min = NULL;
-			_max = NULL;
-			_size = 0LU;
-			_nil_node->childs[LEFT] = NULL;
+			pointer	node = hint.base();
+
+			int	direction;
+			if (_cmp(val, node->val))
+				direction = LEFT;
+			else if (_cmp(node->val, val))
+				direction = RIGHT;
+			else
+				return iterator(hint);
+
+			pointer	parent = node->parent;
+			while (parent->color != PTENODE && node == parent->childs[direction])
+			{
+				node = parent;
+				parent = node->parent;
+			}
+			if (parent->color != PTENODE && direction == LEFT && _cmp(val, parent->val))
+				return this->insert(val).first;
+			else if (parent->color != PTENODE && direction == RIGHT && _cmp(parent->val, val))
+				return this->insert(val).first;
+
+			parent = hint.base();
+			if (parent->childs[direction])
+			{
+				node = parent->childs[direction];
+				while (node)
+				{
+					if (_cmp(val, node->val))
+					{
+						parent = node;
+						node = node->childs[direction];
+					}
+					else if (_cmp(node->val, val))
+					{
+						parent = node;
+						node = node->childs[!direction];
+					}
+					else
+						return iterator(node);
+				}
+			}
+
+			node = _alloc.allocate(1LU);
+			_alloc.construct(node, rb_node<T>(val));
+			node->parent = parent;
+			if (_cmp(val, parent->val))
+			{
+				parent->childs[LEFT] = node;
+				if (parent == _min)
+					_min = node;
+			}
+			else if (_cmp(parent->val, val))
+			{
+				parent->childs[RIGHT] = node;
+				if (parent == _max)
+					_nil_node->childs[LEFT] = _max = node;
+			}
+			++_size;
+			rb_tree::_balance_insert(node);
+
+			return iterator(node);
+		}
+
+		/**
+		 * @brief Inserts elements, from range [first, last),
+		 * into the rb tree if the rb tree doesn't contain an element with an equivalent key.
+		 * If multiple elements in the range have keys that compare equivalent, it is unspecified which element is inserted.
+		 * 
+		 * @param first An input iterator to the initial position in a range.
+		 * @param last An input iterator to the final position in a range.
+		 */
+		template <class InputIterator>
+		void	insert( InputIterator first, InputIterator last )
+		{
+			for ( ; first != last; ++first)
+				this->insert(first->val);
+
+			return;
+		}
+
+		// TODO erase (iterator) Removes the element at pos.
+		iterator	erase( iterator pos );
+
+		// TODO erase (key) Removes the element (if one exists) with the key equivalent to key.
+		size_type	erase( value_type const & val );
+
+		/**
+		 * @brief Exchanges the contents of the rb tree with those of @a rhs.
+		 * Does not invoke any move, copy, or swap operations on individual elements.
+		 * All iterators and references remain valid. The past-the-end iterator is invalidated.
+		 * 
+		 * @param rhs An other rb tree with same template parameters.
+		 */
+		void	swap( rb_tree& rhs )
+		{
+			ft::swap<pointer>(_root, rhs._root);
+			ft::swap<pointer>(_max, rhs._max);
+			ft::swap<pointer>(_min, rhs._min);
+			ft::swap<size_type>(_size, rhs._size);
+
+			ft::swap<pointer>(_nil_node, rhs._nil_node);
+			// _root->parent = _nil_node; // REMIND see if we invalidate iterators on end()
+			// _nil_node->childs[LEFT] = _max;
+			// rhs._root->parent = rhs._nil_node;
+			// rhs._nil_node->childs[LEFT] = rhs._max;
 		}
 
 	private:
@@ -240,8 +400,14 @@ namespace ft
 			pointer	parent = dst->parent;
 
 			if (parent->color != PTENODE)
-				parent->childs[direction] = src;
-			
+			{
+				if (dst == parent->childs[LEFT])
+					parent->childs[LEFT] = src;
+				else
+					parent->childs[RIGHT] = src;
+			}
+			src->parent = parent;
+
 			pointer	tmp = src->childs[direction];
 
 			src->childs[direction] = dst;
@@ -287,7 +453,6 @@ namespace ft
 				rb_tree::_rotate(parent, grandparent, !direction);
 				parent->color = BLACKNODE;
 				grandparent->color = REDNODE;
-				uncle->color = BLACKNODE;
 			}
 			else
 			{
