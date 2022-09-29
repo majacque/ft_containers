@@ -138,7 +138,21 @@ namespace ft
 		/*                            MEMBER FUNCTIONS                            */
 		/**************************************************************************/
 
-		// TODO operator=()
+		/**
+		 * @brief Assigns new contents to the rb tree, replacing its current content.
+		 * 
+		 * @param rhs A rb tree of the same type.
+		 * @return A reference to the instance.
+		 */
+		rb_tree&	operator=( rb_tree const & rhs )
+		{
+			this->clear();
+			_root = this->_dup(rhs._root, _nil_node);
+			for ( _min = _root; _min->childs[LEFT]; _min = _min->childs[LEFT] );
+			for ( _max = _root; _max->childs[RIGHT]; _max = _max->childs[RIGHT] );
+
+			return *this;
+		}
 
 		// Iterators
 
