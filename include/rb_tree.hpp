@@ -422,8 +422,68 @@ namespace ft
 			return;
 		}
 
-		// TODO erase (iterator) Removes the element at pos.
-		iterator	erase( iterator pos );
+		// TODO test erase (iterator) Removes the element at pos.
+		void	erase( iterator pos )
+		{
+			pointer	node = pos.base();
+
+			if (_size == 1LU)
+			{
+				this->clear();
+				return;
+			}
+
+			if (node->childs[LEFT] && node->childs[RIGHT])
+			{
+				pointer successor;
+				for ( successor = node; successor->childs[LEFT]; successor = successor->childs[LEFT] );
+				rb_tree::_swap_value_node(node, successor);
+				if (_root == node)
+					_root = successor;
+			}
+
+			if (node->childs[LEFT] || node->childs[RIGHT])
+			{
+				int	direction = RIGHT;
+				if (node->childs[LEFT])
+					direction = LEFT;
+
+				if (node->parent->color != PTENODE)
+				node->parent->childs[rb_tree::_child_direction(node)] = node->childs[direction];
+				node->childs[direction]->parent = node->parent;
+				node->childs[direction]->color = BLACKNODE;
+				if (_root == node)
+					_root = node->childs[direction];
+				if (_min == node)
+					_min = node->childs[direction];
+				if (_max == node)
+					_nil_node->childs[LEFT] = _max = node->childs[direction];
+			}
+			else if (node->color == REDNODE)
+			{
+				node->parent->childs[rb_tree::_child_direction(node)] = NULL;
+				if (_min == node)
+					_min = node->parent;
+				if (_max == node)
+					_nil_node->childs[LEFT] = _max = node->parent;
+			}
+			else
+			{
+				if (_min == node)
+					_min = node->parent;
+				if (_max == node)
+					_nil_node->childs[LEFT] = _max = node->parent;
+				int	direction = rb_tree::_child_direction(node);
+				node->parent->childs[direction] = NULL;
+				this->_balance_erase(node, direction);
+			}
+
+			_alloc.destroy(node);
+			_alloc.deallocate(node, 1LU);
+			--_size;
+
+			return;
+		}
 
 		// TODO erase (key) Removes the element (if one exists) with the key equivalent to key.
 		size_type	erase( value_type const & val );
@@ -450,19 +510,11 @@ namespace ft
 		}
 
 	private:
-		pointer	_dup(const_pointer const src, pointer const parent)
+		static int	_child_direction( pointer node )
 		{
-			pointer	dst;
-
-			if (!src)
-				return NULL;
-			dst = _alloc.allocate(1LU);
-			_alloc.construct(dst, *src);
-			dst->parent = parent;
-			dst->childs[LEFT] = this->_dup(src->childs[LEFT], dst);
-			dst->childs[RIGHT] = this->_dup(src->childs[RIGHT], dst);
-
-			return dst;
+			if (node->parent->childs[LEFT] == node)
+				return LEFT;
+			return RIGHT;
 		}
 
 		void	_rotate( pointer src, pointer dst, int direction )
@@ -491,6 +543,52 @@ namespace ft
 			return;
 		}
 
+		void	_balance_erase( pointer node, int direction)
+		{
+			pointer	parent = node->parent;
+			pointer	sibling = parent->childs[!direction];
+			if (sibling->color == REDNODE)
+			{
+				this->_rotate(sibling, parent, direction);
+				parent->color = REDNODE;
+				sibling->color = BLACKNODE;
+				this->_balance_erase(node, direction);
+				return;
+			}
+
+			pointer	close_nephew = sibling->childs[direction];
+			if (close_nephew && close_nephew->color == REDNODE)
+			{
+				this->_rotate(close_nephew, sibling, !direction);
+				ft::swap<pointer>(close_nephew, sibling);
+				sibling->color = BLACKNODE;
+				sibling->childs[!direction]->color = REDNODE;
+			}
+
+			pointer	distant_nephew = sibling->childs[!direction];
+			if (distant_nephew && distant_nephew->color == REDNODE)
+			{
+				this->_rotate(sibling, parent, direction);
+				sibling->color = parent->color;
+				parent->color = BLACKNODE;
+				distant_nephew->color = BLACKNODE;
+				return;
+			}
+
+			if (parent->color == REDNODE)
+			{
+				sibling->color = REDNODE;
+				parent->color = BLACKNODE;
+				return;
+			}
+
+			sibling->color = RED;
+			if (parent->parent->color != PTENODE)
+				this->_balance_erase(parent, rb_tree::_child_direction(parent));
+
+			return;
+		}
+
 		void	_balance_insert( pointer node )
 		{
 			pointer	parent = node->parent;
@@ -509,10 +607,7 @@ namespace ft
 				return;
 			}
 
-			int	direction = RIGHT;
-			if (parent == grandparent->childs[LEFT])
-				direction = LEFT;
-
+			int	direction = rb_tree::_child_direction(parent);
 			pointer uncle = grandparent->childs[!direction];
 			if (!uncle || uncle->color == BLACKNODE)
 			{
@@ -548,6 +643,74 @@ namespace ft
 			node->childs[LEFT] = NULL;
 			_alloc.destroy(node);
 			_alloc.deallocate(node, 1LU);
+			return;
+		}
+
+		pointer	_dup( const_pointer const src, pointer const parent )
+		{
+			if (!src)
+				return NULL;
+
+			pointer	dst = _alloc.allocate(1LU);
+			_alloc.construct(dst, *src);
+			dst->parent = parent;
+			dst->childs[LEFT] = this->_dup(src->childs[LEFT], dst);
+			dst->childs[RIGHT] = this->_dup(src->childs[RIGHT], dst);
+
+			return dst;
+		}
+
+		static void	_swap_value_node_parent( pointer parent, pointer child )
+		{
+			int	direction = rb_tree::_child_direction(child);
+
+			if (parent->parent->color != PTENODE)
+				parent->parent->childs[rb_tree::_child_direction(parent)] = child;
+			if (parent->childs[!direction])
+				parent->childs[!direction]->parent = child;
+			if (child->childs[LEFT])
+				child->childs[LEFT]->parent = parent;
+			if (child->childs[RIGHT])
+				child->childs[RIGHT]->parent = parent;
+
+			child->parent = parent->parent;
+			parent->parent = child;
+			parent->childs[direction] = child->childs[direction];
+			child->childs[direction] = parent;
+			ft::swap<pointer>(parent->childs[!direction], child->childs[!direction]);
+
+			ft::swap<int>(parent->color, child->color);
+
+			return;
+		}
+
+		static void	_relink_before_swap( pointer src, pointer dst )
+		{
+			if (src->parent->color != PTENODE)
+				src->parent-childs[rb_tree::_child_direction(src)] = dst;
+			if (src->childs[LEFT])
+				src->childs[LEFT]->parent = dst;
+			if (src->childs[RIGHT])
+				src->childs[RIGHT]->parent = dst;
+			
+			return;
+		}
+
+		static void	_swap_value_node( pointer nodeL, pointer nodeR )
+		{
+			if (nodeL->parent == nodeR)
+				rb_tree::_swap_value_node_parent(nodeR, nodeL);
+			else if (nodeR->parent == nodeL)
+				rb_tree::_swap_value_node_parent(nodeL, nodeR);
+			else
+			{
+				rb_tree::_relink_before_swap(nodeL, nodeR);
+				rb_tree::_relink_before_swap(nodeR, nodeL);
+				ft::swap<pointer>(nodeL->parent, nodeR->parent);
+				ft::swap<pointer>(nodeL->childs[LEFT], nodeR->childs[LEFT]);
+				ft::swap<pointer>(nodeL->childs[RIGHT], nodeR->childs[RIGHT]);
+				ft::swap<int>(nodeL->color, nodeR->color);
+			}
 			return;
 		}
 	};
