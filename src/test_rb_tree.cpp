@@ -12,19 +12,45 @@ inline static bool	__default_constructor( void )
 	return true;
 }
 
+inline static bool	__range_constructor( void )
+{
+	ft::rb_tree<int>	tree;
+
+	tree.insert(10);
+	tree.insert(2);
+	tree.insert(20);
+	tree.insert(1);
+	tree.insert(42);
+	tree.insert(43);
+
+	ft::rb_tree<int>	treecp(tree.begin(), tree.end());
+	if (treecp._validity_check() == false)
+		return false;
+
+	ft::rb_tree<int>::iterator	it = tree.begin();
+	for (ft::rb_tree<int>::iterator first = treecp.begin(); first != treecp.end(); ++first)
+	{
+		if (*first != *it)
+			return false;
+		++it;
+	}
+
+	return true;
+}
+
 inline static bool	__begin( void )
 {
 	ft::rb_tree<int>	tree;
 
 	tree.insert(10);
-	tree.insert(1);
+	tree.insert(2);
 	tree.insert(20);
-	tree.insert(0);
+	tree.insert(1);
 	tree.insert(42);
 
 	ft::rb_tree<int>::iterator	it = tree.begin();
 	ft::rb_tree<int>::const_iterator	cit = tree.begin();
-	if (*it != 0 || *cit != 0)
+	if (*it != 1 || *cit != 1)
 		return false;
 	return true;
 }
@@ -34,9 +60,9 @@ inline static bool	__end( void )
 	ft::rb_tree<int>	tree;
 
 	tree.insert(10);
-	tree.insert(1);
+	tree.insert(2);
 	tree.insert(20);
-	tree.insert(0);
+	tree.insert(1);
 	tree.insert(42);
 
 	ft::rb_tree<int>::iterator	it = tree.end();
@@ -77,14 +103,14 @@ inline static bool	__insert_single_element( void )
 	ret = tree.insert(10);
 	if (ret.second == false || *ret.first != 10 || tree._validity_check() == false)
 		return false;
-	ret = tree.insert(1);
-	if (ret.second == false || *ret.first != 1 || tree._validity_check() == false)
+	ret = tree.insert(2);
+	if (ret.second == false || *ret.first != 2 || tree._validity_check() == false)
 		return false;
 	ret = tree.insert(20);
 	if (ret.second == false || *ret.first != 20 || tree._validity_check() == false)
 		return false;
-	ret = tree.insert(0);
-	if (ret.second == false || *ret.first != 0 || tree._validity_check() == false)
+	ret = tree.insert(1);
+	if (ret.second == false || *ret.first != 1 || tree._validity_check() == false)
 		return false;
 	ret = tree.insert(42);
 	if (ret.second == false || *ret.first != 42 || tree._validity_check() == false)
@@ -147,6 +173,7 @@ void	test_rb_tree( void )
 {
 	t_sub_test	arr[] = {
 		{__default_constructor, "constructor (default)"},
+		{__range_constructor, "constructor (range)"},
 		{__begin, "begin"},
 		{__end, "end"},
 		{__rbegin, "rbegin"},

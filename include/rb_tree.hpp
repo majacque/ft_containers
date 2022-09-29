@@ -45,8 +45,8 @@ namespace ft
 		pointer			_min;
 		pointer			_max;
 		size_type		_size;
-		allocator_type	_alloc;
 		compare_type	_cmp;
+		allocator_type	_alloc;
 
 	public:
 		bool	_validity_check( void )
@@ -66,8 +66,12 @@ namespace ft
 
 		/**
 		 * @brief Constructs an empty rb tree, with no elements.
+		 * 
+		 * @param cmp Comparison function object to use for all comparisons of keys.
+		 * @param alloc Allocator to use for all memory allocations of this rb tree.
 		 */
-		rb_tree( void ): _nil_node(), _root(), _min(), _max(), _size(), _alloc(), _cmp() // REMIND see if we can take an argument like vector default constructor
+		rb_tree( compare_type const & cmp = compare_type(), allocator_type const & alloc = allocator_type() ):
+				_nil_node(), _root(), _min(), _max(), _size(), _cmp(cmp), _alloc(alloc)
 		{
 			_nil_node = _alloc.allocate(1LU);
 			_alloc.construct(_nil_node, rb_node<T>());
@@ -75,7 +79,28 @@ namespace ft
 			return;
 		}
 
-		// TODO constructor range of iterator
+		/**
+		 * @brief Constructs the rb tree with the contents of the range [first, last).
+		 * If multiple elements in the range have keys that compare equivalent, it is unspecified which element is inserted.
+		 * 
+		 * @param first An input iterator to the initial position in a range.
+		 * @param last An input iterator to the final position in a range.
+		 * @param cmp Comparison function object to use for all comparisons of keys.
+		 * @param alloc Allocator to use for all memory allocations of this rb tree.
+		 */
+		template <class InputIterator>
+		rb_tree( InputIterator first, InputIterator last, compare_type const & cmp = compare_type(), allocator_type const & alloc = allocator_type() ):
+				_nil_node(), _root(), _min(), _max(), _size(), _cmp(cmp), _alloc(alloc)
+		{
+			_nil_node = _alloc.allocate(1LU);
+			_alloc.construct(_nil_node, rb_node<T>());
+			_nil_node->color = PTENODE;
+
+			for ( ; first != last; ++first)
+				this->insert(*first);
+
+			return;
+		}
 		// TODO copy constructor
 
 		/**************************************************************************/
@@ -272,7 +297,7 @@ namespace ft
 					_nil_node->childs[LEFT] = _max = new_node;
 			}
 			++_size;
-			rb_tree::_balance_insert(new_node);
+			this->_balance_insert(new_node);
 
 			return pair<iterator, bool>(iterator(new_node), true);
 		}
@@ -345,7 +370,7 @@ namespace ft
 					_nil_node->childs[LEFT] = _max = node;
 			}
 			++_size;
-			rb_tree::_balance_insert(node);
+			this->_balance_insert(node);
 
 			return iterator(node);
 		}
@@ -359,7 +384,7 @@ namespace ft
 		 * @param last An input iterator to the final position in a range.
 		 */
 		template <class InputIterator>
-		void	insert( InputIterator first, InputIterator last )
+		void	insert( InputIterator first, InputIterator last ) // TODO test (maybe)
 		{
 			for ( ; first != last; ++first)
 				this->insert(first->val);
@@ -395,7 +420,7 @@ namespace ft
 		}
 
 	private:
-		static void	_rotate( pointer src, pointer dst, int direction )
+		void	_rotate( pointer src, pointer dst, int direction )
 		{
 			pointer	parent = dst->parent;
 
@@ -406,6 +431,8 @@ namespace ft
 				else
 					parent->childs[RIGHT] = src;
 			}
+			else
+				_root = src;
 			src->parent = parent;
 
 			pointer	tmp = src->childs[direction];
@@ -419,7 +446,7 @@ namespace ft
 			return;
 		}
 
-		static void	_balance_insert( pointer node )
+		void	_balance_insert( pointer node )
 		{
 			pointer	parent = node->parent;
 			if (parent->color == BLACKNODE)
@@ -446,11 +473,11 @@ namespace ft
 			{
 				if (node == parent->childs[!direction])
 				{
-					rb_tree::_rotate(node, parent, direction);
+					this->_rotate(node, parent, direction);
 					ft::swap<pointer>(node, parent);
 				}
 
-				rb_tree::_rotate(parent, grandparent, !direction);
+				this->_rotate(parent, grandparent, !direction);
 				parent->color = BLACKNODE;
 				grandparent->color = REDNODE;
 			}
@@ -459,7 +486,7 @@ namespace ft
 				parent->color = BLACKNODE;
 				uncle->color = BLACKNODE;
 				grandparent->color = REDNODE;
-				rb_tree::_balance_insert(grandparent);
+				this->_balance_insert(grandparent);
 				// REMIND try with a goto with a label 'begin'
 			}
 
