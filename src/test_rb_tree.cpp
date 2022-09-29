@@ -38,6 +38,32 @@ inline static bool	__range_constructor( void )
 	return true;
 }
 
+inline static bool	__copy_constructor( void )
+{
+	ft::rb_tree<int>	tree;
+
+	tree.insert(10);
+	tree.insert(2);
+	tree.insert(20);
+	tree.insert(1);
+	tree.insert(42);
+	tree.insert(43);
+
+	ft::rb_tree<int>	treecp(tree);
+	if (treecp._validity_check() == false || tree.size() != treecp.size())
+		return false;
+
+	ft::rb_tree<int>::iterator	it = tree.begin();
+	for (ft::rb_tree<int>::iterator first = treecp.begin(); first != treecp.end(); ++first)
+	{
+		if (*first != *it)
+			return false;
+		++it;
+	}
+
+	return true;
+}
+
 inline static bool	__begin( void )
 {
 	ft::rb_tree<int>	tree;
@@ -174,6 +200,7 @@ void	test_rb_tree( void )
 	t_sub_test	arr[] = {
 		{__default_constructor, "constructor (default)"},
 		{__range_constructor, "constructor (range)"},
+		{__copy_constructor, "constructor (copy)"},
 		{__begin, "begin"},
 		{__end, "end"},
 		{__rbegin, "rbegin"},

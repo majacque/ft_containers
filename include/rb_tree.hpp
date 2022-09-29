@@ -101,7 +101,23 @@ namespace ft
 
 			return;
 		}
-		// TODO copy constructor
+
+		/**
+		 * @brief Constructs a rb tree with a copy of each of the elements in @a rhs.
+		 * 
+		 * @param rhs Another rb tree to be used as source to initialize the elements of the rb tree with.
+		 */
+		rb_tree( rb_tree const & rhs): _nil_node(), _root(), _min(), _max(), _size(rhs._size), _cmp(rhs._cmp), _alloc(rhs._alloc)
+		{
+			_nil_node = _alloc.allocate(1LU);
+			_alloc.construct(_nil_node, rb_node<T>());
+			_nil_node->color = PTENODE;
+			_root = this->_dup(rhs._root, _nil_node);
+			for ( _min = _root; _min->childs[LEFT]; _min = _min->childs[LEFT] );
+			for ( _max = _root; _max->childs[RIGHT]; _max = _max->childs[RIGHT] );
+
+			return;
+		}
 
 		/**************************************************************************/
 		/*                               DESTRUCTOR                               */
@@ -384,10 +400,10 @@ namespace ft
 		 * @param last An input iterator to the final position in a range.
 		 */
 		template <class InputIterator>
-		void	insert( InputIterator first, InputIterator last ) // TODO test (maybe)
+		void	insert( InputIterator first, InputIterator last ) // TODO test insert (rang) (maybe)
 		{
 			for ( ; first != last; ++first)
-				this->insert(first->val);
+				this->insert(*first);
 
 			return;
 		}
@@ -420,6 +436,21 @@ namespace ft
 		}
 
 	private:
+		pointer	_dup(const_pointer const src, pointer const parent)
+		{
+			pointer	dst;
+
+			if (!src)
+				return NULL;
+			dst = _alloc.allocate(1LU);
+			_alloc.construct(dst, *src);
+			dst->parent = parent;
+			dst->childs[LEFT] = this->_dup(src->childs[LEFT], dst);
+			dst->childs[RIGHT] = this->_dup(src->childs[RIGHT], dst);
+
+			return dst;
+		}
+
 		void	_rotate( pointer src, pointer dst, int direction )
 		{
 			pointer	parent = dst->parent;
