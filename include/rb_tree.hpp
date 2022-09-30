@@ -694,105 +694,137 @@ namespace ft
 		}
 
 		/**
-		 * @brief Returns an iterator pointing to the first element that is not great than (i.e. lesser or equal to) @a val.
+		 * @brief Returns an iterator pointing to the first element that is strictly greater than @a val.
 		 * 
 		 * @param val Key value to compare the elements to.
-		 * @return An iterator pointing to the first element that is not great than @a val. If no such element is found, end() is returned.
+		 * @return An iterator pointing to the first element that is strictly greater than @a val. If no such element is found, end() is returned.
 		 */
 		iterator	upper_bound( value_type const & val )
 		{
-			if (!_root || (_min && _cmp(val, _min->val)))
+			if (!_root || (_max && !_cmp(val, _max->val)))
 				return iterator(_nil_node);
 
 			pointer	node = _root;
 			pointer	parent = node;
 			if (_cmp(val, node->val))
-				node = node->childs[LEFT];
-			else if (_cmp(node->val, val))
 			{
-				if (_cmp(val, node->val))
+				node = node->childs[LEFT];
+				if (_cmp(node->val, val))
 					return iterator(parent);
-				node = node->childs[RIGHT];
 			}
 			else
-				return iterator(node);
+				node = node->childs[RIGHT];
 
-			pointer	higher_low;
-			if (_cmp(parent->val, val))
-				higher_low = parent;
+			pointer	lower_high;
+			if (_cmp(val, parent->val))
+				lower_high = parent;
 			else
-				higher_low = _min;
+				lower_high = _max;
 
 			while (node)
 			{
 				if (_cmp(val, node->val))
 				{
-					parent = node;
+					if (_cmp(node->val, lower_high->val))
+						lower_high = node;
 					node = node->childs[LEFT];
 				}
-				else if (_cmp(node->val, val))
+				else
 				{
-					if (_cmp(higher_low->val, node->val))
-						higher_low = node;
-					parent = node;
+					if (_cmp(lower_high->val, node->val))
+						lower_high = node;
 					node = node->childs[RIGHT];
 				}
-				else
-					return iterator(node);
 			}
 
-			return iterator(higher_low);
+			return iterator(lower_high);
 		}
 
 		/**
-		 * @brief Returns a const iterator pointing to the first element that is not great than (i.e. lesser or equal to) @a val.
+		 * @brief Returns a const iterator pointing to the first element that is strictly greater than @a val.
 		 * 
 		 * @param val Key value to compare the elements to.
-		 * @return A const iterator pointing to the first element that is not great than @a val. If no such element is found, end() is returned.
+		 * @return A const iterator pointing to the first element that is strictly greater than @a val. If no such element is found, end() is returned.
 		 */
 		const_iterator	upper_bound( value_type const & val ) const
 		{
-			if (!_root || (_min && _cmp(val, _min->val)))
+			if (!_root || (_max && !_cmp(val, _max->val)))
 				return const_iterator(_nil_node);
 
 			pointer	node = _root;
 			pointer	parent = node;
 			if (_cmp(val, node->val))
-				node = node->childs[LEFT];
-			else if (_cmp(node->val, val))
 			{
-				if (_cmp(val, node->val))
+				node = node->childs[LEFT];
+				if (_cmp(node->val, val))
 					return const_iterator(parent);
-				node = node->childs[RIGHT];
 			}
 			else
-				return const_iterator(node);
+				node = node->childs[RIGHT];
 
-			pointer	higher_low;
-			if (_cmp(parent->val, val))
-				higher_low = parent;
+			pointer	lower_high;
+			if (_cmp(val, parent->val))
+				lower_high = parent;
 			else
-				higher_low = _min;
+				lower_high = _max;
 
 			while (node)
 			{
 				if (_cmp(val, node->val))
 				{
-					parent = node;
+					if (_cmp(node->val, lower_high->val))
+						lower_high = node;
 					node = node->childs[LEFT];
 				}
-				else if (_cmp(node->val, val))
+				else
 				{
-					if (_cmp(higher_low->val, node->val))
-						higher_low = node;
-					parent = node;
+					if (_cmp(lower_high->val, node->val))
+						lower_high = node;
 					node = node->childs[RIGHT];
 				}
-				else
-					return const_iterator(node);
 			}
 
-			return const_iterator(higher_low);
+			return const_iterator(lower_high);
+		}
+
+		/**
+		 * @brief Returns a range containing all elements with the given @a val in the rb tree.
+		 * The range is defined by two iterators, one pointing to the first element that is not less than key and
+		 * another pointing to the first element greater than key.
+		 * Alternatively, the first iterator may be obtained with lower_bound(), and the second with upper_bound().
+		 * 
+		 * @param val A key value to compare the elements to.
+		 * @return A ft::pair containing a pair of iterators defining the wanted range:
+		 * The first pointing to the first element that is not less than key and the second pointing to the first element greater than key.
+		 * If there are no elements not less than key, end() is returned as the first element.
+		 * Similarly if there are no elements greater than key, end() is returned as the second element.
+		 */
+		pair<iterator, iterator>	equal_range( value_type const & val )
+		{
+			iterator	lower_b = this->lower_bound(val);
+			iterator	upper_b = this->upper_bound(val);
+
+			return pair<iterator, iterator>(lower_b, upper_b);
+		}
+
+		/**
+		 * @brief Returns a range containing all elements with the given @a val in the rb tree.
+		 * The range is defined by two const iterators, one pointing to the first element that is not less than key and
+		 * another pointing to the first element greater than key.
+		 * Alternatively, the first iterator may be obtained with lower_bound(), and the second with upper_bound().
+		 * 
+		 * @param val A key value to compare the elements to.
+		 * @return A ft::pair containing a pair of const iterators defining the wanted range:
+		 * The first pointing to the first element that is not less than key and the second pointing to the first element greater than key.
+		 * If there are no elements not less than key, end() is returned as the first element.
+		 * Similarly if there are no elements greater than key, end() is returned as the second element.
+		 */
+		pair<const_iterator, const_iterator>	equal_range( value_type const & val ) const
+		{
+			const_iterator	lower_b = this->lower_bound(val);
+			const_iterator	upper_b = this->upper_bound(val);
+
+			return pair<const_iterator, const_iterator>(lower_b, upper_b);
 		}
 
 	private:

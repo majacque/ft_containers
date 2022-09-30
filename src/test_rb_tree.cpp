@@ -447,67 +447,71 @@ inline static bool	__upper_bound( void )
 	ft::rb_tree<int>::iterator	it;
 
 	it = tree.upper_bound(-2);
-	if (it != tree.end())
-		return false;
-
-	it = tree.upper_bound(-1);
 	if (*it != -1)
 		return false;
 
-	it = tree.upper_bound(5);
+	it = tree.upper_bound(-1);
+	if (*it != 2)
+		return false;
+
+	it = tree.upper_bound(1);
 	if (*it != 2)
 		return false;
 
 	it = tree.upper_bound(2);
-	if (*it != 2)
+	if (*it != 10)
 		return false;
 
-	it = tree.upper_bound(12);
+	it = tree.upper_bound(9);
 	if (*it != 10)
 		return false;
 
 	it = tree.upper_bound(10);
-	if (*it != 10)
+	if (*it != 15)
 		return false;
 
-	it = tree.upper_bound(16);
+	it = tree.upper_bound(14);
 	if (*it != 15)
 		return false;
 
 	it = tree.upper_bound(15);
-	if (*it != 15)
+	if (*it != 20)
 		return false;
 
-	it = tree.upper_bound(25);
+	it = tree.upper_bound(19);
 	if (*it != 20)
 		return false;
 
 	it = tree.upper_bound(20);
-	if (*it != 20)
+	if (*it != 42)
 		return false;
 
-	it = tree.upper_bound(43);
+	it = tree.upper_bound(25);
 	if (*it != 42)
 		return false;
 
 	it = tree.upper_bound(42);
-	if (*it != 42)
+	if (*it != 45)
 		return false;
 
-	it = tree.upper_bound(46);
+	it = tree.upper_bound(43);
 	if (*it != 45)
 		return false;
 
 	it = tree.upper_bound(45);
-	if (*it != 45)
+	if (*it != 50)
 		return false;
 
-	it = tree.upper_bound(51);
+	it = tree.upper_bound(49);
 	if (*it != 50)
 		return false;
 
 	it = tree.upper_bound(50);
-	if (*it != 50)
+	if (it != tree.end())
+		return false;
+
+	it = tree.upper_bound(51);
+	if (it != tree.end())
 		return false;
 
 	return true;
