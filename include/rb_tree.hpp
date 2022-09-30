@@ -1033,6 +1033,28 @@ namespace ft
 		}
 	};
 
+// TODO relational operators (==, !=, <, <=, >, >=) Compares the contents of two rb tree.
+/* template< class Key, class Compare, class Alloc >
+bool operator==( const ft::rb_tree<Key,Compare,Alloc>& lhs,
+                 const ft::rb_tree<Key,Compare,Alloc>& rhs ); */
+// == & != Checks if the contents of lhs and rhs are equal, that is,
+// they have the same number of elements and each element in lhs compares equal with the element in rhs at the same position.
+
+// <, <=, > & >=  Compares the contents of lhs and rhs lexicographically.
+// The comparison is performed by a function equivalent to ft::lexicographical_compare. This comparison ignores the rb tree's ordering Compare (compare_type).
+
+
+// TODO swap Specializes the ft::swap algorithm for ft::rb_tree. Swaps the contents of lhs and rhs. Calls lhs.swap(rhs).
+/* template< class Key, class Compare, class Alloc >
+void swap( ft::rb_tree<Key,Compare,Alloc>& lhs,
+           ft::rb_tree<Key,Compare,Alloc>& rhs ); */
+template <class _T, class _Compare, class _Alloc>
+void	swap( rb_tree<_T, _Compare, _Alloc> &lhs, rb_tree<_T, _Compare, _Alloc> &rhs )
+{
+	lhs.swap(rhs);
+	return;
+}
+
 template <typename T>
 inline static void    __blackSteps(ft::rb_node<T> const *const node, std::list<int> &lst, int const steps)
 {

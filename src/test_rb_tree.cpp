@@ -1,6 +1,7 @@
 #include "tests_define.hpp"
 #include "rb_tree.hpp"
 #include <set>
+#include <algorithm>
 
 inline static bool	__default_constructor( void )
 {
@@ -300,6 +301,36 @@ inline static bool	__erase_value( void )
 	return true;
 }
 
+inline static bool	__swap( void )
+{
+	int	tab1[] = {10, 2, 20, -1, 42, 50, 45, 15};
+	int	tab2[] = {5, 2, 3, 1, 4, 6};
+
+	ft::rb_tree<int>	tree1(&tab1[0], &tab1[8]);
+	ft::rb_tree<int>	tree2(&tab2[0], &tab2[6]);
+
+	ft::rb_tree<int>::iterator	it1_begin = tree1.begin();
+	ft::rb_tree<int>::iterator	it2_begin = tree2.begin();
+
+	std::sort(&tab1[0], &tab1[8]);
+	std::sort(&tab2[0], &tab2[6]);
+
+	tree1.swap(tree2);
+
+	if (tree1.begin() != it2_begin ||
+		tree2.begin() != it1_begin)
+		return false;
+
+	for (size_t i = 0; i < 8; ++i)
+	{
+		if (*it1_begin != tab1[i])
+			return false;
+		++it1_begin;
+	}
+
+	return true;
+}
+
 inline static bool	__find( void )
 {
 	ft::rb_tree<int>	tree;
@@ -517,6 +548,36 @@ inline static bool	__upper_bound( void )
 	return true;
 }
 
+inline static bool	__swap_nm( void )
+{
+	int	tab1[] = {10, 2, 20, -1, 42, 50, 45, 15};
+	int	tab2[] = {5, 2, 3, 1, 4, 6};
+
+	ft::rb_tree<int>	tree1(&tab1[0], &tab1[8]);
+	ft::rb_tree<int>	tree2(&tab2[0], &tab2[6]);
+
+	ft::rb_tree<int>::iterator	it1_begin = tree1.begin();
+	ft::rb_tree<int>::iterator	it2_begin = tree2.begin();
+
+	std::sort(&tab1[0], &tab1[8]);
+	std::sort(&tab2[0], &tab2[6]);
+
+	ft::swap(tree1, tree2);
+
+	if (tree1.begin() != it2_begin ||
+		tree2.begin() != it1_begin)
+		return false;
+
+	for (size_t i = 0; i < 8; ++i)
+	{
+		if (*it1_begin != tab1[i])
+			return false;
+		++it1_begin;
+	}
+
+	return true;
+}
+
 void	test_rb_tree( void )
 {
 	t_sub_test	arr[] = {
@@ -532,10 +593,12 @@ void	test_rb_tree( void )
 		{__insert_hint, "insert (hint)"},
 		{__erase_iterator, "erase (iterator)"},
 		{__erase_value, "erase (value)"},
+		{__swap, "swap (member)"},
 		{__find, "find"},
 		{__count, "count"},
 		{__lower_bound, "lower bound"},
 		{__upper_bound, "upper bound"},
+		{__swap_nm, "swap (non-member)"},
 		{NULL, ""}
 	};
 
