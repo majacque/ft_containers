@@ -384,10 +384,6 @@ inline static bool	__lower_bound( void )
 	if (*it != 10)
 		return false;
 
-	it = tree.lower_bound(10);
-	if (*it != 10)
-		return false;
-
 	it = tree.lower_bound(11);
 	if (*it != 15)
 		return false;
@@ -435,6 +431,88 @@ inline static bool	__lower_bound( void )
 	return true;
 }
 
+inline static bool	__upper_bound( void )
+{
+	ft::rb_tree<int>	tree;
+
+	tree.insert(10);
+	tree.insert(2);
+	tree.insert(20);
+	tree.insert(-1);
+	tree.insert(42);
+	tree.insert(50);
+	tree.insert(45);
+	tree.insert(15);
+
+	ft::rb_tree<int>::iterator	it;
+
+	it = tree.upper_bound(-2);
+	if (it != tree.end())
+		return false;
+
+	it = tree.upper_bound(-1);
+	if (*it != -1)
+		return false;
+
+	it = tree.upper_bound(5);
+	if (*it != 2)
+		return false;
+
+	it = tree.upper_bound(2);
+	if (*it != 2)
+		return false;
+
+	it = tree.upper_bound(12);
+	if (*it != 10)
+		return false;
+
+	it = tree.upper_bound(10);
+	if (*it != 10)
+		return false;
+
+	it = tree.upper_bound(16);
+	if (*it != 15)
+		return false;
+
+	it = tree.upper_bound(15);
+	if (*it != 15)
+		return false;
+
+	it = tree.upper_bound(25);
+	if (*it != 20)
+		return false;
+
+	it = tree.upper_bound(20);
+	if (*it != 20)
+		return false;
+
+	it = tree.upper_bound(43);
+	if (*it != 42)
+		return false;
+
+	it = tree.upper_bound(42);
+	if (*it != 42)
+		return false;
+
+	it = tree.upper_bound(46);
+	if (*it != 45)
+		return false;
+
+	it = tree.upper_bound(45);
+	if (*it != 45)
+		return false;
+
+	it = tree.upper_bound(51);
+	if (*it != 50)
+		return false;
+
+	it = tree.upper_bound(50);
+	if (*it != 50)
+		return false;
+
+	return true;
+}
+
 void	test_rb_tree( void )
 {
 	t_sub_test	arr[] = {
@@ -453,6 +531,7 @@ void	test_rb_tree( void )
 		{__find, "find"},
 		{__count, "count"},
 		{__lower_bound, "lower bound"},
+		{__upper_bound, "upper bound"},
 		{NULL, ""}
 	};
 
