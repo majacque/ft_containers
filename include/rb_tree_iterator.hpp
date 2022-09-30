@@ -11,17 +11,17 @@ namespace __ft
 	protected:
 		T	_current;
 
-		typedef ft::iterator_traits<T>					traits_type;
+		typedef ft::iterator_traits<T>						traits_type;
 
 	public:
-		typedef T										iterator_type;
-		typedef typename traits_type::iterator_category	iterator_category;
-		typedef typename traits_type::value_type		value_type;
-		typedef typename traits_type::difference_type	difference_type;
-		typedef typename traits_type::reference			reference;
-		typedef typename traits_type::pointer			pointer;
+		typedef T											iterator_type;
+		typedef typename std::bidirectional_iterator_tag	iterator_category;
+		typedef typename traits_type::value_type			value_type;
+		typedef typename traits_type::difference_type		difference_type;
+		typedef typename traits_type::reference				reference;
+		typedef typename traits_type::pointer				pointer;
 
-		typedef value_type								node_type;
+		typedef value_type									node_type;
 
 		__rb_tree_iterator(): _current(iterator_type())
 		{

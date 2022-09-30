@@ -76,6 +76,7 @@ namespace ft
 			_nil_node = _alloc.allocate(1LU);
 			_alloc.construct(_nil_node, rb_node<T>());
 			_nil_node->color = PTENODE;
+			_min = _nil_node;
 			return;
 		}
 
@@ -95,6 +96,7 @@ namespace ft
 			_nil_node = _alloc.allocate(1LU);
 			_alloc.construct(_nil_node, rb_node<T>());
 			_nil_node->color = PTENODE;
+			_min = _nil_node;
 
 			for ( ; first != last; ++first)
 				this->insert(*first);
@@ -269,7 +271,7 @@ namespace ft
 		{
 			this->__clear(_root);
 			_root = NULL;
-			_min = NULL;
+			_min = _nil_node;
 			_max = NULL;
 			_size = 0LU;
 			_nil_node->childs[LEFT] = NULL;
@@ -427,6 +429,8 @@ namespace ft
 		{
 			pointer	node = pos.base();
 
+			// TODO look what I want to do with an erase on past-the-end (set infinite loop)
+
 			if (_size == 1LU)
 			{
 				this->clear();
@@ -435,8 +439,8 @@ namespace ft
 
 			if (node->childs[LEFT] && node->childs[RIGHT])
 			{
-				pointer successor;
-				for ( successor = node; successor->childs[LEFT]; successor = successor->childs[LEFT] );
+				pointer successor = node->childs[RIGHT];
+				for ( ; successor->childs[LEFT]; successor = successor->childs[LEFT] );
 				rb_tree::_swap_value_node(node, successor);
 				if (_root == node)
 					_root = successor;
@@ -582,7 +586,7 @@ namespace ft
 				return;
 			}
 
-			sibling->color = RED;
+			sibling->color = REDNODE;
 			if (parent->parent->color != PTENODE)
 				this->_balance_erase(parent, rb_tree::_child_direction(parent));
 
@@ -687,7 +691,7 @@ namespace ft
 		static void	_relink_before_swap( pointer src, pointer dst )
 		{
 			if (src->parent->color != PTENODE)
-				src->parent-childs[rb_tree::_child_direction(src)] = dst;
+				src->parent->childs[rb_tree::_child_direction(src)] = dst;
 			if (src->childs[LEFT])
 				src->childs[LEFT]->parent = dst;
 			if (src->childs[RIGHT])

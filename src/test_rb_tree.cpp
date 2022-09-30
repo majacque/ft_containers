@@ -1,5 +1,6 @@
 #include "tests_define.hpp"
 #include "rb_tree.hpp"
+#include <set>
 
 inline static bool	__default_constructor( void )
 {
@@ -225,6 +226,46 @@ inline static bool	__insert_hint( void )
 	return true;
 }
 
+inline static bool	__erase_iterator( void )
+{
+	long double	g_long_double[] = {
+		987654321.0,
+		98765432.10,
+		9876543.210,
+		987654.3210,
+		98765.43210,
+		9876.543210,
+		987.6543210,
+		98.75643210,
+		9.876543210,
+		0.9876543210
+	};
+	size_t g_long_double_size = sizeof(g_long_double) / sizeof(*g_long_double);
+
+	ft::rb_tree<long double>	tree(&g_long_double[0], &g_long_double[g_long_double_size]);
+	std::set<long double>		ref(&g_long_double[0], &g_long_double[g_long_double_size]);
+
+	for (size_t idx = 0U ; idx < g_long_double_size ; ++idx)
+	{
+		if (idx % 2)
+		{
+			tree.erase(tree.begin());
+			ref.erase(ref.begin());
+		}
+		else
+		{
+			tree.erase((--tree.end()));
+			ref.erase(--ref.end());
+		}
+
+		if (tree.size() != ref.size() ||
+			tree._validity_check() == false ||
+			!std::equal(tree.begin(), tree.end(), ref.begin()))
+			return false;
+	}
+	return true;
+}
+
 void	test_rb_tree( void )
 {
 	t_sub_test	arr[] = {
@@ -238,6 +279,7 @@ void	test_rb_tree( void )
 		{__rend, "rend"},
 		{__insert_single_element, "insert (single element)"},
 		{__insert_hint, "insert (hint)"},
+		{__erase_iterator, "erase (iterator)"},
 		{NULL, ""}
 	};
 
