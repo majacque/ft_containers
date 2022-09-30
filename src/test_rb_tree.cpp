@@ -323,6 +323,28 @@ inline static bool	__find( void )
 	return true;
 }
 
+inline static bool	__count( void )
+{
+	ft::rb_tree<int>	tree;
+
+	tree.insert(10);
+	tree.insert(2);
+	tree.insert(20);
+	tree.insert(1);
+	tree.insert(42);
+	tree.insert(43);
+
+	if( !tree.count(10) ||
+		!tree.count(2) ||
+		!tree.count(20) ||
+		!tree.count(1) ||
+		!tree.count(42) ||
+		!tree.count(43) ||
+		tree.count(2612))
+		return false;
+	return true;
+}
+
 void	test_rb_tree( void )
 {
 	t_sub_test	arr[] = {
@@ -339,6 +361,7 @@ void	test_rb_tree( void )
 		{__erase_iterator, "erase (iterator)"},
 		{__erase_value, "erase (value)"},
 		{__find, "find"},
+		{__count, "count"},
 		{NULL, ""}
 	};
 

@@ -579,6 +579,12 @@ namespace ft
 
 		// TODO count Returns the number of elements with key that compares equivalent to the specified argument, which is either 1 or 0 since this container does not allow duplicates.
 		// size_type count( const Key& key ) const;
+		size_type	count( value_type const & val ) const
+		{
+			if (this->find(val).base() != _nil_node)
+				return 1LU;
+			return 0LU;
+		}
 
 	private:
 		static int	_child_direction( pointer node )
