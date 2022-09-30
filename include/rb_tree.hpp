@@ -577,13 +577,122 @@ namespace ft
 			return const_iterator(_nil_node);
 		}
 
-		// TODO count Returns the number of elements with key that compares equivalent to the specified argument, which is either 1 or 0 since this container does not allow duplicates.
-		// size_type count( const Key& key ) const;
+		/**
+		 * @brief Returns the number of elements with key that compares equivalent to the specified argument,
+		 * which is either 1 or 0 since this container does not allow duplicates.
+		 * 
+		 * @param val Key value of the elements to count.
+		 * @return Number of elements with key that compares equivalent to key or x, which is either 1 or 0 for (1).
+		 */
 		size_type	count( value_type const & val ) const
 		{
 			if (this->find(val).base() != _nil_node)
 				return 1LU;
 			return 0LU;
+		}
+
+		// TODO lower_bound() Returns an iterator pointing to the first element that is not less than (i.e. greater or equal to) key.
+		// const_iterator lower_bound( const Key& key ) const;
+		/**
+		 * @brief Returns an iterator pointing to the first element that is not less than (i.e. greater or equal to) @a val.
+		 * 
+		 * @param val Key value to compare the elements to.
+		 * @return An iterator pointing to the first element that is not less than @a val. If no such element is found, end() is returned.
+		 */
+		iterator	lower_bound( value_type const & val )
+		{
+			if (!_root || (_max && _cmp(_max->val, val)))
+				return iterator(_nil_node);
+
+			pointer	node = _root;
+			pointer	parent = node;
+			if (_cmp(val, node->val))
+			{
+				node = node->childs[LEFT];
+				if (_cmp(node->val, val))
+					return iterator(parent);
+			}
+			else if (_cmp(node->val, val))
+				node = node->childs[RIGHT];
+			else
+				return iterator(node);
+
+			pointer	lower_high;
+			if (_cmp(val, parent->val))
+				lower_high = parent;
+			else
+				lower_high = _max;
+
+			while (node)
+			{
+				if (_cmp(val, node->val))
+				{
+					if (_cmp(node->val, lower_high->val))
+						lower_high = node;
+					parent = node;
+					node = node->childs[LEFT];
+				}
+				else if (_cmp(node->val, val))
+				{
+					parent = node;
+					node = node->childs[RIGHT];
+				}
+				else
+					return iterator(node);
+			}
+
+			return iterator(lower_high);
+		}
+
+		/**
+		 * @brief Returns a const iterator pointing to the first element that is not less than (i.e. greater or equal to) @a val.
+		 * 
+		 * @param val Key value to compare the elements to.
+		 * @return A const iterator pointing to the first element that is not less than @a val. If no such element is found, end() is returned.
+		 */
+		const_iterator	lower_bound( value_type const & val ) const
+		{
+			if (!_root || (_max && _cmp(_max->val, val)))
+				return const_iterator(_nil_node);
+
+			pointer	node = _root;
+			pointer	parent = node;
+			if (_cmp(val, node->val))
+			{
+				node = node->childs[LEFT];
+				if (_cmp(node->val, val))
+					return const_iterator(parent);
+			}
+			else if (_cmp(node->val, val))
+				node = node->childs[RIGHT];
+			else
+				return const_iterator(node);
+
+			pointer	lower_high;
+			if (_cmp(val, parent->val))
+				lower_high = parent;
+			else
+				lower_high = _max;
+
+			while (node)
+			{
+				if (_cmp(val, node->val))
+				{
+					if (_cmp(node->val, lower_high->val))
+						lower_high = node;
+					parent = node;
+					node = node->childs[LEFT];
+				}
+				else if (_cmp(node->val, val))
+				{
+					parent = node;
+					node = node->childs[RIGHT];
+				}
+				else
+					return const_iterator(node);
+			}
+
+			return const_iterator(lower_high);
 		}
 
 	private:
