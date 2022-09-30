@@ -493,8 +493,20 @@ namespace ft
 			return;
 		}
 
-		// TODO erase (key) Removes the element (if one exists) with the key equivalent to key.
-		size_type	erase( value_type const & val );
+		/**
+		 * @brief Removes the element (if one exists) with the key equivalent to @a val.
+		 * 
+		 * @param val Key value of the element to erase.
+		 * @return Number of elements removed (0 or 1).
+		 */
+		size_type	erase( value_type const & val )
+		{
+			iterator	it = this->find(val);
+			if (it.base() == _nil_node)
+				return 0LU;
+			this->erase(it);
+			return 1LU;
+		}
 
 		/**
 		 * @brief Exchanges the contents of the rb tree with those of @a rhs.
@@ -564,6 +576,9 @@ namespace ft
 
 			return const_iterator(_nil_node);
 		}
+
+		// TODO count Returns the number of elements with key that compares equivalent to the specified argument, which is either 1 or 0 since this container does not allow duplicates.
+		// size_type count( const Key& key ) const;
 
 	private:
 		static int	_child_direction( pointer node )

@@ -266,6 +266,40 @@ inline static bool	__erase_iterator( void )
 	return true;
 }
 
+inline static bool	__erase_value( void )
+{
+	char	g_char[] = {
+		'Q',
+		'W',
+		'E',
+		'R',
+		'T',
+		'Y',
+		'U',
+		'I',
+		'O',
+		'P',
+	};
+	size_t	g_char_size = sizeof(g_char) / sizeof(*g_char);
+
+	ft::rb_tree<char>	tree(&g_char[0], &g_char[g_char_size]);
+	std::set<char>		ref(&g_char[0], &g_char[g_char_size]);
+	size_t				ft_ret;
+	size_t				std_ret;
+
+	for (size_t idx = 0U ; idx < g_char_size * 2 ; ++idx)
+	{
+		ft_ret = tree.erase(g_char[idx / 2]);
+		std_ret = ref.erase(g_char[idx / 2]);
+
+		if (tree.size() != ref.size() || ft_ret != std_ret ||
+			tree._validity_check() == false ||
+			!std::equal(tree.begin(), tree.end(), ref.begin()))
+			return false;
+	}
+	return true;
+}
+
 inline static bool	__find( void )
 {
 	ft::rb_tree<int>	tree;
@@ -303,6 +337,7 @@ void	test_rb_tree( void )
 		{__insert_single_element, "insert (single element)"},
 		{__insert_hint, "insert (hint)"},
 		{__erase_iterator, "erase (iterator)"},
+		{__erase_value, "erase (value)"},
 		{__find, "find"},
 		{NULL, ""}
 	};
