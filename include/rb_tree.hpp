@@ -424,12 +424,16 @@ namespace ft
 			return;
 		}
 
-		// TODO test erase (iterator) Removes the element at pos.
+		/**
+		 * @brief Removes the element at @a pos. References and iterators to the erased elements are invalidated.
+		 * Other references and iterators are not affected. The iterator @a pos must be valid and dereferenceable.
+		 * Thus the end() iterator (which is valid, but is not dereferenceable) cannot be used as a value for @a pos.
+		 * 
+		 * @param pos An iterator to the element to remove.
+		 */
 		void	erase( iterator pos )
 		{
 			pointer	node = pos.base();
-
-			// TODO look what I want to do with an erase on past-the-end (set infinite loop)
 
 			if (_size == 1LU)
 			{
@@ -511,6 +515,54 @@ namespace ft
 			// _nil_node->childs[LEFT] = _max;
 			// rhs._root->parent = rhs._nil_node;
 			// rhs._nil_node->childs[LEFT] = rhs._max;
+		}
+
+		// Lookup
+
+		/**
+		 * @brief Finds an element with key equivalent to @a val.
+		 * 
+		 * @param val 
+		 * @return An iterator to the element with a key equivalent to @a val.
+		 * If no such element is found, an iterator to end() is returned.
+		 */
+		iterator	find( value_type const & val )
+		{
+			pointer	node = _root;
+			while (node)
+			{
+				if (_cmp(val, node->val))
+					node = node->childs[LEFT];
+				else if (_cmp(node->val, val))
+					node = node->childs[RIGHT];
+				else
+					return iterator(node);
+			}
+
+			return iterator(_nil_node);
+		}
+
+		/**
+		 * @brief Finds an element with key equivalent to @a val.
+		 * 
+		 * @param val 
+		 * @return A const iterator to the element with a key equivalent to @a val.
+		 * If no such element is found, a const iterator to end() is returned.
+		 */
+		const_iterator	find( value_type const & val ) const
+		{
+			pointer	node = _root;
+			while (node)
+			{
+				if (_cmp(val, node->val))
+					node = node->childs[LEFT];
+				else if (_cmp(node->val, val))
+					node = node->childs[RIGHT];
+				else
+					return const_iterator(node);
+			}
+
+			return const_iterator(_nil_node);
 		}
 
 	private:

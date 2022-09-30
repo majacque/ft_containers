@@ -266,6 +266,29 @@ inline static bool	__erase_iterator( void )
 	return true;
 }
 
+inline static bool	__find( void )
+{
+	ft::rb_tree<int>	tree;
+
+	tree.insert(10);
+	tree.insert(2);
+	tree.insert(20);
+	tree.insert(1);
+	tree.insert(42);
+	tree.insert(43);
+
+	if (*tree.find(10) != 10 ||
+		*tree.find(2) != 2 ||
+		*tree.find(20) != 20 ||
+		*tree.find(1) != 1 ||
+		*tree.find(42) != 42 ||
+		*tree.find(43) != 43 ||
+		tree.find(321321) != tree.end())
+		return false;
+
+	return true;
+}
+
 void	test_rb_tree( void )
 {
 	t_sub_test	arr[] = {
@@ -280,6 +303,7 @@ void	test_rb_tree( void )
 		{__insert_single_element, "insert (single element)"},
 		{__insert_hint, "insert (hint)"},
 		{__erase_iterator, "erase (iterator)"},
+		{__find, "find"},
 		{NULL, ""}
 	};
 
