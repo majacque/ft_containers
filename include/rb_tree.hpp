@@ -1033,21 +1033,51 @@ namespace ft
 		}
 	};
 
-// TODO relational operators (==, !=, <, <=, >, >=) Compares the contents of two rb tree.
-/* template< class Key, class Compare, class Alloc >
-bool operator==( const ft::rb_tree<Key,Compare,Alloc>& lhs,
-                 const ft::rb_tree<Key,Compare,Alloc>& rhs ); */
+// TODO relational operators (==, !=) Compares the contents of two rb tree.
 // == & != Checks if the contents of lhs and rhs are equal, that is,
 // they have the same number of elements and each element in lhs compares equal with the element in rhs at the same position.
+template <class _T, class _Compare, class _Alloc>
+bool	operator==( rb_tree<_T, _Compare, _Alloc> const & lhs, rb_tree<_T, _Compare, _Alloc> const & rhs )
+{
+	if (lhs.size() != rhs.size())
+		return false;
 
+	return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
+}
+
+template <class _T, class _Compare, class _Alloc>
+bool	operator!=( rb_tree<_T, _Compare, _Alloc> const & lhs, rb_tree<_T, _Compare, _Alloc> const & rhs )
+{
+	return !(lhs == rhs);
+}
+
+// TODO relational operators (<, <=, >, >=) Compares the contents of two rb tree.
 // <, <=, > & >=  Compares the contents of lhs and rhs lexicographically.
 // The comparison is performed by a function equivalent to ft::lexicographical_compare. This comparison ignores the rb tree's ordering Compare (compare_type).
+template <class _T, class _Compare, class _Alloc>
+bool	operator<( rb_tree<_T, _Compare, _Alloc> const & lhs, rb_tree<_T, _Compare, _Alloc> const & rhs )
+{
+	return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
 
+template <class _T, class _Compare, class _Alloc>
+bool	operator<=( rb_tree<_T, _Compare, _Alloc> const & lhs, rb_tree<_T, _Compare, _Alloc> const & rhs )
+{
+	return !(rhs < lhs);
+}
 
-// TODO swap Specializes the ft::swap algorithm for ft::rb_tree. Swaps the contents of lhs and rhs. Calls lhs.swap(rhs).
-/* template< class Key, class Compare, class Alloc >
-void swap( ft::rb_tree<Key,Compare,Alloc>& lhs,
-           ft::rb_tree<Key,Compare,Alloc>& rhs ); */
+template <class _T, class _Compare, class _Alloc>
+bool	operator>( rb_tree<_T, _Compare, _Alloc> const & lhs, rb_tree<_T, _Compare, _Alloc> const & rhs )
+{
+	return rhs < lhs;
+}
+
+template <class _T, class _Compare, class _Alloc>
+bool	operator>=( rb_tree<_T, _Compare, _Alloc> const & lhs, rb_tree<_T, _Compare, _Alloc> const & rhs )
+{
+	return !(lhs < rhs);
+}
+
 template <class _T, class _Compare, class _Alloc>
 void	swap( rb_tree<_T, _Compare, _Alloc> &lhs, rb_tree<_T, _Compare, _Alloc> &rhs )
 {

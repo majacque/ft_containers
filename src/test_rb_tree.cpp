@@ -548,6 +548,40 @@ inline static bool	__upper_bound( void )
 	return true;
 }
 
+inline static bool	__relational_operators( void )
+{
+	int	tab1[] = {10, 2, 20, -1, 42, 50, 45, 15};
+	int	tab2[] = {5, 2, 3, 1, 4, 6};
+
+	ft::rb_tree<int>	tree1(&tab1[0], &tab1[8]);
+	ft::rb_tree<int>	tree2(tree1);
+
+	if ((tree1 == tree2) == false || (tree1 != tree2) == true ||
+		(tree1 <= tree2) == false ||
+		(tree1 >= tree2) == false)
+		return false;
+
+	tree2.erase(20);
+	if ((tree1 == tree2) == true || (tree1 != tree2) == false ||
+		(tree1 <= tree2) == false ||
+		(tree1 >= tree2) == true)
+		return false;
+
+	tree1.erase(20);
+	tree1.erase(42);
+	if ((tree1 == tree2) == true || (tree1 != tree2) == false)
+		return false;
+
+	tree1.insert(43);
+	if ((tree2 < tree1) == false ||
+		(tree2 <= tree1) == false ||
+		(tree1 > tree2) == false ||
+		(tree1 >= tree2) == false)
+		return false;
+
+	return true;
+}
+
 inline static bool	__swap_nm( void )
 {
 	int	tab1[] = {10, 2, 20, -1, 42, 50, 45, 15};
@@ -598,6 +632,7 @@ void	test_rb_tree( void )
 		{__count, "count"},
 		{__lower_bound, "lower bound"},
 		{__upper_bound, "upper bound"},
+		{__relational_operators, "relational operators"},
 		{__swap_nm, "swap (non-member)"},
 		{NULL, ""}
 	};
