@@ -583,10 +583,10 @@ namespace ft
 
 		/**
 		 * @brief Returns the number of elements with key that compares equivalent to the specified argument,
-		 * which is either 1 or 0 since this container does not allow duplicates.
+		 * which is either 1 or 0 since this rb tree does not allow duplicates.
 		 * 
 		 * @param val Key value of the elements to count.
-		 * @return Number of elements with key that compares equivalent to key or x, which is either 1 or 0 for (1).
+		 * @return Number of elements with key that compares equivalent to @a val, which is either 1 or 0 for (1).
 		 */
 		size_type	count( value_type const & val ) const
 		{

@@ -127,6 +127,24 @@ inline static bool	__end( void )
 	return true;
 }
 
+inline static bool	__empty( void )
+{
+	ft::map<char, int>	m;
+
+	if (m.empty() == false)
+		return false;
+
+	m['a'] = 100;
+	if (m.empty() == true)
+		return false;
+
+	m.clear();
+	if (m.empty() == false)
+		return false;
+
+	return true;
+}
+
 inline static bool	__size( void )
 {
 	ft::map<char, int>	m;
@@ -144,6 +162,40 @@ inline static bool	__size( void )
 	return true;
 }
 
+inline static bool	__clear( void )
+{
+	ft::map<char, int>	m;
+
+	m.clear();
+	if (m.size() != 0)
+		return false;
+
+	m['a'] = 100;
+	m.clear();
+	if (m.size() != 0)
+		return false;
+
+	return true;
+}
+
+inline static bool	__count( void )
+{
+	ft::map<char, int>	m;
+
+	if (m.count('a') != 0)
+		return false;
+
+	m['a'] = 100;
+	if (m.count('a') != 1)
+		return false;
+
+	m.clear();
+	if (m.count('a') != 0)
+		return false;
+
+	return true;
+}
+
 void	test_map( void )
 {
 	t_sub_test	arr[] = {
@@ -152,7 +204,10 @@ void	test_map( void )
 		{__subscript_operator, "operator[]"},
 		{__begin, "begin"},
 		{__end, "end"},
+		{__empty, "empty"},
 		{__size, "size"},
+		{__clear, "clear"},
+		{__count, "count"},
 		{NULL, ""}
 	};
 

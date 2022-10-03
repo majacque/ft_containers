@@ -168,6 +168,16 @@ namespace ft
 		// Capacity
 
 		/**
+		 * @brief Returns whether the map is empty (i.e. whether its size is 0).
+		 * 
+		 * @return true if the container size is 0, false otherwise.
+		 */
+		bool	empty( void ) const
+		{
+			return _tree.empty();
+		}
+
+		/**
 		 * @brief Returns the number of elements in the map.
 		 */
 		size_type	size( void ) const
@@ -177,8 +187,33 @@ namespace ft
 
 		// Modifiers
 
-		// TODO clear
-		// void	clear( void );
+		/**
+		 * @brief Destroy the map object.
+		 */
+		void	clear( void )
+		{
+			_tree.clear();
+			return;
+		}
+
+		/**
+		 * @brief Removes the element at @a pos. References and iterators to the erased elements are invalidated.
+		 * Other references and iterators are not affected. The iterator @a pos must be valid and dereferenceable.
+		 * Thus the end() iterator (which is valid, but is not dereferenceable) cannot be used as a value for @a pos.
+		 * 
+		 * @param pos An iterator to the element to remove.
+		 */
+		void	erase( iterator position )
+		{
+			_tree.erase(position);
+			return;
+		}
+
+		// TODO erase (key)
+		// size_type erase(const key_type& x);
+
+		// TODO erase (range)
+		// void erase(iterator first, iterator last);
 
 		/**
 		 * @brief Inserts element(s) into the map, if the map doesn't already contain an element with an equivalent key.
@@ -198,6 +233,20 @@ namespace ft
 		// TODO insert (range)
 		/* template <class InputIterator>
 		void	insert( InputIterator first, InputIterator last ); */
+
+		// Lookup
+
+		/**
+		 * @brief Returns the number of elements with key that compares equivalent to the specified argument,
+		 * which is either 1 or 0 since this map does not allow duplicates.
+		 * 
+		 * @param key The key of the elements to count.
+		 * @return Number of elements with key that compares equivalent to @a key, which is either 1 or 0 for (1).
+		 */
+		size_type	count( key_type const & key )
+		{
+			return _tree.count(value_type(key, mapped_type()));
+		}
 
 	};
 }
