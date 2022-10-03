@@ -30,6 +30,7 @@ int	main(int argc, char **argv) {
 		{test_utility, "utility"},
 		{test_vector, "vector"},
 		{test_rb_tree, "red black tree"},
+		{test_map, "map"},
 		{NULL, ""}
 	};
 

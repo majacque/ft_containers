@@ -36,6 +36,7 @@ SRC				=	\
 					test_utility.cpp	\
 					test_vector.cpp	\
 					test_rb_tree.cpp	\
+					test_map.cpp
 
 ######################################
 #            OBJECT FILES            #
