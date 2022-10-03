@@ -150,8 +150,12 @@ namespace ft
 		{
 			this->clear();
 			_root = this->_dup(rhs._root, _nil_node);
-			for ( _min = _root; _min->childs[LEFT]; _min = _min->childs[LEFT] );
-			for ( _max = _root; _max->childs[RIGHT]; _max = _max->childs[RIGHT] );
+			if (_root)
+			{
+				for ( _min = _root; _min->childs[LEFT]; _min = _min->childs[LEFT] );
+				for ( _max = _root; _max->childs[RIGHT]; _max = _max->childs[RIGHT] );
+			}
+			_size = rhs._size;
 
 			return *this;
 		}
