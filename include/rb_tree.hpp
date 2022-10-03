@@ -599,40 +599,21 @@ namespace ft
 		 */
 		iterator	lower_bound( value_type const & val )
 		{
-			if (!_root || (_max && _cmp(_max->val, val)))
+			if (!_root || _cmp(_max->val, val))
 				return iterator(_nil_node);
 
 			pointer	node = _root;
-			pointer	parent = node;
-			if (_cmp(val, node->val))
-			{
-				node = node->childs[LEFT];
-				if (_cmp(node->val, val))
-					return iterator(parent);
-			}
-			else if (_cmp(node->val, val))
-				node = node->childs[RIGHT];
-			else
-				return iterator(node);
-
-			pointer	lower_high;
-			if (_cmp(val, parent->val))
-				lower_high = parent;
-			else
-				lower_high = _max;
-
+			pointer	lower_high = _max;
 			while (node)
 			{
 				if (_cmp(val, node->val))
 				{
 					if (_cmp(node->val, lower_high->val))
 						lower_high = node;
-					parent = node;
 					node = node->childs[LEFT];
 				}
 				else if (_cmp(node->val, val))
 				{
-					parent = node;
 					node = node->childs[RIGHT];
 				}
 				else
@@ -650,40 +631,21 @@ namespace ft
 		 */
 		const_iterator	lower_bound( value_type const & val ) const
 		{
-			if (!_root || (_max && _cmp(_max->val, val)))
+			if (!_root || _cmp(_max->val, val))
 				return const_iterator(_nil_node);
 
 			pointer	node = _root;
-			pointer	parent = node;
-			if (_cmp(val, node->val))
-			{
-				node = node->childs[LEFT];
-				if (_cmp(node->val, val))
-					return const_iterator(parent);
-			}
-			else if (_cmp(node->val, val))
-				node = node->childs[RIGHT];
-			else
-				return const_iterator(node);
-
-			pointer	lower_high;
-			if (_cmp(val, parent->val))
-				lower_high = parent;
-			else
-				lower_high = _max;
-
+			pointer	lower_high = _max;
 			while (node)
 			{
 				if (_cmp(val, node->val))
 				{
 					if (_cmp(node->val, lower_high->val))
 						lower_high = node;
-					parent = node;
 					node = node->childs[LEFT];
 				}
 				else if (_cmp(node->val, val))
 				{
-					parent = node;
 					node = node->childs[RIGHT];
 				}
 				else
@@ -701,26 +663,11 @@ namespace ft
 		 */
 		iterator	upper_bound( value_type const & val )
 		{
-			if (!_root || (_max && !_cmp(val, _max->val)))
+			if (!_root || !_cmp(val, _max->val))
 				return iterator(_nil_node);
 
 			pointer	node = _root;
-			pointer	parent = node;
-			if (_cmp(val, node->val))
-			{
-				node = node->childs[LEFT];
-				if (_cmp(node->val, val))
-					return iterator(parent);
-			}
-			else
-				node = node->childs[RIGHT];
-
-			pointer	lower_high;
-			if (_cmp(val, parent->val))
-				lower_high = parent;
-			else
-				lower_high = _max;
-
+			pointer	lower_high = _max;
 			while (node)
 			{
 				if (_cmp(val, node->val))
@@ -748,26 +695,11 @@ namespace ft
 		 */
 		const_iterator	upper_bound( value_type const & val ) const
 		{
-			if (!_root || (_max && !_cmp(val, _max->val)))
+			if (!_root || !_cmp(val, _max->val))
 				return const_iterator(_nil_node);
 
 			pointer	node = _root;
-			pointer	parent = node;
-			if (_cmp(val, node->val))
-			{
-				node = node->childs[LEFT];
-				if (_cmp(node->val, val))
-					return const_iterator(parent);
-			}
-			else
-				node = node->childs[RIGHT];
-
-			pointer	lower_high;
-			if (_cmp(val, parent->val))
-				lower_high = parent;
-			else
-				lower_high = _max;
-
+			pointer	lower_high = _max;
 			while (node)
 			{
 				if (_cmp(val, node->val))
