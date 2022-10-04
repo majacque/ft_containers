@@ -348,6 +348,26 @@ namespace ft
 			return;
 		}
 
+		// Observers
+
+		/**
+		 * @brief Returns the function object that compares the keys, which is a copy of this container's constructor argument comp.
+		 * By default, this is a less object, which returns the same as operator<.
+		 */
+		key_compare	key_comp( void ) const
+		{
+			return key_compare();
+		}
+
+		/**
+		 * @brief Returns a function object that compares objects of type std::map::value_type (key-value pairs)
+		 * by using key_comp to compare the first components of the pairs.
+		 */
+		value_compare	value_comp( void ) const
+		{
+			return value_compare();
+		}
+
 		// Lookup
 
 		/**

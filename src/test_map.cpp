@@ -398,6 +398,55 @@ inline static bool	__upper_bound( void )
 	return true;
 }
 
+inline static bool	__key_comp( void )
+{
+	ft::map<char, int, std::less<char> >	mless;
+	ft::map<char, int, std::greater<char> >	mgreater;
+
+	ft::map<char, int, std::less<char> >::key_compare	comp_less = mless.key_comp();
+	ft::map<char, int, std::greater<char> >::key_compare	comp_greater = mgreater.key_comp();
+
+	std::less<char>	less;
+	std::greater<char>	greater;
+
+	if (comp_less('a', 'b') != less('a', 'b') ||
+		comp_less('b', 'b') != less('b', 'b') ||
+		comp_less('b', 'a') != less('b', 'a'))
+		return false;
+
+	if (comp_greater('a', 'b') != greater('a', 'b') ||
+		comp_greater('b', 'b') != greater('b', 'b') ||
+		comp_greater('b', 'a') != greater('b', 'a'))
+		return false;
+	return true;
+}
+
+inline static bool	__value_comp( void )
+{
+	ft::map<char, int, std::less<char> >	mless;
+	ft::map<char, int, std::greater<char> >	mgreater;
+
+	ft::map<char, int, std::less<char> >::value_compare	comp_less = mless.value_comp();
+	ft::map<char, int, std::greater<char> >::value_compare	comp_greater = mgreater.value_comp();
+
+	std::less<char>	less;
+	std::greater<char>	greater;
+
+	ft::pair<char, int>	a('a', 10);
+	ft::pair<char, int>	b('b', 10);
+
+	if (comp_less(a, b) != less('a', 'b') ||
+		comp_less(b, b) != less('b', 'b') ||
+		comp_less(b, a) != less('b', 'a'))
+		return false;
+
+	if (comp_greater(a, b) != greater('a', 'b') ||
+		comp_greater(b, b) != greater('b', 'b') ||
+		comp_greater(b, a) != greater('b', 'a'))
+		return false;
+	return true;
+}
+
 void	test_map( void )
 {
 	t_sub_test	arr[] = {
@@ -418,6 +467,8 @@ void	test_map( void )
 		{__count, "count"},
 		{__lower_bound, "lower bound (>=)"},
 		{__upper_bound, "upper bound (>)"},
+		{__key_comp, "key comp"},
+		{__value_comp, "value comp"},
 		{NULL, ""}
 	};
 
