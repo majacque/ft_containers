@@ -180,6 +180,44 @@ namespace ft
 			return _tree.end();
 		}
 
+		/**
+		 * @brief Returns a reverse iterator to the first element of the reversed map.
+		 * It corresponds to the last element of the non-reversed map. If the map is empty, the returned iterator is equal to rend().
+		 */
+		reverse_iterator	rbegin( void )
+		{
+			return _tree.rbegin();
+		}
+
+		/**
+		 * @brief Returns a const reverse iterator to the first element of the reversed map.
+		 * It corresponds to the last element of the non-reversed map. If the map is empty, the returned iterator is equal to rend().
+		 */
+		const_reverse_iterator	rbegin( void ) const
+		{
+			return _tree.rbegin();
+		}
+
+		/**
+		 * @brief Returns a reverse iterator to the element following the last element of the reversed map.
+		 * It corresponds to the element preceding the first element of the non-reversed map.
+		 * This element acts as a placeholder, attempting to access it results in undefined behavior.
+		 */
+		reverse_iterator	rend( void )
+		{
+			return _tree.rend();
+		}
+
+		/**
+		 * @brief Returns a const reverse iterator to the element following the last element of the reversed map.
+		 * It corresponds to the element preceding the first element of the non-reversed map.
+		 * This element acts as a placeholder, attempting to access it results in undefined behavior.
+		 */
+		const_reverse_iterator	rend( void ) const
+		{
+			return _tree.rend();
+		}
+
 		// Capacity
 
 		/**

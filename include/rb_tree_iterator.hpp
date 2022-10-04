@@ -11,7 +11,7 @@ namespace __ft
 	protected:
 		T	_current;
 
-		typedef ft::iterator_traits<T>						traits_type;
+		typedef ft::iterator_traits<NodeValue *>						traits_type;
 
 	public:
 		typedef T											iterator_type;
@@ -21,7 +21,7 @@ namespace __ft
 		typedef typename traits_type::reference				reference;
 		typedef typename traits_type::pointer				pointer;
 
-		typedef value_type									node_type;
+		typedef typename ft::iterator_traits<T>::value_type	node_type;
 
 		__rb_tree_iterator(): _current(iterator_type())
 		{
@@ -59,12 +59,12 @@ namespace __ft
 			return *this;
 		}
 
-		NodeValue&	operator*( void ) const
+		reference	operator*( void ) const
 		{
 			return _current->val;
 		}
 
-		NodeValue*	operator->( void ) const
+		pointer	operator->( void ) const
 		{
 			return &_current->val;
 		}
