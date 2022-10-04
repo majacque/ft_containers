@@ -2,6 +2,8 @@
 #include "map.hpp"
 #include <map>
 #include <string>
+#include <typeinfo>
+#include <algorithm>
 
 inline static bool	__default_constructor( void )
 {
@@ -447,6 +449,112 @@ inline static bool	__value_comp( void )
 	return true;
 }
 
+inline static bool	__get_allocator( void )
+{
+	if (typeid(ft::map<char, int>::allocator_type) != typeid(std::allocator<ft::rb_node<ft::pair<char const, int> > >))
+		return false;
+	return true;
+}
+
+inline static bool	__relational_operators( void )
+{
+	ft::map<char, int>	m1;
+
+	m1['b'] = 100;
+	m1['d'] = 200;
+	m1['e'] = 101;
+	m1['a'] = 300;
+	m1['z'] = 400;
+
+	ft::map<char, int>	m2(m1);
+
+	if ((m1 == m2) == false || (m1 != m2) == true ||
+		(m1 <= m2) == false ||
+		(m1 >= m2) == false)
+		return false;
+
+	m2.erase('d');
+	if ((m1 == m2) == true || (m1 != m2) == false ||
+		(m1 <= m2) == false ||
+		(m1 >= m2) == true)
+		return false;
+
+	m1.erase('d');
+	m1.erase('e');
+	if ((m1 == m2) == true || (m1 != m2) == false)
+		return false;
+
+	m1.insert(ft::pair<char, int>('f', 100));
+	if ((m2 < m1) == false ||
+		(m2 <= m1) == false ||
+		(m1 > m2) == false ||
+		(m1 >= m2) == false)
+		return false;
+
+	return true;
+}
+
+inline static bool	__swap_nm( void )
+{
+	char	tab1[] = {
+		'c',
+		'd',
+		'a',
+		'z',
+		'h',
+		't',
+		'n',
+		'b',
+	};
+
+	char	tab2[] = {
+		'w',
+		'u',
+		'h',
+		'k',
+		'l',
+	};
+
+	ft::map<char, int>	m1;
+	ft::map<char, int>	m2;
+
+	m1['c'] = 100;
+	m1['d'] = 1100;
+	m1['a'] = 200;
+	m1['z'] = 2200;
+	m1['h'] = 300;
+	m1['t'] = 3300;
+	m1['n'] = 400;
+	m1['b'] = 4400;
+
+	m2['w'] = 100;
+	m2['u'] = 1100;
+	m2['h'] = 200;
+	m2['k'] = 2200;
+	m2['l'] = 600;
+
+	ft::map<char, int>::iterator	it1_begin = m1.begin();
+	ft::map<char, int>::iterator	it2_begin = m2.begin();
+
+	std::sort(&tab1[0], &tab1[8]);
+	std::sort(&tab2[0], &tab2[5]);
+
+	ft::swap(m1, m2);
+
+	if (m1.begin() != it2_begin ||
+		m2.begin() != it1_begin)
+		return false;
+
+	for (size_t i = 0; i < 8; ++i)
+	{
+		if (it1_begin->first != tab1[i])
+			return false;
+		++it1_begin;
+	}
+
+	return true;
+}
+
 void	test_map( void )
 {
 	t_sub_test	arr[] = {
@@ -469,6 +577,9 @@ void	test_map( void )
 		{__upper_bound, "upper bound (>)"},
 		{__key_comp, "key comp"},
 		{__value_comp, "value comp"},
+		{__get_allocator, "get allocator"},
+		{__relational_operators, "relational operators (==, !=, <, <=, >, >=)"},
+		{__swap_nm, "swap (non-member)"},
 		{NULL, ""}
 	};
 

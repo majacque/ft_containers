@@ -1,7 +1,7 @@
 #ifndef MAP_HPP
 # define MAP_HPP
 
-#include "utility.hpp"
+#include "utility.hpp" 
 #include "rb_tree.hpp"
 #include <functional>
 #include <memory>
@@ -38,19 +38,17 @@ namespace ft
 			}
 		};
 
-		typedef typename allocator_type::const_reference					const_reference;
-		typedef typename allocator_type::reference							reference;
-		typedef typename allocator_type::const_pointer						const_pointer;
-		typedef typename allocator_type::pointer							pointer;
-		// typedef __ft::__rb_tree_iterator<const_pointer, const value_type>	const_iterator;
-		// typedef __ft::__rb_tree_iterator<pointer, value_type>				iterator;
+		typedef typename allocator_type::const_reference									const_reference;
+		typedef typename allocator_type::reference											reference;
+		typedef typename allocator_type::const_pointer										const_pointer;
+		typedef typename allocator_type::pointer											pointer;
 		typedef typename rb_tree<value_type, value_compare, allocator_type>::const_iterator	const_iterator;
 		typedef typename rb_tree<value_type, value_compare, allocator_type>::iterator		iterator;
-		typedef reverse_iterator<const_iterator>							const_reverse_iterator;
-		typedef reverse_iterator<iterator>									reverse_iterator;
+		typedef reverse_iterator<const_iterator>											const_reverse_iterator;
+		typedef reverse_iterator<iterator>													reverse_iterator;
 
-		typedef iterator_traits<iterator>									difference_type;
-		typedef size_t														size_type;
+		typedef iterator_traits<iterator>													difference_type;
+		typedef size_t																		size_type;
 
 	private:
 		rb_tree<value_type, value_compare, allocator_type>	_tree;
@@ -127,6 +125,14 @@ namespace ft
 		{
 			_tree = rhs._tree;
 			return *this;
+		}
+
+		/**
+		 * @brief Returns the allocator associated with the map.
+		 */
+		allocator_type	get_allocator( void ) const
+		{
+			return allocator_type();
 		}
 
 		// Element access
@@ -377,7 +383,7 @@ namespace ft
 		 * @param key The key of the elements to count.
 		 * @return Number of elements with key that compares equivalent to @a key, which is either 1 or 0 for (1).
 		 */
-		size_type	count( key_type const & key )
+		size_type	count( key_type const & key ) const
 		{
 			return _tree.count(value_type(key, mapped_type()));
 		}
@@ -489,6 +495,65 @@ namespace ft
 		}
 
 	};
+
+	/**
+	 * @brief Checks if the contents of @a lhs and @a rhs are equal, that is,
+	 * they have the same number of elements and each element in @a lhs compares equal with the element in @a rhs at the same position.
+	 */
+	template <class Key, class T, class Compare, class Allocator>
+	bool	operator==( map<Key, T, Compare, Allocator> const & lhs, map<Key, T, Compare, Allocator> const & rhs )
+	{
+		if (lhs.size() != rhs.size())
+			return false;
+
+		return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
+	}
+
+	template <class Key, class T, class Compare, class Allocator>
+	bool	operator!=( map<Key, T, Compare, Allocator> const & lhs, map<Key, T, Compare, Allocator> const & rhs )
+	{
+		return !(lhs == rhs);
+	}
+
+
+	/**
+	 * @brief Compares the contents of @a lhs and @a rhs lexicographically.
+	 * The comparison is performed by a function equivalent to ft::lexicographical_compare.
+	 * This comparison ignores the map's ordering Compare (compare_type).
+	 */
+	template <class Key, class T, class Compare, class Allocator>
+	bool	operator<( map<Key, T, Compare, Allocator> const & lhs, map<Key, T, Compare, Allocator> const & rhs )
+	{
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	}
+
+	template <class Key, class T, class Compare, class Allocator>
+	bool	operator<=( map<Key, T, Compare, Allocator> const & lhs, map<Key, T, Compare, Allocator> const & rhs )
+	{
+		return !(rhs < lhs);
+	}
+
+	template <class Key, class T, class Compare, class Allocator>
+	bool	operator>( map<Key, T, Compare, Allocator> const & lhs, map<Key, T, Compare, Allocator> const & rhs )
+	{
+		return rhs < lhs;
+	}
+
+	template <class Key, class T, class Compare, class Allocator>
+	bool	operator>=( map<Key, T, Compare, Allocator> const & lhs, map<Key, T, Compare, Allocator> const & rhs )
+	{
+		return !(lhs < rhs);
+	}
+
+	/**
+	 * @brief Specializes the ft::swap algorithm for ft::map. Swaps the contents of @a lhs and @a rhs. Calls lhs.swap(rhs).
+	 */
+	template <class Key, class T, class Compare, class Allocator>
+	void	swap( map<Key, T, Compare, Allocator>& lhs, map<Key, T, Compare, Allocator>& rhs )
+	{
+		lhs.swap(rhs);
+		return;
+	}
 }
 
 #endif

@@ -121,6 +121,7 @@ namespace ft
 				for ( _min = _root; _min->childs[LEFT]; _min = _min->childs[LEFT] );
 				for ( _max = _root; _max->childs[RIGHT]; _max = _max->childs[RIGHT] );
 			}
+			_nil_node->childs[LEFT] = _max;
 
 			return;
 		}
@@ -159,6 +160,7 @@ namespace ft
 				for ( _min = _root; _min->childs[LEFT]; _min = _min->childs[LEFT] );
 				for ( _max = _root; _max->childs[RIGHT]; _max = _max->childs[RIGHT] );
 			}
+			_nil_node->childs[LEFT] = _max;
 			_size = rhs._size;
 
 			return *this;
@@ -311,12 +313,16 @@ namespace ft
 			pointer	parent;
 			while (position)
 			{
-				parent = position;
-
 				if (_cmp(val, position->val))
+				{
+					parent = position;
 					position = position->childs[LEFT];
+				}
 				else if (_cmp(position->val, val))
+				{
+					parent = position;
 					position = position->childs[RIGHT];
+				}
 				else
 					return pair<iterator, bool>(iterator(position), false);
 			}
@@ -352,6 +358,22 @@ namespace ft
 		 */
 		iterator	insert( iterator hint, value_type const & val )
 		{
+			if (!_root)
+			{
+				_root = _alloc.allocate(1LU);
+				_alloc.construct(_root, rb_node<T>(val));
+				_root->color = BLACKNODE;
+				_root->parent = _nil_node;
+				_min = _root;
+				_nil_node->childs[LEFT] = _max = _root;
+				++_size;
+
+				return iterator(_root);
+			}
+
+			if (hint.base() == _nil_node)
+				return this->insert(val).first;
+
 			pointer	node = hint.base();
 
 			int	direction;
@@ -368,10 +390,15 @@ namespace ft
 				node = parent;
 				parent = node->parent;
 			}
-			if (parent->color != PTENODE && direction == LEFT && _cmp(val, parent->val))
-				return this->insert(val).first;
-			else if (parent->color != PTENODE && direction == RIGHT && _cmp(parent->val, val))
-				return this->insert(val).first;
+			if (parent->color != PTENODE)
+			{
+				if (direction == LEFT && _cmp(val, parent->val))
+					return this->insert(val).first;
+				else if (direction == RIGHT && _cmp(parent->val, val))
+					return this->insert(val).first;
+				else if (!_cmp(val, parent->val) && !_cmp(parent->val, val))
+					return iterator(parent);
+			}
 
 			parent = hint.base();
 			if (parent->childs[direction])
@@ -382,12 +409,12 @@ namespace ft
 					if (_cmp(val, node->val))
 					{
 						parent = node;
-						node = node->childs[direction];
+						node = node->childs[LEFT];
 					}
 					else if (_cmp(node->val, val))
 					{
 						parent = node;
-						node = node->childs[!direction];
+						node = node->childs[RIGHT];
 					}
 					else
 						return iterator(node);
@@ -417,9 +444,9 @@ namespace ft
 
 		/**
 		 * @brief Inserts elements, from range [first, last),
-		 * into the rb tree if the rb tree doesn't contain an element with an equivalent key.
-		 * If multiple elements in the range have keys that compare equivalent, it is unspecified which element is inserted.
-		 * 
+		//  * into the rb tree if the rb tree doesn't contain an element with an equivalent key.
+		//  * If multiple elements in the range have keys that compare equivalent, it is unspecified which element is inserted.
+		//  * 
 		 * @param first An input iterator to the initial position in a range.
 		 * @param last An input iterator to the final position in a range.
 		 */
@@ -901,7 +928,6 @@ namespace ft
 				uncle->color = BLACKNODE;
 				grandparent->color = REDNODE;
 				this->_balance_insert(grandparent);
-				// REMIND try with a goto with a label 'begin'
 			}
 
 			return;
@@ -989,9 +1015,10 @@ namespace ft
 		}
 	};
 
-// TODO relational operators (==, !=) Compares the contents of two rb tree.
-// == & != Checks if the contents of lhs and rhs are equal, that is,
-// they have the same number of elements and each element in lhs compares equal with the element in rhs at the same position.
+/**
+ * @brief Checks if the contents of @a lhs and @a rhs are equal, that is,
+ * they have the same number of elements and each element in @a lhs compares equal with the element in @a rhs at the same position.
+ */
 template <class _T, class _Compare, class _Alloc>
 bool	operator==( rb_tree<_T, _Compare, _Alloc> const & lhs, rb_tree<_T, _Compare, _Alloc> const & rhs )
 {
@@ -1007,9 +1034,11 @@ bool	operator!=( rb_tree<_T, _Compare, _Alloc> const & lhs, rb_tree<_T, _Compare
 	return !(lhs == rhs);
 }
 
-// TODO relational operators (<, <=, >, >=) Compares the contents of two rb tree.
-// <, <=, > & >=  Compares the contents of lhs and rhs lexicographically.
-// The comparison is performed by a function equivalent to ft::lexicographical_compare. This comparison ignores the rb tree's ordering Compare (compare_type).
+/**
+ * @brief Compares the contents of @a lhs and @a rhs lexicographically.
+ * The comparison is performed by a function equivalent to ft::lexicographical_compare.
+ * This comparison ignores the rb tree's ordering Compare (compare_type).
+ */
 template <class _T, class _Compare, class _Alloc>
 bool	operator<( rb_tree<_T, _Compare, _Alloc> const & lhs, rb_tree<_T, _Compare, _Alloc> const & rhs )
 {
@@ -1034,6 +1063,9 @@ bool	operator>=( rb_tree<_T, _Compare, _Alloc> const & lhs, rb_tree<_T, _Compare
 	return !(lhs < rhs);
 }
 
+/**
+ * @brief Specializes the ft::swap algorithm for ft::rb_tree. Swaps the contents of @a lhs and @a rhs. Calls lhs.swap(rhs).
+ */
 template <class _T, class _Compare, class _Alloc>
 void	swap( rb_tree<_T, _Compare, _Alloc> &lhs, rb_tree<_T, _Compare, _Alloc> &rhs )
 {
@@ -1041,7 +1073,7 @@ void	swap( rb_tree<_T, _Compare, _Alloc> &lhs, rb_tree<_T, _Compare, _Alloc> &rh
 	return;
 }
 
-template <typename T>
+template <typename T> // TODO put that on the tester file
 inline static void    __blackSteps(ft::rb_node<T> const *const node, std::list<int> &lst, int const steps)
 {
     if (!node)
