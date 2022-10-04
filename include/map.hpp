@@ -61,7 +61,10 @@ namespace ft
 		/**************************************************************************/
 
 		/**
-		 * @brief Construct an empty map.
+		 * @brief Constructs an empty map, with no elements.
+		 * 
+		 * @param comp Comparison function object to use for all comparisons of keys.
+		 * @param alloc Allocator to use for all memory allocations of this map.
 		 */
 		explicit map( key_compare const & comp = key_compare(),
 				allocator_type const & alloc = allocator_type() ): _tree(comp, alloc)
@@ -69,20 +72,32 @@ namespace ft
 			return;
 		}
 
-		// TODO range constructor
-		/* template <class InputIterator>
+		/**
+		 * @brief Constructs a map with the contents of the range [first, last).
+		 * If multiple elements in the range have keys that compare equivalent, it is unspecified which element is inserted.
+		 * 
+		 * @param first An input iterator to the initial position in a range.
+		 * @param last An input iterator to the final position in a range.
+		 * @param comp Comparison function object to use for all comparisons of keys.
+		 * @param alloc Allocator to use for all memory allocations of this map.
+		 */
+		template <class InputIterator>
 		map( InputIterator first, InputIterator last,
 			key_compare const & comp = key_compare(),
 			allocator_type const & alloc = allocator_type()): _tree(first, last, comp, alloc)
 		{
 			return;
-		} */
+		}
 
-		// TODO copy constructor
-		/* map( map const & rhs ): _tree(rhs._tree)
+		/**
+		 * @brief Constructs a map with a copy of each of the elements in @a rhs.
+		 * 
+		 * @param rhs Another map to be used as source to initialize the elements of the map with.
+		 */
+		map( map const & rhs ): _tree(rhs._tree)
 		{
 			return;
-		} */
+		}
 
 		/**************************************************************************/
 		/*                               DESTRUCTOR                               */
@@ -197,11 +212,11 @@ namespace ft
 		}
 
 		/**
-		 * @brief Removes the element at @a pos. References and iterators to the erased elements are invalidated.
-		 * Other references and iterators are not affected. The iterator @a pos must be valid and dereferenceable.
-		 * Thus the end() iterator (which is valid, but is not dereferenceable) cannot be used as a value for @a pos.
+		 * @brief Removes the element at @a position. References and iterators to the erased elements are invalidated.
+		 * Other references and iterators are not affected. The iterator @a position must be valid and dereferenceable.
+		 * Thus the end() iterator (which is valid, but is not dereferenceable) cannot be used as a value for @a position.
 		 * 
-		 * @param pos An iterator to the element to remove.
+		 * @param position An iterator to the element to remove.
 		 */
 		void	erase( iterator position )
 		{
@@ -209,11 +224,28 @@ namespace ft
 			return;
 		}
 
-		// TODO erase (key)
-		// size_type erase(const key_type& x);
+		/**
+		 * @brief Removes the element (if one exists) with the key equivalent to @a val.
+		 * 
+		 * @param key Key value of the element to erase.
+		 * @return Number of elements removed (0 or 1).
+		 */
+		size_type	erase( key_type const & key )
+		{
+			return _tree.erase(value_type(key, mapped_type()));
+		}
 
-		// TODO erase (range)
-		// void erase(iterator first, iterator last);
+		/**
+		 * @brief Removes the elements in the range [first; last), which must be a valid range in the map.
+		 * 
+		 * @param first An iterator to the initial position in a range.
+		 * @param last An iterator to the final position in a range.
+		 */
+		void	erase( iterator first, iterator last )
+		{
+			_tree.erase(first, last);
+			return;
+		}
 
 		/**
 		 * @brief Inserts element(s) into the map, if the map doesn't already contain an element with an equivalent key.
@@ -246,6 +278,30 @@ namespace ft
 		size_type	count( key_type const & key )
 		{
 			return _tree.count(value_type(key, mapped_type()));
+		}
+
+		/**
+		 * @brief Finds an element with key equivalent to @a key.
+		 * 
+		 * @param key Key value of the element to search for.
+		 * @return An iterator to the element with a key equivalent to @a key.
+		 * If no such element is found, an iterator to end() is returned.
+		 */
+		iterator	find( key_type const & key )
+		{
+			return _tree.find(value_type(key, mapped_type()));
+		}
+
+		/**
+		 * @brief Finds an element with key equivalent to @a key.
+		 * 
+		 * @param key Key value of the element to search for.
+		 * @return A const iterator to the element with a key equivalent to @a key.
+		 * If no such element is found, an iterator to end() is returned.
+		 */
+		const_iterator	find( key_type const & key ) const
+		{
+			return _tree.find(value_type(key, mapped_type()));
 		}
 
 	};

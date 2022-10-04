@@ -7,6 +7,67 @@ inline static bool	__default_constructor( void )
 {
 	ft::map<char, int>	m;
 	ft::map<char, int, std::greater<char> >	m1;
+
+	if (m.size() != 0 ||
+		m.empty() != true)
+		return false;
+
+	if (m1.size() != 0 ||
+		m1.empty() != true)
+		return false;
+
+	return true;
+}
+
+inline static bool	__range_constructor( void )
+{
+	ft::map<char, int>	m;
+	ft::map<char, int>	mtest(m.begin(), m.end());
+
+	if (mtest.size() != 0 ||
+		mtest.end() != mtest.begin())
+		return false;
+
+	m.insert(ft::pair<char, int>('b', 10));
+	m.insert(ft::pair<char, int>('c', 20));
+	m.insert(ft::pair<char, int>('a', 30));
+
+	ft::map<char, int>	mcopy(m.begin(), m.end());
+
+	ft::map<char, int>::iterator	itcopy = mcopy.begin();
+	for (ft::map<char, int>::iterator	it = m.begin() ; it != m.end(); ++it)
+	{
+		if (it->first != itcopy->first)
+			return false;
+		++itcopy;
+	}
+
+	return true;
+}
+
+inline static bool	__copy_constructor( void )
+{
+	ft::map<char, int>	m;
+	ft::map<char, int>	mtest(m);
+
+	if (mtest.size() != 0 ||
+		mtest.end() != mtest.begin())
+		return false;
+
+	m.insert(ft::pair<char, int>('b', 10));
+	m.insert(ft::pair<char, int>('c', 20));
+	m.insert(ft::pair<char, int>('a', 30));
+
+	ft::map<char, int>	mcopy(m);
+
+	ft::map<char, int>::iterator	itcopy = mcopy.begin();
+	for (ft::map<char, int>::iterator	it = m.begin() ; it != m.end(); ++it)
+	{
+		if (it->first != itcopy->first)
+			return false;
+		++itcopy;
+	}
+
 	return true;
 }
 
@@ -21,6 +82,9 @@ inline static bool	__copy_assignement_operator( void )
 
 	m2 = m1;
 	m1 = ft::map<char, int>();
+
+	if (m1.begin() != m1.end())
+		return false;
 
 	if (m1.size() != 0 || m2.size() != 3)
 		return false;
@@ -178,6 +242,38 @@ inline static bool	__clear( void )
 	return true;
 }
 
+inline static bool	__erase( void )
+{
+	ft::map<char, int>	m;
+
+	m.insert(ft::pair<char, int>('b', 100));
+	m.insert(ft::pair<char, int>('c', 200));
+	m.insert(ft::pair<char, int>('a', 300));
+
+	ft::map<char, int>::iterator	it = m.begin();
+	m.erase(it);
+
+	if (m.size() != 2 ||
+		m.find('a') != m.end())
+		return false;
+
+	m.erase('b');
+
+	if (m.size() != 1 ||
+		m.find('b') != m.end())
+		return false;
+
+	m.insert(ft::pair<char, int>('b', 100));
+	m.insert(ft::pair<char, int>('a', 300));
+	m.erase(m.begin(), m.end());
+
+	if (m.size() != 0 ||
+		m.find('c') != m.end())
+		return false;
+
+	return true;
+}
+
 inline static bool	__count( void )
 {
 	ft::map<char, int>	m;
@@ -200,6 +296,8 @@ void	test_map( void )
 {
 	t_sub_test	arr[] = {
 		{__default_constructor, "constructor (default)"},
+		{__range_constructor, "constructor (range)"},
+		{__copy_constructor, "constructor (copy)"},
 		{__copy_assignement_operator, "operator="},
 		{__subscript_operator, "operator[]"},
 		{__begin, "begin"},
@@ -207,6 +305,7 @@ void	test_map( void )
 		{__empty, "empty"},
 		{__size, "size"},
 		{__clear, "clear"},
+		{__erase, "erase"},
 		{__count, "count"},
 		{NULL, ""}
 	};

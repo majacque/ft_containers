@@ -70,7 +70,7 @@ namespace ft
 		 * @param cmp Comparison function object to use for all comparisons of keys.
 		 * @param alloc Allocator to use for all memory allocations of this rb tree.
 		 */
-		rb_tree( compare_type const & cmp = compare_type(), allocator_type const & alloc = allocator_type() ):
+		explicit rb_tree( compare_type const & cmp = compare_type(), allocator_type const & alloc = allocator_type() ):
 				_nil_node(), _root(), _min(), _max(), _size(), _cmp(cmp), _alloc(alloc)
 		{
 			_nil_node = _alloc.allocate(1LU);
@@ -114,9 +114,13 @@ namespace ft
 			_nil_node = _alloc.allocate(1LU);
 			_alloc.construct(_nil_node, rb_node<T>());
 			_nil_node->color = PTENODE;
+			_min = _nil_node;
 			_root = this->_dup(rhs._root, _nil_node);
-			for ( _min = _root; _min->childs[LEFT]; _min = _min->childs[LEFT] );
-			for ( _max = _root; _max->childs[RIGHT]; _max = _max->childs[RIGHT] );
+			if (_root)
+			{
+				for ( _min = _root; _min->childs[LEFT]; _min = _min->childs[LEFT] );
+				for ( _max = _root; _max->childs[RIGHT]; _max = _max->childs[RIGHT] );
+			}
 
 			return;
 		}
@@ -513,6 +517,18 @@ namespace ft
 		}
 
 		/**
+		 * @brief Removes the elements in the range [first; last), which must be a valid range in the rb tree.
+		 * 
+		 * @param first An iterator to the initial position in a range.
+		 * @param last An iterator to the final position in a range.
+		 */
+		void	erase( iterator first, iterator last )
+		{
+			while (first != last)
+				this->erase(first++);
+		}
+
+		/**
 		 * @brief Exchanges the contents of the rb tree with those of @a rhs.
 		 * Does not invoke any move, copy, or swap operations on individual elements.
 		 * All iterators and references remain valid. The past-the-end iterator is invalidated.
@@ -538,7 +554,7 @@ namespace ft
 		/**
 		 * @brief Finds an element with key equivalent to @a val.
 		 * 
-		 * @param val 
+		 * @param val Key value of the element to search for.
 		 * @return An iterator to the element with a key equivalent to @a val.
 		 * If no such element is found, an iterator to end() is returned.
 		 */
@@ -561,7 +577,7 @@ namespace ft
 		/**
 		 * @brief Finds an element with key equivalent to @a val.
 		 * 
-		 * @param val 
+		 * @param val Key value of the element to search for.
 		 * @return A const iterator to the element with a key equivalent to @a val.
 		 * If no such element is found, a const iterator to end() is returned.
 		 */
