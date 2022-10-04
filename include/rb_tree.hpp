@@ -424,7 +424,7 @@ namespace ft
 		 * @param last An input iterator to the final position in a range.
 		 */
 		template <class InputIterator>
-		void	insert( InputIterator first, InputIterator last ) // TODO test insert (rang) (maybe)
+		void	insert( InputIterator first, InputIterator last )
 		{
 			for ( ; first != last; ++first)
 				this->insert(*first);

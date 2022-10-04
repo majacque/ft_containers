@@ -274,6 +274,41 @@ inline static bool	__erase( void )
 	return true;
 }
 
+inline static bool	__insert( void )
+{
+	ft::map<char,int> m;
+
+	m.insert(ft::pair<char,int>('a', 100));
+	m.insert(ft::pair<char,int>('z', 200));
+
+	ft::pair<ft::map<char,int>::iterator,bool> ret;
+	ret = m.insert(ft::pair<char,int>('z', 500));
+	if (ret.first->first != 'z' ||
+		ret.second != false)
+		return false;
+
+	ft::map<char,int>::iterator it = m.begin();
+	m.insert (it, ft::pair<char,int>('b', 300));
+	m.insert (it, ft::pair<char,int>('c', 400));
+
+	if (m.size() != 4)
+		return false;
+
+	ft::map<char,int> anothermap;
+	anothermap.insert(m.begin(), m.find('c'));
+
+	ft::map<char, int>::iterator	itm = m.begin();
+	for (ft::map<char, int>::iterator it = anothermap.begin(); it != anothermap.end(); ++it)
+	{
+		if (it->first != itm->first ||
+			it->second != itm->second)
+			return false;
+		++itm;
+	}
+
+	return true;
+}
+
 inline static bool	__count( void )
 {
 	ft::map<char, int>	m;
@@ -306,6 +341,7 @@ void	test_map( void )
 		{__size, "size"},
 		{__clear, "clear"},
 		{__erase, "erase"},
+		{__insert, "insert"},
 		{__count, "count"},
 		{NULL, ""}
 	};

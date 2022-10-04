@@ -259,12 +259,33 @@ namespace ft
 			return _tree.insert(val);
 		}
 
-		// TODO insert (hint)
-		// iterator	insert( iterator hint, value_type const & x );
+		/**
+		 * @brief Inserts element(s) into the map, if the map doesn't already contain an element with an equivalent key.
+		 * Inserts @a val in the position as close as possible to @a hint.
+		 * 
+		 * @param hint An iterator used as a suggestion as to where to start the search.
+		 * @param val Element value to insert.
+		 * @return An iterator to the inserted element, or to the element that prevented the insertion.
+		 */
+		iterator	insert( iterator hint, value_type const & val )
+		{
+			return _tree.insert(hint, val);
+		}
 
-		// TODO insert (range)
-		/* template <class InputIterator>
-		void	insert( InputIterator first, InputIterator last ); */
+		/**
+		 * @brief Inserts elements, from range [first, last),
+		 * into the map if the map doesn't contain an element with an equivalent key.
+		 * If multiple elements in the range have keys that compare equivalent, it is unspecified which element is inserted.
+		 * 
+		 * @param first An input iterator to the initial position in a range.
+		 * @param last An input iterator to the final position in a range.
+		 */
+		template <class InputIterator>
+		void	insert( InputIterator first, InputIterator last )
+		{
+			_tree.insert(first, last);
+			return;
+		}
 
 		// Lookup
 
