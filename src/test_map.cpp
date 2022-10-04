@@ -226,6 +226,15 @@ inline static bool	__size( void )
 	return true;
 }
 
+inline static bool	__max_size( void )
+{
+	ft::map<char, int>	m;
+
+	if (m.max_size() != std::allocator<ft::rb_node<ft::pair<char, int> > >().max_size())
+		return false;
+	return true;
+}
+
 inline static bool	__clear( void )
 {
 	ft::map<char, int>	m;
@@ -309,6 +318,32 @@ inline static bool	__insert( void )
 	return true;
 }
 
+inline static bool	__swap( void )
+{
+	ft::map<char, int>	m1;
+	ft::map<char, int>	m2;
+
+	m1['a'] = 200;
+	m1['c'] = 100;
+	m1['b'] = 300;
+
+	m2['y'] = 200;
+	m2['x'] = 100;
+	m2['z'] = 300;
+
+	m1.swap(m2);
+
+	if (m1.find('a') != m1.end() ||
+		m1.find('z') == m1.end())
+		return false;
+
+	if (m2.find('a') == m2.end() ||
+		m2.find('z') != m2.end())
+		return false;
+
+	return true;
+}
+
 inline static bool	__count( void )
 {
 	ft::map<char, int>	m;
@@ -327,6 +362,42 @@ inline static bool	__count( void )
 	return true;
 }
 
+inline static bool	__lower_bound( void )
+{
+	ft::map<char, int>	m;
+
+	m['a'] = 20;
+	m['b'] = 40;
+	m['c'] = 60;
+	m['d'] = 80;
+	m['f'] = 100;
+
+	if (m.lower_bound('b')->first != 'b' ||
+		m.lower_bound('e')->first != 'f' ||
+		m.lower_bound('z') != m.end())
+		return false;
+
+	return true;
+}
+
+inline static bool	__upper_bound( void )
+{
+	ft::map<char, int>	m;
+
+	m['a'] = 20;
+	m['b'] = 40;
+	m['c'] = 60;
+	m['d'] = 80;
+	m['f'] = 100;
+
+	if (m.upper_bound('b')->first != 'c' ||
+		m.upper_bound('e')->first != 'f' ||
+		m.upper_bound('z') != m.end())
+		return false;
+
+	return true;
+}
+
 void	test_map( void )
 {
 	t_sub_test	arr[] = {
@@ -339,10 +410,14 @@ void	test_map( void )
 		{__end, "end"},
 		{__empty, "empty"},
 		{__size, "size"},
+		{__max_size, "max size"},
 		{__clear, "clear"},
 		{__erase, "erase"},
 		{__insert, "insert"},
+		{__swap, "swap"},
 		{__count, "count"},
+		{__lower_bound, "lower bound (>=)"},
+		{__upper_bound, "upper bound (>)"},
 		{NULL, ""}
 	};
 

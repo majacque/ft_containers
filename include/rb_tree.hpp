@@ -615,7 +615,8 @@ namespace ft
 		 * @brief Returns an iterator pointing to the first element that is not less than (i.e. greater or equal to) @a val.
 		 * 
 		 * @param val Key value to compare the elements to.
-		 * @return An iterator pointing to the first element that is not less than @a val. If no such element is found, end() is returned.
+		 * @return An iterator pointing to the first element that is not less than @a val.
+		 * If no such element is found, end() is returned.
 		 */
 		iterator	lower_bound( value_type const & val )
 		{
@@ -647,7 +648,8 @@ namespace ft
 		 * @brief Returns a const iterator pointing to the first element that is not less than (i.e. greater or equal to) @a val.
 		 * 
 		 * @param val Key value to compare the elements to.
-		 * @return A const iterator pointing to the first element that is not less than @a val. If no such element is found, end() is returned.
+		 * @return A const iterator pointing to the first element that is not less than @a val.
+		 * If no such element is found, end() is returned.
 		 */
 		const_iterator	lower_bound( value_type const & val ) const
 		{
@@ -679,7 +681,8 @@ namespace ft
 		 * @brief Returns an iterator pointing to the first element that is strictly greater than @a val.
 		 * 
 		 * @param val Key value to compare the elements to.
-		 * @return An iterator pointing to the first element that is strictly greater than @a val. If no such element is found, end() is returned.
+		 * @return An iterator pointing to the first element that is strictly greater than @a val.
+		 * If no such element is found, end() is returned.
 		 */
 		iterator	upper_bound( value_type const & val )
 		{
@@ -711,7 +714,8 @@ namespace ft
 		 * @brief Returns a const iterator pointing to the first element that is strictly greater than @a val.
 		 * 
 		 * @param val Key value to compare the elements to.
-		 * @return A const iterator pointing to the first element that is strictly greater than @a val. If no such element is found, end() is returned.
+		 * @return A const iterator pointing to the first element that is strictly greater than @a val.
+		 * If no such element is found, end() is returned.
 		 */
 		const_iterator	upper_bound( value_type const & val ) const
 		{
@@ -741,15 +745,15 @@ namespace ft
 
 		/**
 		 * @brief Returns a range containing all elements with the given @a val in the rb tree.
-		 * The range is defined by two iterators, one pointing to the first element that is not less than key and
-		 * another pointing to the first element greater than key.
+		 * The range is defined by two iterators, one pointing to the first element that is not less than @a val and
+		 * another pointing to the first element greater than @a val.
 		 * Alternatively, the first iterator may be obtained with lower_bound(), and the second with upper_bound().
 		 * 
-		 * @param val A key value to compare the elements to.
+		 * @param val A val value to compare the elements to.
 		 * @return A ft::pair containing a pair of iterators defining the wanted range:
-		 * The first pointing to the first element that is not less than key and the second pointing to the first element greater than key.
-		 * If there are no elements not less than key, end() is returned as the first element.
-		 * Similarly if there are no elements greater than key, end() is returned as the second element.
+		 * The first pointing to the first element that is not less than @a val and the second pointing to the first element greater than @a val.
+		 * If there are no elements not less than @a val, end() is returned as the first element.
+		 * Similarly if there are no elements greater than @a val, end() is returned as the second element.
 		 */
 		pair<iterator, iterator>	equal_range( value_type const & val )
 		{
@@ -761,15 +765,15 @@ namespace ft
 
 		/**
 		 * @brief Returns a range containing all elements with the given @a val in the rb tree.
-		 * The range is defined by two const iterators, one pointing to the first element that is not less than key and
-		 * another pointing to the first element greater than key.
+		 * The range is defined by two const iterators, one pointing to the first element that is not less than @a val and
+		 * another pointing to the first element greater than @a val.
 		 * Alternatively, the first iterator may be obtained with lower_bound(), and the second with upper_bound().
 		 * 
-		 * @param val A key value to compare the elements to.
+		 * @param val A val value to compare the elements to.
 		 * @return A ft::pair containing a pair of const iterators defining the wanted range:
-		 * The first pointing to the first element that is not less than key and the second pointing to the first element greater than key.
-		 * If there are no elements not less than key, end() is returned as the first element.
-		 * Similarly if there are no elements greater than key, end() is returned as the second element.
+		 * The first pointing to the first element that is not less than @a val and the second pointing to the first element greater than @a val.
+		 * If there are no elements not less than @a val, end() is returned as the first element.
+		 * Similarly if there are no elements greater than @a val, end() is returned as the second element.
 		 */
 		pair<const_iterator, const_iterator>	equal_range( value_type const & val ) const
 		{

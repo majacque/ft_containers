@@ -238,6 +238,16 @@ namespace ft
 			return _tree.size();
 		}
 
+		/**
+		 * @brief Returns the maximum number of elements that the map can hold.
+		 * This is the maximum potential size the map can reach due to known system or library implementation limitations,
+		 * but the map is by no means guaranteed to be able to reach that size: it can still fail to allocate storage at any point before that size is reached.
+		 */
+		size_type	max_size( void ) const
+		{
+			return _tree.max_size();
+		}
+
 		// Modifiers
 
 		/**
@@ -263,7 +273,7 @@ namespace ft
 		}
 
 		/**
-		 * @brief Removes the element (if one exists) with the key equivalent to @a val.
+		 * @brief Removes the element (if one exists) with the key equivalent to @a key.
 		 * 
 		 * @param key Key value of the element to erase.
 		 * @return Number of elements removed (0 or 1).
@@ -325,6 +335,19 @@ namespace ft
 			return;
 		}
 
+		/**
+		 * @brief Exchanges the contents of the map with those of @a rhs.
+		 * Does not invoke any move, copy, or swap operations on individual elements.
+		 * All iterators and references remain valid. The past-the-end iterator is invalidated.
+		 * 
+		 * @param rhs An other map with same template parameters.
+		 */
+		void	swap( map& rhs )
+		{
+			_tree.swap(rhs._tree);
+			return;
+		}
+
 		// Lookup
 
 		/**
@@ -361,6 +384,88 @@ namespace ft
 		const_iterator	find( key_type const & key ) const
 		{
 			return _tree.find(value_type(key, mapped_type()));
+		}
+
+		/**
+		 * @brief Returns an iterator pointing to the first element that is not less than (i.e. greater or equal to) @a key.
+		 * 
+		 * @param key Key value to compare the elements to.
+		 * @return An iterator pointing to the first element that is not less than @a key.
+		 * If no such element is found, end() is returned.
+		 */
+		iterator	lower_bound( key_type const & key )
+		{
+			return _tree.lower_bound(value_type(key, mapped_type()));
+		}
+
+		/**
+		 * @brief Returns a const iterator pointing to the first element that is not less than (i.e. greater or equal to) @a key.
+		 * 
+		 * @param key Key value to compare the elements to.
+		 * @return A const iterator pointing to the first element that is not less than @a key.
+		 * If no such element is found, end() is returned.
+		 */
+		const_iterator	lower_bound( key_type const & key ) const
+		{
+			return _tree.lower_bound(value_type(key, mapped_type()));
+		}
+
+		/**
+		 * @brief Returns an iterator pointing to the first element that is strictly greater than @a key.
+		 * 
+		 * @param key Key value to compare the elements to.
+		 * @return An iterator pointing to the first element that is strictly greater than @a key.
+		 * If no such element is found, end() is returned.
+		 */
+		iterator	upper_bound( key_type const & key )
+		{
+			return _tree.upper_bound(value_type(key, mapped_type()));
+		}
+
+		/**
+		 * @brief Returns a const iterator pointing to the first element that is strictly greater than @a key.
+		 * 
+		 * @param key Key value to compare the elements to.
+		 * @return A const iterator pointing to the first element that is strictly greater than @a key.
+		 * If no such element is found, end() is returned.
+		 */
+		const_iterator	upper_bound( key_type const & key ) const
+		{
+			return _tree.upper_bound(value_type(key, mapped_type()));
+		}
+
+		/**
+		 * @brief Returns a range containing all elements with the given @a key in the map.
+		 * The range is defined by two iterators, one pointing to the first element that is not less than @a key and
+		 * another pointing to the first element greater than @a key.
+		 * Alternatively, the first iterator may be obtained with lower_bound(), and the second with upper_bound().
+		 * 
+		 * @param key A key value to compare the elements to.
+		 * @return A ft::pair containing a pair of iterators defining the wanted range:
+		 * The first pointing to the first element that is not less than @a key and the second pointing to the first element greater than @a key.
+		 * If there are no elements not less than @a key, end() is returned as the first element.
+		 * Similarly if there are no elements greater than @a key, end() is returned as the second element.
+		 */
+		pair<iterator, iterator>	equal_range( key_type const & key )
+		{
+			return _tree.equal_range(value_type(key, mapped_type()));
+		}
+
+		/**
+		 * @brief Returns a range containing all elements with the given @a key in the map.
+		 * The range is defined by two const iterators, one pointing to the first element that is not less than @a key and
+		 * another pointing to the first element greater than @a key.
+		 * Alternatively, the first iterator may be obtained with lower_bound(), and the second with upper_bound().
+		 * 
+		 * @param key A key value to compare the elements to.
+		 * @return A ft::pair containing a pair of const iterators defining the wanted range:
+		 * The first pointing to the first element that is not less than @a key and the second pointing to the first element greater than @a key.
+		 * If there are no elements not less than @a key, end() is returned as the first element.
+		 * Similarly if there are no elements greater than @a key, end() is returned as the second element.
+		 */
+		pair<const_iterator, const_iterator>	equal_range( key_type const & key ) const
+		{
+			return _tree.equal_range(value_type(key, mapped_type()));
 		}
 
 	};
