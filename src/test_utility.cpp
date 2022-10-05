@@ -14,10 +14,10 @@ inline static bool	__pair_default_constructor( void )
 {
 	std::string									s;
 	std::vector<int>							v;
-	ft::pair< std::string, std::vector<int> >	pr;
+	NAMESPACE::pair< std::string, std::vector<int> >	pr;
 
-	if (typeid(ft::pair< std::string, std::vector<int> >::first_type) != typeid(s) ||
-		typeid(ft::pair< std::string, std::vector<int> >::second_type) != typeid(v))
+	if (typeid(NAMESPACE::pair< std::string, std::vector<int> >::first_type) != typeid(s) ||
+		typeid(NAMESPACE::pair< std::string, std::vector<int> >::second_type) != typeid(v))
 		return false;
 	else if(typeid(pr.first) != typeid(s) || typeid(pr.second) != typeid(v))
 		return false;
@@ -29,20 +29,20 @@ inline static bool	__pair_default_constructor( void )
 
 inline static bool	__pair_initialization_constructor( void )
 {
-	ft::pair<int, char>	pr0(nb, c);
+	NAMESPACE::pair<int, char>	pr0(nb, c);
 
-	if (typeid(ft::pair<int, char>::first_type) != typeid(nb) ||
-		typeid(ft::pair<int, char>::second_type) != typeid(c))
+	if (typeid(NAMESPACE::pair<int, char>::first_type) != typeid(nb) ||
+		typeid(NAMESPACE::pair<int, char>::second_type) != typeid(c))
 		return false;
 	else if(typeid(pr0.first) != typeid(nb) || typeid(pr0.second) != typeid(c))
 		return false;
 	else if (pr0.first != nb || pr0.second != c)
 		return false;
 
-	ft::pair< std::string, std::vector<int> >	pr1(str, vec);
+	NAMESPACE::pair< std::string, std::vector<int> >	pr1(str, vec);
 
-	if (typeid(ft::pair< std::string, std::vector<int> >::first_type) != typeid(str) ||
-		typeid(ft::pair< std::string, std::vector<int> >::second_type) != typeid(vec))
+	if (typeid(NAMESPACE::pair< std::string, std::vector<int> >::first_type) != typeid(str) ||
+		typeid(NAMESPACE::pair< std::string, std::vector<int> >::second_type) != typeid(vec))
 		return false;
 	else if(typeid(pr1.first) != typeid(str) || typeid(pr1.second) != typeid(vec))
 		return false;
@@ -54,16 +54,16 @@ inline static bool	__pair_initialization_constructor( void )
 
 inline static bool	__pair_copy_constructor( void )
 {
-	ft::pair<int, char>	pr0(nb, c);
-	ft::pair<int, char>	pr1(pr0);
+	NAMESPACE::pair<int, char>	pr0(nb, c);
+	NAMESPACE::pair<int, char>	pr1(pr0);
 
 	if(typeid(pr0.first) != typeid(pr1.first) || typeid(pr0.second) != typeid(pr1.second))
 		return false;
 	else if (pr0.first != pr1.first || pr0.second != pr1.second)
 		return false;
 
-	ft::pair< std::string, std::vector<int> >	p2(str, vec);
-	ft::pair< std::string, std::vector<int> >	p3(p2);
+	NAMESPACE::pair< std::string, std::vector<int> >	p2(str, vec);
+	NAMESPACE::pair< std::string, std::vector<int> >	p3(p2);
 
 	if(typeid(p2.first) != typeid(p3.first) || typeid(p2.second) != typeid(p3.second))
 		return false;
@@ -75,8 +75,8 @@ inline static bool	__pair_copy_constructor( void )
 
 inline static bool	__pair_assignment_operator( void )
 {
-	ft::pair<int,char>	pr0(nb,c);
-	ft::pair<int,char>	pr1;
+	NAMESPACE::pair<int,char>	pr0(nb,c);
+	NAMESPACE::pair<int,char>	pr1;
 
 	pr1 = pr0;
 
@@ -85,8 +85,8 @@ inline static bool	__pair_assignment_operator( void )
 	else if (pr0.first != pr1.first || pr0.second != pr1.second)
 		return false;
 
-	ft::pair< std::string, std::vector<int> >	p2(str, vec);
-	ft::pair< std::string, std::vector<int> >	p3;
+	NAMESPACE::pair< std::string, std::vector<int> >	p2(str, vec);
+	NAMESPACE::pair< std::string, std::vector<int> >	p3;
 
 	p3 = p2;
 
@@ -100,60 +100,59 @@ inline static bool	__pair_assignment_operator( void )
 
 inline static bool	__pair_relational_operators( void )
 {
-	std::pair<int,char>	std_p0(nb,c);
-	std::pair<int,char>	std_p1(nb,c);
-	ft::pair<int,char>	ft_p0(nb,c);
-	ft::pair<int,char>	ft_p1(nb,c);
+	NAMESPACE::pair<int, char>	p0(nb, c);
+	NAMESPACE::pair<int, char>	p1(nb, c);
 
-	if (std::operator==(std_p0, std_p1) != ft::operator==(ft_p0, ft_p1) ||
-		std::operator!=(std_p0, std_p1) != ft::operator!=(ft_p0, ft_p1) ||
-		std::operator<(std_p0, std_p1) != ft::operator<(ft_p0, ft_p1) ||
-		std::operator<=(std_p0, std_p1) != ft::operator<=(ft_p0, ft_p1) ||
-		std::operator>(std_p0, std_p1) != ft::operator>(ft_p0, ft_p1) ||
-		std::operator>=(std_p0, std_p1) != ft::operator>=(ft_p0, ft_p1))
+	if ((p0 == p1) != true || (p0 != p1) != false ||
+		(p0 <= p1) != true || (p0 < p1) != false ||
+		(p0 >= p1) != true || (p0 > p1) != false)
 		return false;
 
-	std_p0.first += 1;
-	std_p0.second += 1;
-	ft_p0.first += 1;
-	ft_p0.second += 1;
+	p0.first -= 1;
 
-	if (std::operator==(std_p0, std_p1) != ft::operator==(ft_p0, ft_p1) ||
-		std::operator!=(std_p0, std_p1) != ft::operator!=(ft_p0, ft_p1) ||
-		std::operator<(std_p0, std_p1) != ft::operator<(ft_p0, ft_p1) ||
-		std::operator<=(std_p0, std_p1) != ft::operator<=(ft_p0, ft_p1) ||
-		std::operator>(std_p0, std_p1) != ft::operator>(ft_p0, ft_p1) ||
-		std::operator>=(std_p0, std_p1) != ft::operator>=(ft_p0, ft_p1))
+	if ((p0 == p1) != false || (p0 != p1) != true ||
+		(p0 <= p1) != true || (p0 < p1) != true ||
+		(p0 >= p1) != false || (p0 > p1) != false)
 		return false;
-	
-	std_p1.first += 3;
-	std_p1.second += 3;
-	ft_p1.first += 3;
-	ft_p1.second += 3;
 
-	if (std::operator==(std_p0, std_p1) != ft::operator==(ft_p0, ft_p1) ||
-		std::operator!=(std_p0, std_p1) != ft::operator!=(ft_p0, ft_p1) ||
-		std::operator<(std_p0, std_p1) != ft::operator<(ft_p0, ft_p1) ||
-		std::operator<=(std_p0, std_p1) != ft::operator<=(ft_p0, ft_p1) ||
-		std::operator>(std_p0, std_p1) != ft::operator>(ft_p0, ft_p1) ||
-		std::operator>=(std_p0, std_p1) != ft::operator>=(ft_p0, ft_p1))
+	p0.first += 1;
+	p0.second -= 1;
+
+	if ((p0 == p1) != false || (p0 != p1) != true ||
+		(p0 <= p1) != true || (p0 < p1) != true ||
+		(p0 >= p1) != false || (p0 > p1) != false)
 		return false;
-	
+
+	p0.second += 2;
+
+	if ((p0 == p1) != false || (p0 != p1) != true ||
+		(p0 <= p1) != false || (p0 < p1) != false ||
+		(p0 >= p1) != true || (p0 > p1) != true)
+		return false;
+
+	p0.second -= 1;
+	p0.first += 1;
+
+	if ((p0 == p1) != false || (p0 != p1) != true ||
+		(p0 <= p1) != false || (p0 < p1) != false ||
+		(p0 >= p1) != true || (p0 > p1) != true)
+		return false;
+
 	return true;
 }
 
 inline static bool	__make_pair( void )
 {
 	// template explicitly declared
-	ft::pair<int,char>	p0(nb,c);
-	ft::pair<int,char>	p1 = ft::make_pair<int,char>(nb,c);
+	NAMESPACE::pair<int,char>	p0(nb,c);
+	NAMESPACE::pair<int,char>	p1 = NAMESPACE::make_pair<int,char>(nb,c);
 
 	if (p0 != p1)
 		return false;
 
 	// template implicitly deduced
-	ft::pair<std::string, std::vector<int> >	p2(str,vec);
-	ft::pair<std::string, std::vector<int> >	p3 = ft::make_pair(str,vec);
+	NAMESPACE::pair<std::string, std::vector<int> >	p2(str,vec);
+	NAMESPACE::pair<std::string, std::vector<int> >	p3 = NAMESPACE::make_pair(str,vec);
 
 	if (p2 != p3)
 		return false;

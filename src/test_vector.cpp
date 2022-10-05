@@ -3,32 +3,21 @@
 #include <vector>
 #include <cstring>
 #include <string>
-/* 
-inline static bool	__( void )
-{
-	return true;
-}
- */
 
-typedef ft::vector<int>	t_vector_int;
-typedef ft::vector<std::string>	t_vector_str;
+typedef NAMESPACE::vector<int>			t_vector_int;
+typedef NAMESPACE::vector<std::string>	t_vector_str;
 
 // CONSTRUCTOR
 
 inline static bool	__default_constructor( void )
 {
-	std::vector<int>	std_v_int;
-	ft::vector<int>		ft_v_int;
-	std::vector<double>	std_v_double;
-	ft::vector<double>	ft_v_double;
+	t_vector_int	v_int;
+	t_vector_str	v_str;
 
-	// REMIND test with empty()
-	if (std_v_int.size() != ft_v_int.size() ||
-		std_v_int.capacity() != ft_v_int.capacity())
+	if (v_int.size() || v_int.capacity())
 		return false;
 
-	if (std_v_double.size() != ft_v_double.size() ||
-		std_v_double.capacity() != ft_v_double.capacity())
+	if (v_str.size() || v_str.capacity())
 		return false;
 
 	return true;
@@ -68,26 +57,28 @@ inline static bool	__fill_construct_length_error( void )
 
 inline static bool	__fill_constructor( void )
 {
-	std::vector<int>	std_v_int(6,7);
-	ft::vector<int>		ft_v_int(6,7);
-	for (size_t i = 0; i < std_v_int.size() && i < ft_v_int.size(); i++)
+	t_vector_int	v_int(6, 7);
+	for (size_t i = 0; i < 6; ++i)
 	{
-		if (std_v_int[i] != ft_v_int[i])
+		if (v_int[i] != 7)
+			return false;
+	}
+	
+	t_vector_str	v_str(3, "Factorio");
+	for (size_t i = 0; i < 3; ++i)
+	{
+		if (v_str[i] != "Factorio")
 			return false;
 	}
 
-	std::vector<std::string>	std_v_string(3, "Factorio");
-	ft::vector<std::string>		ft_v_string(3, "Factorio");
-	for (size_t i = 0; i < std_v_string.size() && i < ft_v_string.size(); i++)
-	{
-		if (std_v_string[i] != ft_v_string[i])
-			return false;
-	}
-
-	if (__fill_construct_length_error() == false)
+	if (v_int.size() != 6 ||
+		v_int.capacity() != 6)
+		return false;
+	
+	if (v_str.size() != 3 ||
+		v_str.capacity() != 3)
 		return false;
 
-	// REMIND test with size(), capacity(), empty()
 	return true;
 }
 
@@ -96,17 +87,10 @@ inline static bool	__range_constructor( void )
 	t_vector_int	v0(6,7);
 	t_vector_int	v1(v0.begin(), v0.end());
 
-	if (v0.size() != v1.size() ||
-		v0.capacity() != v1.capacity())
+	if (v0.capacity() != v1.capacity() ||
+		v0 != v1)
 		return false;
 
-	for (size_t i = 0; i < 6; i++)
-	{
-		if (v0[i] != v1[i])
-			return false;
-	}
-
-	// REMIND test with v0 != v1
 	return true;
 }
 
@@ -115,17 +99,10 @@ inline static bool	__copy_constructor( void )
 	t_vector_int	v0(6,7);
 	t_vector_int	v1(v0);
 
-	if (v0.size() != v1.size() ||
-		v0.capacity() != v1.capacity())
+	if (v0.capacity() != v1.capacity() ||
+		v0 != v1)
 		return false;
 
-	for (size_t i = 0; i < 6; i++)
-	{
-		if (v0[i] != v1[i])
-			return false;
-	}
-
-	// REMIND test with v0 != v1
 	return true;
 }
 
@@ -138,17 +115,10 @@ inline static bool	__assign_operator( void )
 
 	v1 = v0;
 
-	if (v1.size() != v0.size() ||
-		v1.capacity() != v0.capacity())
+	if (v1.capacity() != v0.capacity() ||
+		v0 != v1)
 		return false;
 
-	for (size_t i = 0; i < 6; ++i)
-	{
-		if (v1[i] != v0[i])
-			return false;
-	}
-
-	// REMIND test with v0 != v1
 	return true;
 }
 
@@ -163,7 +133,13 @@ inline static bool	__begin( void )
 	if (it.base() != t_vector_int::pointer())
 		return false;
 
-	// REMIND test with vector not empty
+	t_vector_int	v_int(6,7);
+	v_int[0] = 1;
+
+	it = v_int.begin();
+	if (*it != 1)
+		return false;
+
 	return true;
 }
 
@@ -171,12 +147,18 @@ inline static bool	__end( void )
 {
 	t_vector_int	v_int_empty;
 
-	t_vector_int::iterator	it = v_int_empty.begin();
+	t_vector_int::iterator	it = v_int_empty.end();
 
 	if (it.base() != t_vector_int::pointer())
 		return false;
 
-	// REMIND test with vector not empty
+	t_vector_int	v_int(6,7);
+	v_int[5] = 1;
+
+	it = v_int.end();
+	--it;
+	if (*it != 1)
+		return false;
 	return true;
 }
 
@@ -187,7 +169,6 @@ inline static bool	__rbegin( void )
 	if (v.rbegin().base().base() != v.end().base())
 		return false;
 
-	// REMIND test with different data
 	return true;
 }
 
@@ -198,7 +179,6 @@ inline static bool	__rend( void )
 	if (v.begin().base() != v.rend().base().base())
 		return false;
 
-	// REMIND test with different data
 	return true;
 }
 
@@ -227,16 +207,6 @@ inline static bool	__size( void )
 		v6_str.size() != length)
 		return false;
 
-	// REMIND test with capacity() != size()
-	return true;
-}
-
-inline static bool	__max_size( void )
-{
-	t_vector_int	v;
-
-	if (v.max_size() != std::allocator<int>().max_size())
-		return false;
 	return true;
 }
 
@@ -259,7 +229,6 @@ inline static bool	__resize( void )
 	if (v[3] || v[4])
 		return false;
 
-	// REMIND test with different data
 	return true;
 }
 
@@ -286,7 +255,6 @@ inline static bool	__capacity( void )
 		v6_str.capacity() != length)
 		return false;
 
-	// REMIND test after reserve(), insert(), push_back()...
 	return true;
 }
 
@@ -358,7 +326,10 @@ inline static bool	__access_element_operator( void )
 
 	try
 	{
-		v_int[0] = 0;
+		v_int[0] = 1;
+		if (*v_int.begin() != 1 ||
+			v_int[1] != 7)
+			return false;
 	}
 	catch(const std::exception& e)
 	{
@@ -366,7 +337,6 @@ inline static bool	__access_element_operator( void )
 		return false;
 	}
 
-	// REMIND test with different data
 	return true;
 }
 
@@ -413,7 +383,6 @@ inline static bool	__front( void )
 		&crf != v.begin().base())
 		return false;
 
-	// REMIND test with empty vector
 	return true;
 }
 
@@ -428,7 +397,6 @@ inline static bool	__back( void )
 		&crf != (v.end() - 1).base())
 		return false;
 
-	// REMIND test with empty vector
 	return true;
 }
 
@@ -444,7 +412,6 @@ inline static bool	__assign_fill( void )
 		v.capacity() != 6)
 		return false;
 
-	// REMIND test with different data
 	return true;
 }
 
@@ -565,7 +532,6 @@ inline static bool	__insert_fill( void )
 			return false;
 	}
 
-	// REMIND test for size() != capacity()
 	return true;
 }
 
@@ -595,8 +561,6 @@ inline static bool	__insert_range( void )
 			return false;
 	}
 
-	// REMIND test with different data
-	// test with (pos, end, begin)
 	return true;
 }
 
@@ -627,7 +591,6 @@ inline static bool	__erase( void )
 		v[0] != 8)
 		return false;
 
-	// REMIND test with different data
 	return true;
 }
 
@@ -654,7 +617,6 @@ inline static bool	__swap( void )
 			return false;
 	}
 
-	// REMIND test with different data
 	return true;
 }
 
@@ -696,7 +658,6 @@ inline static bool	__nm_swap( void )
 			return false;
 	}
 
-	// REMIND test with different data
 	return true;
 }
 
@@ -736,6 +697,22 @@ inline static bool	__relational_operators( void )
 	return true;
 }
 
+bool	__benchmark( void )
+{
+	t_vector_int	v;
+	for (int i = 0; i < 100000; ++i)
+	{
+		v.push_back(i);
+	}
+
+	while (!v.empty())
+	{
+		v.erase(v.begin());
+	}
+
+	return true;
+}
+
 void	test_vector( void )
 {
 	t_sub_test	arr[] = {
@@ -749,7 +726,6 @@ void	test_vector( void )
 		{__rbegin, "rbegin"},
 		{__rend, "rend"},
 		{__size, "size"},
-		{__max_size, "max size"},
 		{__resize, "resize"},
 		{__capacity, "capacity"},
 		{__empty, "empty"},
@@ -769,6 +745,7 @@ void	test_vector( void )
 		{__clear, "clear"},
 		{__nm_swap, "swap (non member)"},
 		{__relational_operators, "relational operators"},
+		{__benchmark, "benchmark"},
 		{NULL, ""}
 	};
 

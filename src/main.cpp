@@ -29,7 +29,7 @@ int	main(int argc, char **argv) {
 		{test_algorithm, "algorithm"},
 		{test_utility, "utility"},
 		{test_vector, "vector"},
-		{test_rb_tree, "red black tree"},
+		// {test_rb_tree, "red black tree"},
 		{test_map, "map"},
 		{NULL, ""}
 	};
@@ -56,6 +56,11 @@ int	main(int argc, char **argv) {
 		arr[test_to_launch].f();
 	}
 
+	#ifdef STD
+	std::cout << "std.log\n";
+	#else
+	std::cout << "ft.log\n";
+	#endif
+
 	return 0;
 }
-// TODO implement multiple verbose tests

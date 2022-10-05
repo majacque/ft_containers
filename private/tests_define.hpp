@@ -16,6 +16,12 @@
 # define RESET "\033[0m"
 #endif
 
+#ifdef STD
+ #define NAMESPACE std
+#else
+ #define NAMESPACE ft
+#endif
+
 typedef struct s_sub_test	t_sub_test;
 
 struct s_sub_test

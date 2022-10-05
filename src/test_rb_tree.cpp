@@ -2,6 +2,84 @@
 #include "rb_tree.hpp"
 #include <set>
 #include <algorithm>
+#include <list> // _validity_check()
+#include <cstdlib> // _validity_check()
+
+template <typename T>
+inline static void	__blackSteps(ft::rb_node<T> const *const node, std::list<int> &lst, int const steps)
+{
+	if (!node)
+		return lst.push_back(steps);
+	__blackSteps(node->childs[LEFT], lst, steps + (node->color == BLACKNODE));
+	__blackSteps(node->childs[RIGHT], lst, steps + (node->color == BLACKNODE));
+}
+
+template <typename T, typename Compare>
+inline static int	__propertiesCheck(ft::rb_node<T> const *const node, Compare const cmp)
+{
+	std::list<int>					lst;
+	std::list<int>::const_iterator	it;
+
+	if (!node)
+		return EXIT_SUCCESS;
+	// Color check
+	{
+		if (node->color != REDNODE && node->color != BLACKNODE)
+			return EXIT_FAILURE;
+	}
+	// Order check
+	{
+		if ((node->childs[LEFT] && !cmp(node->childs[LEFT]->val, node->val)) ||
+			(node->childs[RIGHT] && !cmp(node->val, node->childs[RIGHT]->val)))
+			return EXIT_FAILURE;
+	}
+	// Red violation check
+	{
+		if (node->color == REDNODE &&
+			((node->childs[LEFT] && node->childs[LEFT]->color == REDNODE) ||
+			(node->childs[RIGHT] && node->childs[RIGHT]->color == REDNODE)))
+			return EXIT_FAILURE;
+	}
+	// Black violation check
+	{
+		__blackSteps(node, lst, 0U);
+		for (it = lst.begin() ; it != lst.end() ; ++it)
+			if (*it != *lst.begin())
+				return EXIT_FAILURE;
+	}
+	return __propertiesCheck(node->childs[LEFT], cmp) || __propertiesCheck(node->childs[RIGHT], cmp);
+}
+
+template <typename T>
+inline static int	__integrityCheck(ft::rb_node<T> const *const node)
+{
+	if (!node)
+		return EXIT_SUCCESS;
+	if (node->childs[LEFT] && node->childs[LEFT]->parent != node)
+		return EXIT_FAILURE;
+	if (node->childs[RIGHT] && node->childs[RIGHT]->parent != node)
+		return EXIT_FAILURE;
+	return __integrityCheck(node->childs[LEFT]) || __integrityCheck(node->childs[RIGHT]);
+}
+
+template <typename T>
+inline static bool	__validity_check( ft::rb_node<T> const * const node )
+{
+	ft::rb_node<T> const *	root = node;
+	if (root->color == PTENODE)
+		return true;
+
+	while (root->parent->color != PTENODE)
+		root = root->parent;
+
+	if (__integrityCheck(root))
+		return false;
+
+	if (__propertiesCheck(root, typename ft::rb_tree<T>::compare_type()))
+		return false;
+
+	return true;
+}
 
 inline static bool	__default_constructor( void )
 {
@@ -26,7 +104,7 @@ inline static bool	__range_constructor( void )
 	tree.insert(43);
 
 	ft::rb_tree<int>	treecp(tree.begin(), tree.end());
-	if (treecp._validity_check() == false)
+	if (__validity_check(tree.begin().base()) == false)
 		return false;
 
 	ft::rb_tree<int>::iterator	it = tree.begin();
@@ -52,7 +130,7 @@ inline static bool	__copy_constructor( void )
 	tree.insert(43);
 
 	ft::rb_tree<int>	treecp(tree);
-	if (treecp._validity_check() == false || tree.size() != treecp.size())
+	if (__validity_check(treecp.begin().base()) == false || tree.size() != treecp.size())
 		return false;
 
 	ft::rb_tree<int>::iterator	it = tree.begin();
@@ -159,27 +237,27 @@ inline static bool	__insert_single_element( void )
 	ft::pair<ft::rb_tree<int>::iterator, bool>	ret;
 
 	ret = tree.insert(10);
-	if (ret.second == false || *ret.first != 10 || tree._validity_check() == false)
+	if (ret.second == false || *ret.first != 10 || __validity_check(tree.begin().base()) == false)
 		return false;
 	ret = tree.insert(2);
-	if (ret.second == false || *ret.first != 2 || tree._validity_check() == false)
+	if (ret.second == false || *ret.first != 2 || __validity_check(tree.begin().base()) == false)
 		return false;
 	ret = tree.insert(20);
-	if (ret.second == false || *ret.first != 20 || tree._validity_check() == false)
+	if (ret.second == false || *ret.first != 20 || __validity_check(tree.begin().base()) == false)
 		return false;
 	ret = tree.insert(1);
-	if (ret.second == false || *ret.first != 1 || tree._validity_check() == false)
+	if (ret.second == false || *ret.first != 1 || __validity_check(tree.begin().base()) == false)
 		return false;
 	ret = tree.insert(42);
-	if (ret.second == false || *ret.first != 42 || tree._validity_check() == false)
+	if (ret.second == false || *ret.first != 42 || __validity_check(tree.begin().base()) == false)
 		return false;
 
 	ret = tree.insert(42);
-	if (ret.second == true || *ret.first != 42 || tree._validity_check() == false)
+	if (ret.second == true || *ret.first != 42 || __validity_check(tree.begin().base()) == false)
 		return false;
 
 	ret = tree.insert(43);
-	if (ret.second == false || *ret.first != 43 || tree._validity_check() == false)
+	if (ret.second == false || *ret.first != 43 || __validity_check(tree.begin().base()) == false)
 		return false;
 
 	if (tree.size() != 6 || tree.empty() == true)
@@ -196,32 +274,32 @@ inline static bool	__insert_hint( void )
 	it = tree.insert(10).first;
 
 	ret = tree.insert(it, 1);
-	if (*ret != 1 || tree._validity_check() == false)
+	if (*ret != 1|| __validity_check(tree.begin().base()) == false)
 		return false;
 
 	it = ret;
 	ret = tree.insert(it, 20);
-	if (*ret != 20 || tree._validity_check() == false)
+	if (*ret != 20|| __validity_check(tree.begin().base()) == false)
 		return false;
 
 	it = ret;
 	ret = tree.insert(it, 0);
-	if (*ret != 0 || tree._validity_check() == false)
+	if (*ret != 0|| __validity_check(tree.begin().base()) == false)
 		return false;
 
 	it = ret;
 	ret = tree.insert(it, 42);
-	if (*ret != 42 || tree._validity_check() == false)
+	if (*ret != 42|| __validity_check(tree.begin().base()) == false)
 		return false;
 
 	it = ret;
 	ret = tree.insert(it, 42);
-	if (*ret != 42 || tree._validity_check() == false)
+	if (*ret != 42|| __validity_check(tree.begin().base()) == false)
 		return false;
 
 	it = ret;
 	ret = tree.insert(it, 43);
-	if (*ret != 43 || tree._validity_check() == false)
+	if (*ret != 43|| __validity_check(tree.begin().base()) == false)
 		return false;
 
 	return true;
@@ -260,7 +338,7 @@ inline static bool	__erase_iterator( void )
 		}
 
 		if (tree.size() != ref.size() ||
-			tree._validity_check() == false ||
+			__validity_check(tree.begin().base()) == false ||
 			!std::equal(tree.begin(), tree.end(), ref.begin()))
 			return false;
 	}
@@ -294,7 +372,7 @@ inline static bool	__erase_value( void )
 		std_ret = ref.erase(g_char[idx / 2]);
 
 		if (tree.size() != ref.size() || ft_ret != std_ret ||
-			tree._validity_check() == false ||
+			__validity_check(tree.begin().base()) == false ||
 			!std::equal(tree.begin(), tree.end(), ref.begin()))
 			return false;
 	}

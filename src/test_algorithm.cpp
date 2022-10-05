@@ -16,25 +16,32 @@ inline static bool	__equal( void )
 	std::vector<int>	myvector(myints,myints+5);		// myvector: 20 40 60 80 100
 
 	// using default comparison:
-	if (std::equal(myvector.begin(), myvector.end(), myints) != ft::equal(myvector.begin(), myvector.end(), myints))
+	if (NAMESPACE::equal(myvector.begin(), myvector.end(), myints) != true)
 		return false;
+
 	// using predicate comparison:
-	else if (std::equal(myvector.begin(), myvector.end(), myints, __mypredicate) != ft::equal(myvector.begin(), myvector.end(), myints, __mypredicate))
+	if (NAMESPACE::equal(myvector.begin(), myvector.end(), myints, __mypredicate) != true)
 		return false;
 
 	myvector[3] = 81;									// myvector: 20 40 60 81 100
 
-	if (std::equal(myvector.begin(), myvector.end(), myints) != ft::equal(myvector.begin(), myvector.end(), myints))
+	// using default comparison:
+	if (NAMESPACE::equal(myvector.begin(), myvector.end(), myints) != false)
 		return false;
-	else if (std::equal(myvector.begin(), myvector.end(), myints, __mypredicate) != ft::equal(myvector.begin(), myvector.end(), myints, __mypredicate))
+
+	// using predicate comparison:
+	if (NAMESPACE::equal(myvector.begin(), myvector.end(), myints, __mypredicate) != false)
 		return false;
 
 	myvector[3] = 80;									// myvector: 20 40 60 80 100
 	myvector.pop_back();								// myvector: 20 40 60 80
 
-	if (std::equal(myvector.begin(), myvector.end(), myints) != ft::equal(myvector.begin(), myvector.end(), myints))
+	// using default comparison:
+	if (NAMESPACE::equal(myvector.begin(), myvector.end(), myints) != true)
 		return false;
-	else if (std::equal(myvector.begin(), myvector.end(), myints, __mypredicate) != ft::equal(myvector.begin(), myvector.end(), myints, __mypredicate))
+
+	// using predicate comparison:
+	if (NAMESPACE::equal(myvector.begin(), myvector.end(), myints, __mypredicate) != true)
 		return false;
 
 	return true;
@@ -53,20 +60,16 @@ inline static bool	__lexicographical_compare( void )
 	std::string	foo("Apple");
 	std::string	bar("apartment");
 
-	if (std::lexicographical_compare(foo.begin(), foo.end(), bar.begin(), bar.end()) !=
-		ft::lexicographical_compare(foo.begin(), foo.end(), bar.begin(), bar.end()))
+	if (NAMESPACE::lexicographical_compare(foo.begin(), foo.end(), bar.begin(), bar.end()) != true)
 		return false;
-	else if (std::lexicographical_compare(foo.begin(), foo.end(), bar.begin(), bar.end(), __mycomp) !=
-			ft::lexicographical_compare(foo.begin(), foo.end(), bar.begin(), bar.end(), __mycomp))
+	else if (NAMESPACE::lexicographical_compare(foo.begin(), foo.end(), bar.begin(), bar.end(), __mycomp) != false)
 		return false;
 
 	bar = foo;
 
-	if (std::lexicographical_compare(foo.begin(), foo.end(), bar.begin(), bar.end()) !=
-		ft::lexicographical_compare(foo.begin(), foo.end(), bar.begin(), bar.end()))
+	if (NAMESPACE::lexicographical_compare(foo.begin(), foo.end(), bar.begin(), bar.end()) != false)
 		return false;
-	else if (std::lexicographical_compare(foo.begin(), foo.end(), bar.begin(), bar.end(), __mycomp) !=
-			ft::lexicographical_compare(foo.begin(), foo.end(), bar.begin(), bar.end(), __mycomp))
+	else if (NAMESPACE::lexicographical_compare(foo.begin(), foo.end(), bar.begin(), bar.end(), __mycomp) != false)
 		return false;
 
 	return true;

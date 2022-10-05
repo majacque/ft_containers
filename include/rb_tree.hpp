@@ -8,8 +8,6 @@
 #include "algorithm.hpp"
 #include <functional>
 #include <memory>
-#include <list> // _validity_check()
-#include <cstdlib> // _validity_check()
 
 namespace ft
 {
@@ -49,16 +47,6 @@ namespace ft
 		allocator_type	_alloc;
 
 	public:
-		bool	_validity_check( void )
-		{
-			if (__integrityCheck(_root))
-				return false;
-
-			if (__propertiesCheck(_root, compare_type()))
-				return false;
-
-			return true;
-		}
 
 		/**************************************************************************/
 		/*                               CONSTRUCTOR                              */
@@ -444,9 +432,9 @@ namespace ft
 
 		/**
 		 * @brief Inserts elements, from range [first, last),
-		//  * into the rb tree if the rb tree doesn't contain an element with an equivalent key.
-		//  * If multiple elements in the range have keys that compare equivalent, it is unspecified which element is inserted.
-		//  * 
+		 * into the rb tree if the rb tree doesn't contain an element with an equivalent key.
+		 * If multiple elements in the range have keys that compare equivalent, it is unspecified which element is inserted.
+		 * 
 		 * @param first An input iterator to the initial position in a range.
 		 * @param last An input iterator to the final position in a range.
 		 */
@@ -1071,63 +1059,6 @@ void	swap( rb_tree<_T, _Compare, _Alloc> &lhs, rb_tree<_T, _Compare, _Alloc> &rh
 {
 	lhs.swap(rhs);
 	return;
-}
-
-template <typename T> // TODO put that on the tester file
-inline static void    __blackSteps(ft::rb_node<T> const *const node, std::list<int> &lst, int const steps)
-{
-    if (!node)
-        return lst.push_back(steps);
-    __blackSteps(node->childs[LEFT], lst, steps + (node->color == BLACKNODE));
-    __blackSteps(node->childs[RIGHT], lst, steps + (node->color == BLACKNODE));
-}
-
-template <typename T, typename Compare>
-inline static int    __propertiesCheck(ft::rb_node<T> const *const node, Compare const cmp)
-{
-    std::list<int>                    lst;
-    std::list<int>::const_iterator    it;
-
-    if (!node)
-        return EXIT_SUCCESS;
-    // Color check
-    {
-        if (node->color != REDNODE && node->color != BLACKNODE)
-            return EXIT_FAILURE;
-    }
-    // Order check
-    {
-        if ((node->childs[LEFT] && !cmp(node->childs[LEFT]->val, node->val)) ||
-            (node->childs[RIGHT] && !cmp(node->val, node->childs[RIGHT]->val)))
-            return EXIT_FAILURE;
-    }
-    // Red violation check
-    {
-        if (node->color == REDNODE &&
-            ((node->childs[LEFT] && node->childs[LEFT]->color == REDNODE) ||
-            (node->childs[RIGHT] && node->childs[RIGHT]->color == REDNODE)))
-            return EXIT_FAILURE;
-    }
-    // Black violation check
-    {
-        __blackSteps(node, lst, 0U);
-        for (it = lst.begin() ; it != lst.end() ; ++it)
-            if (*it != *lst.begin())
-                return EXIT_FAILURE;
-    }
-    return __propertiesCheck(node->childs[LEFT], cmp) || __propertiesCheck(node->childs[RIGHT], cmp);
-}
-
-template <typename T>
-inline static int    __integrityCheck(ft::rb_node<T> const *const node)
-{
-    if (!node)
-        return EXIT_SUCCESS;
-    if (node->childs[LEFT] && node->childs[LEFT]->parent != node)
-        return EXIT_FAILURE;
-    if (node->childs[RIGHT] && node->childs[RIGHT]->parent != node)
-        return EXIT_FAILURE;
-    return __integrityCheck(node->childs[LEFT]) || __integrityCheck(node->childs[RIGHT]);
 }
 
 }

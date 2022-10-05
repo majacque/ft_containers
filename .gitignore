@@ -1,3 +1,5 @@
-objs/
+objs_ft/
+objs_std/
+*.log
 *.out
 .vscode/
